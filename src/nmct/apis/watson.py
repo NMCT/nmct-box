@@ -1,14 +1,12 @@
+import asyncio
 import json
 import logging
-import queue
-import asyncio
 from urllib.parse import urlparse
 
-from autobahn.websocket.util import create_url
-from autobahn.asyncio import WebSocketClientProtocol, WebSocketClientFactory
-from watson_developer_cloud import AuthorizationV1, ConversationV1, TextToSpeechV1, LanguageTranslatorV2, SpeechToTextV1
-
 import aiy.audio
+from autobahn.asyncio import WebSocketClientProtocol, WebSocketClientFactory
+from autobahn.websocket.util import create_url
+from watson_developer_cloud import AuthorizationV1, ConversationV1, TextToSpeechV1, LanguageTranslatorV2, SpeechToTextV1
 
 log = logging.getLogger("Watson")
 
@@ -136,10 +134,13 @@ class _WatsonRecognizer(object):
 
 class WatsonConversation(object):
     def __init__(self, workspace_id):
+        print('init\n\n')
+
         self.workspace_id = workspace_id
         auth = ServiceCredential("conversation")
         self.client = ConversationV1(version="2017-05-26", **auth.data)
         self.context = {}
+        self._finished = False
 
     def message(self, text):
         response = self.client.message(self.workspace_id, {'text': text}, context=self.context)
@@ -153,11 +154,15 @@ class WatsonConversation(object):
         #         self.on_intent(intent["intent"], intent["confidence"])
         if "context" in response:
             self.context = response["context"]
-        return response["output"]
+        return [i["intent"] for i in response.get("intents")], response.get("entities"), response.get("output")
+
+    def finish(self):
+        self.context = {}
+        self._finished = True
 
     @property
     def finished(self):
-        return False  # TODO!
+        return self._finished  # TODO!
 
 
 class WatsonTextToSpeechClientProtocol(WebSocketClientProtocol):
