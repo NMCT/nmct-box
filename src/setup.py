@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='NMCT-Box',
-    version='0.3.0',
+    version='0.3.9',
     packages=['nmct', 'nmct.drivers', 'nmct.apis'],
     url='http://www.nmct.be',
     license='',
@@ -10,10 +10,11 @@ setup(
     author_email='',
     description='',
     install_requires=[
-        'aiy', 'RPi.GPIO', 'snowboy', 'watson-developer-cloud', 'autobahn'
+        'aiy', 'RPi.GPIO', 'snowboy', 'watson-developer-cloud', 'autobahn', 'Flask', 'smbus-cffi',
+        'rpi-ws281x', 'spidev', 'matplotlib'
     ],
     data_files=[
-    "../resources/snowboy/common.res"
+        "../resources/snowboy/common.res"
         #     ('share/doc/aiy', ['README.md']),
         #     ('share/doc/aiy/examples', [
         #         "examples/vision/buzzer/congratulations.track",
@@ -23,9 +24,13 @@ setup(
         #         "examples/vision/buzzer/tetris.track",
         #     ])
     ],
-    # long_description=open('README.md').read(),
+    long_description=open('../README.md').read(),
     scripts=[
-        "examples/watson_demo.py",
+        "examples/watson_conversation.py",
+        "examples/watson_translate.py",
+        "examples/hotwords.py",
+        "examples/sensors.py",
+        "examples/pixelring.py",
 
     ]
 

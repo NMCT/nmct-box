@@ -21,7 +21,7 @@ import time
 import aiy.audio
 import aiy.voicehat
 
-import nmct.sensors
+import nmct.hardware
 import nmct.snowboy
 import nmct.watson
 
@@ -35,6 +35,7 @@ def main():
     detector = nmct.snowboy.get_detector()
     detector.add_hotword("NMCT.seb.pmdl")
     detector.add_hotword("NMCT.chris.pmdl")
+    detector.add_hotword("NMCT.chrisv2.pmdl")
     detector.add_hotword("NMCT.dieter.pmdl")
 
     aiy.audio.get_recorder().start()

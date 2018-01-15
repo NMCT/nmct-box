@@ -21,7 +21,7 @@ import logging
 import aiy.audio
 import aiy.voicehat
 
-import nmct.sensors
+import nmct.hardware
 import nmct.snowboy
 import nmct.watson
 

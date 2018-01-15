@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Vul gegevens in:</title>
+
+    <link rel="stylesheet" href="../static/styles/bootstrap.css">
+    <link rel="stylesheet" href="../static/styles/font-awesome.css">
+    <link rel="stylesheet" href="../static/styles/sb-admin-2.css">
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Nmct box!!!</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    LCD display
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <form role="form" action="write_lcd" method="post">
+                                <div class="form-group">
+                                    <label>LCD Input</label>
+                                    <input class="form-control" name="lcdMessage" placeholder="{{lcdMessage}}">
+                                    <p class="help-block">Geef hier tekst in om naar het LCD display te sturen.</p>
+                                </div>
+
+
+                                <button type="submit" class="btn btn-default" name="show_method">Schrijf naar LCD
+                                    display
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Neopixel
+                </div>
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <form role="form" action="show_ring" method="post">
+                                <div class="form-group">
+                                    <label>Neo pixel</label>
+                                    <label>{{show_method}}</label>
+                                </div>
+                                <!-- TODO: add color picker/dropdown/... -->
+                                <button type="submit" class="btn btn-default" name="show_method" value="loop">loop
+                                    led
+                                </button>
+                                <button type="submit" class="btn btn-default" name="show_method" value="fill">fill
+                                    led
+                                </button>
+                                <button type="submit" class="btn btn-default" name="show_method" value="theater_chase">
+                                    theater
+                                    chase
+                                </button>
+                                <button type="submit" class="btn btn-default" name="show_method" value="rainbow">
+                                    rainbow cycle
+                                </button>
+                                <button type="submit" class="btn btn-default" name="show_method" value="rainbow_chase">
+                                    theater chase rainbow
+                                </button>
+                                <button type="submit" class="btn btn-default" name="show_method" value="clear">
+                                    clear
+                                </button>
+
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+</div>
+<!-- /#page-wrapper -->
+
+
+<script src="../static/js/sb-admin-2.js"></script>
+<script src="../static/js/jquery.js"></script>
+<script src="../static/js/bootstrap.js"></script>
+
+</body>
+
+</html>

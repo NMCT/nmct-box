@@ -73,11 +73,17 @@ class WatsonSpeechToTextClientProtocol(WebSocketClientProtocol):
             res = json.loads(payload.decode('utf8'))
             log.debug("Result received: {}".format(res))
             if "results" in res:
+                transcript = res["results"][0]["alternatives"][0]["transcript"]
                 if res["results"][0]["final"]:
                     aiy.audio.get_recorder().remove_processor(self.factory)
                     self.sendMessage(json.dumps({'action': 'stop'}).encode('utf-8'))
                     self.sendClose(1000)
-                    self.factory.transcript.set_result(res["results"][0]["alternatives"][0]["transcript"])
+                    if callable(self.factory.final_cb):
+                        self.factory.final_cb(transcript)
+                    self.factory.transcript.set_result(transcript)
+                else:
+                    if callable(self.factory.partial_cb):
+                        self.factory.partial_cb(transcript)
 
     def onClose(self, wasClean, code, reason):
         if reason:
@@ -101,11 +107,13 @@ class WatsonClientFactory(WebSocketClientFactory):
 
 
 class WatsonSpeechToTextClientFactory(WatsonClientFactory):
-    def __init__(self, model, *args, **kwargs):
+    def __init__(self, model, partial_cb=None, final_cb=None, *args, **kwargs):
         super().__init__("speech-to-text", "v1", "recognize", {'model': model}, *args, **kwargs)
         self.audio_queue = asyncio.Queue()
         self.protocol = WatsonSpeechToTextClientProtocol
         self.transcript = asyncio.Future()
+        self.partial_cb = partial_cb
+        self.final_cb = final_cb
 
     def add_data(self, data):
         asyncio.run_coroutine_threadsafe(self.audio_queue.put(data), self.loop)
@@ -117,10 +125,10 @@ class _WatsonRecognizer(object):
         self.client = SpeechToTextV1(**ServiceCredential('speech-to-text').data)
         self.recognition_result = None
 
-    def recognize(self):
+    def recognize(self, partial_cb=None, final_cb=None):
         log.debug("Recognition start")
         loop = asyncio.get_event_loop()
-        factory = WatsonSpeechToTextClientFactory(model=self.model, loop=loop)
+        factory = WatsonSpeechToTextClientFactory(model=self.model, partial_cb=partial_cb, final_cb=final_cb, loop=loop)
         aiy.audio.get_recorder().add_processor(factory)
         coro = loop.create_connection(factory, factory.host, 443, ssl=True)
         loop.run_until_complete(coro)
@@ -226,6 +234,10 @@ class _WatsonSynthesizer:
 
     def get_voice(self, name):
         return [v for v in self.client.voices()["voices"] if v["name"] == name][0]
+
+    def say(self, text):
+        audio = self.synthesize(text)
+        aiy.audio.get_player().play_bytes(audio, 16000)
 
 
 class WatsonTranslator:
