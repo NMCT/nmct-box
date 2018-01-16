@@ -108,6 +108,15 @@ class LCDisplay:
         self._driver.write(bits & ~LCDisplay.ENABLE)
         time.sleep(LCDisplay.E_DELAY)
 
+    def clear(self):
+        self.__lcd_byte(LCDisplay.LCD_LINE_1, LCDisplay.LCD_CMD)
+        for i in range(15):
+            self.__lcd_byte(ord(" "), LCDisplay.LCD_CHR)
+        self.__lcd_byte(LCDisplay.LCD_LINE_2, LCDisplay.LCD_CMD)
+        for i in range(15):
+            self.__lcd_byte(ord(" "), LCDisplay.LCD_CHR)
+        self.__lcd_byte(LCDisplay.LCD_LINE_1, LCDisplay.LCD_CMD)
+
     def write(self, message):
         # print("Message : " + message + " naar LCD")
         for i in range(len(message)):
@@ -119,8 +128,8 @@ class LCDisplay:
 
     def write_line(self, message, line):  # FIXME
         self.__lcd_byte(line, LCDisplay.LCD_CMD)
-        for i in range(len(message)):
-            self.__lcd_byte(ord(message[i]), LCDisplay.LCD_CHR)
+        for c in message:
+            self.__lcd_byte(ord(c), LCDisplay.LCD_CHR)
 
 
 if __name__ == "__main__":

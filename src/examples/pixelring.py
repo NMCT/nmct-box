@@ -25,7 +25,7 @@ logging.basicConfig()
 logging.getLogger().setLevel(logging.DEBUG)
 
 
-def main():
+def pixelring_demo():
     ring = nmct.hardware.get_pixel_ring()
     # ring.queue_effect("rainbow")
     # ring.queue_effect("clear")
@@ -41,4 +41,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    pixelring_demo()

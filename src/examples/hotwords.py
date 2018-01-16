@@ -29,7 +29,7 @@ logging.basicConfig()
 logging.getLogger().setLevel(logging.DEBUG)
 
 
-def main():
+def hotword_demo():
     led = aiy.voicehat.get_led()
 
     detector = nmct.snowboy.get_detector()
@@ -50,4 +50,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    hotword_demo()

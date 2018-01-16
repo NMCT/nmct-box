@@ -55,3 +55,8 @@ class OneWire(object):  # TODO: make static? --> use metaclass to implement __ge
 
         def __str__(self):
             return self._id
+
+
+class Thermometer(OneWire.Slave):
+    def measure(self):
+        return int(self.data["t"]) * 1e-3

@@ -28,7 +28,7 @@ logging.basicConfig()
 logging.getLogger().setLevel(logging.DEBUG)
 
 
-def main():
+def conversation_demo():
     led = aiy.voicehat.get_led()
 
     # print(nmct.sensors.get_temperature())
@@ -68,4 +68,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    conversation_demo()

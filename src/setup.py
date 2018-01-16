@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='NMCT-Box',
-    version='0.3.9',
+    version='0.3.12',
     packages=['nmct', 'nmct.drivers', 'nmct.apis'],
     url='http://www.nmct.be',
     license='',

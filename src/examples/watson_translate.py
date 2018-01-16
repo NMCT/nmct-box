@@ -29,7 +29,7 @@ logging.basicConfig()
 logging.getLogger().setLevel(logging.DEBUG)
 
 
-def main():
+def translate_demo():
     button = aiy.voicehat.get_button()
     led = aiy.voicehat.get_led()
 
@@ -68,4 +68,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    translate_demo()

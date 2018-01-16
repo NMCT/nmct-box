@@ -263,6 +263,9 @@ class PixelRing(PixelStrip):
             self.set_pixel_color(led, OFF)
             self.show()
 
+    def sleep(self, sec):
+        time.sleep(sec)
+
     def loop(self, color: Color, speed=20):
         """Loop a single LED around the ring"""
         for led in self:
@@ -352,9 +355,9 @@ class NeoPixelThread(threading.Thread):
 if __name__ == "__main__":
     ring = PixelRing(24, 12)
     ring.begin()
-    # print("loop")
-    # ring.loop(COLORS["RED"])
-    # time.sleep(1)
+    print("loop")
+    ring.loop(COLORS["RED"])
+    time.sleep(1)
     print("fill")
     ring.fill(COLORS["GREEN"])
     time.sleep(1)
@@ -364,25 +367,25 @@ if __name__ == "__main__":
     print("unfill")
     ring.unfill(COLORS["GREEN"])
     time.sleep(1)
-    # print("rainbow chase")
-    # ring.rainbow_chase()
-    # time.sleep(1)
-    # print("theater chase")
-    # ring.theater_chase(COLORS["BLUE"])
-    # time.sleep(1)
-    # print("rainbow")
-    # ring.rainbow()
-    # time.sleep(1)
+    print("rainbow chase")
+    ring.rainbow_chase()
+    time.sleep(1)
+    print("theater chase")
+    ring.theater_chase(COLORS["BLUE"])
+    time.sleep(1)
+    print("rainbow")
+    ring.rainbow()
+    time.sleep(1)
     print("clear")
     ring.clear()
-    # for name, col in COLORS.items():
-    #     print("{}: {}".format(name, col))
-    #     for led in ring:
-    #         ring.set_pixel_color(led, col)
-    #         ring.show()
-    #         time.sleep(0.001)
-    #         # ring.set_pixel_color(led, Color(0, 0, 0))
-    #         # ring.show()
-    # for led in ring:
-    #     ring.set_pixel_color(led, COLORS["K"])
-    #     ring.show()
+    for name, col in COLORS.items():
+        print("{}: {}".format(name, col))
+        for led in ring:
+            ring.set_pixel_color(led, col)
+            ring.show()
+            time.sleep(0.01)
+            # ring.set_pixel_color(led, Color(0, 0, 0))
+            # ring.show()
+    for led in ring:
+        ring.set_pixel_color(led, COLORS["K"])
+        ring.show()

@@ -25,9 +25,9 @@ logging.basicConfig()
 logging.getLogger().setLevel(logging.DEBUG)
 
 
-def main():
+def sensor_demo():
     print(nmct.hardware.measure_acceleration())
 
 
 if __name__ == '__main__':
-    main()
+    sensor_demo()

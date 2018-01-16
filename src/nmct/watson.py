@@ -30,6 +30,14 @@ def get_translator(source='en', target='es'):
     return WatsonTranslator(source, target)
 
 
+def list_voices():
+    return get_synthesizer(DEFAULT_VOICE).list_voices()
+
+
+def list_translators():
+    return get_translator().list_models()
+
+
 def say(text, voice=DEFAULT_VOICE):
     synthesizer = get_synthesizer(voice)
     audio = synthesizer.synthesize(text)
@@ -39,4 +47,3 @@ def say(text, voice=DEFAULT_VOICE):
 def translate(text, source, target):
     translator = get_translator(source, target)
     return translator.translate(text)
-

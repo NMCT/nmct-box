@@ -1,7 +1,7 @@
 from nmct.drivers.adxl345 import ADXL345
 from nmct.drivers.lcd import LCDisplay
 from nmct.drivers.neopixel import NeoPixelThread
-from nmct.drivers.onewire import OneWire
+from nmct.drivers.onewire import Thermometer
 
 _accelerometer = None
 _temp_probe = None
@@ -10,12 +10,16 @@ _pixelring = None
 
 
 def measure_temperature():
-    return int(OneWire()["28-0417b27173ff"].data["t"]) * 1e-3
+    return get_thermometer().measure()
 
 
 def measure_acceleration():
     acc = get_accelerometer()
     return acc.measure()
+
+
+def get_thermometer():
+    return Thermometer("28-0417b27173ff")  # TODO: autodetect ID
 
 
 def get_accelerometer():
