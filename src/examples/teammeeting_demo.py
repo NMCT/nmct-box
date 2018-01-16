@@ -61,6 +61,7 @@ def teammeeting_demo():
     kate = nmct.watson.get_synthesizer('en-GB_KateVoice')
     michael = nmct.watson.get_synthesizer('en-US_MichaelVoice')
     dieter = nmct.watson.get_synthesizer('de-DE_DieterVoice')
+    lisa = nmct.watson.get_synthesizer('en-US_LisaVoice')
     conversation = nmct.watson.get_conversation("9de1dde4-e3a6-406b-9913-82e5ce74f64c")
 
     aiy.audio.get_tts_volume()
@@ -72,8 +73,8 @@ def teammeeting_demo():
         ring.queue_effect("fill", COLORS["ORANGE"])
         ring.queue_effect("sleep", 0.5)
         ring.queue_effect("fill", COLORS["BLACK"])
-        aiy.audio.say("Hi. I'm the NMCT box of doom and hell fire and I'd like to introduce you to some of my friends.")
-        aiy.audio.say("Press my big, round button to get started.")
+        lisa.say("Hi. I'm the NMCT box of doom and I'd like you to meet some of my friends."
+                 "Press my big, round button to get started.")
         button.wait_for_press()
 
         allison.say("I'm Allison. I can tell you about my environment. Press the button to measure my acceleration.")
@@ -94,7 +95,7 @@ def teammeeting_demo():
         ring.queue_effect("clear")
 
         time.sleep(1)
-        aiy.audio.say("I can listen for hotwords too. Say the magic word...")
+        lisa.say("I can listen for hotwords too. Say the magic word...")
         lcd.write('Say "NMCT"!')
         led.set_state(led.BEACON)
         detector.wait_for_hotword()
@@ -104,7 +105,7 @@ def teammeeting_demo():
         ring.queue_effect("clear")
         lcd.write_line("--- NMCT Box ---", 0)
 
-        aiy.audio.say(
+        lisa.say(
             "Well done! Now meet some of my friends from all over the world. They can translate for you!")
         time.sleep(1)
         sofia.say("Hola! Me llamo Sofia y hablos espanol!")
@@ -140,8 +141,8 @@ def teammeeting_demo():
                 translation = response["translation"]
                 print("Translation: {}".format(translation))
                 dieter.say(translation)
-
-        aiy.audio.say(
+        time.sleep(1)
+        lisa.say(
             "Now meet Kate from the UK. Ever since the accident, she imagines she's a car. "
             "You can ask her for lights or music, when you are done just tell her goodbye. ")
 
@@ -181,8 +182,8 @@ def teammeeting_demo():
         time.sleep(1)
         ring.queue_effect("rainbow_chase", speed=200)
         ring.queue_effect("clear")
-        aiy.audio.say("That was fun. I hope it was as good for you as it was for me. "
-                      "See you around, if you need me, I'll be in my box!")
+        lisa.say("That was fun. I hope it was as good for you as it was for me. "
+                 "See you around, if you need me, I'll be in my box!")
         aiy.audio.get_recorder().stop()
 
     script()
