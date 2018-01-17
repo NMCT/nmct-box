@@ -2,6 +2,7 @@ from collections import namedtuple
 from time import sleep
 
 import smbus
+import math
 
 # adxl address 0x53
 # select the correct i2c bus for this revision of Raspberry Pi
@@ -33,6 +34,7 @@ MEASURE = 0x08
 AXES_DATA = 0x32
 
 Acceleration = namedtuple("Acceleration", "x y z")
+Tilt = namedtuple("Tilt","roll","pitch")
 
 
 class ADXL345:
@@ -76,6 +78,12 @@ class ADXL345:
             for lsb, msb in zip(data[0::2], data[1::2])
         ]
         return Acceleration(x, y, z)
+
+    def tilt(self):
+        x,y,z = self.measure()
+        roll = math.atan2(y, math.sqrt(x * x + z * z)) * 180 / math.pi
+        pitch = math.atan2(x, math.sqrt(y * y + z * z)) * 180 / math.pi
+        return Tilt(roll,pitch)
 
 
 if __name__ == "__main__":

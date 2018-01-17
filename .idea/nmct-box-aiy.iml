@@ -5,7 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.secret" />
     </content>
-    <orderEntry type="jdk" jdkName="Remote Python 3.6.3 (sftp://pi@169.254.10.1:22/opt/nmct-box-aiy/env/bin/python)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Remote Python 3.5.3 (ssh://pi@169.254.10.11:22/usr/bin/python3.5)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TestRunnerService">

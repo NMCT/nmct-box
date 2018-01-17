@@ -53,11 +53,21 @@ def get_axes():
         # print(x)
         # print(y)
         # print(z)
+        print(accelero.tilt())
 
     except Exception as ex:
         print("Exception")
         print(ex)
     return flask.render_template("index.html", show_method='axe')
+
+@app.route('/student',methods=['POST','GET'])
+def show_student():
+    #http://169.254.10.11/student?number=3
+    number = flask.request.args.get('number')
+    template = "student{0}.html".format(number)
+
+    print(template)
+    return flask.render_template(template)
 
 
 if __name__ == '__main__':

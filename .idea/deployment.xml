@@ -1,39 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" promptOnRemoteOverwrite="CHECK_TIMESTAMP" serverName="Pi3-APIPA" notifyRemoteChanges="true">
+  <component name="PublishConfigData" autoUpload="Always" promptOnRemoteOverwrite="CHECK_TIMESTAMP" notifyRemoteChanges="true">
     <serverData>
-      <paths name="Pi3-APIPA">
+      <paths name="pi_python2.5">
         <serverdata>
           <mappings>
-            <mapping deploy="/opt/nmct-box-aiy" local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="Pi3-DDNS">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="Pi3-Phone">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/tmp/nmct-box-aiy" local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="Pi3-SFTP-DNS">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/tmp/nmct-box-aiy" local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="RasPi-SFTP-DNS">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/nmct_box_aiy" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
