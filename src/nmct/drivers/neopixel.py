@@ -344,7 +344,6 @@ class NeoPixelThread(threading.Thread):
     def run(self):
         while True:
             effect = self._queue.get()
-
             effect()
 
     def queue_effect(self, effect, *args, **kwargs):
