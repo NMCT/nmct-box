@@ -1,0 +1,13 @@
+[Unit]
+Description = uWSGI instance to serve NMCT Box web interface
+After = network.target
+
+[Service]
+User = root
+Group = www-data
+WorkingDirectory = ${NMCT_HOME}
+Environment = "PATH=${NMCT_HOME}/env/bin"
+ExecStart = ${NMCT_HOME}/env/bin/uwsgi --ini ${NMCT_HOME}/web/nmct-box.ini
+
+[Install]
+WantedBy = multi-user.target

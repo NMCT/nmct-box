@@ -1,6 +1,5 @@
-from traceback import print_exception
-
 import flask
+from traceback import print_exception
 
 import nmct
 
@@ -60,9 +59,10 @@ def get_axes():
         print(ex)
     return flask.render_template("index.html", show_method='axe')
 
-@app.route('/student',methods=['POST','GET'])
+
+@app.route('/student', methods=['POST', 'GET'])
 def show_student():
-    #http://169.254.10.11/student?number=3
+    # http://169.254.10.11/student?number=3
     number = flask.request.args.get('number')
     template = "student{0}.html".format(number)
 
