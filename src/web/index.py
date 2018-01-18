@@ -27,13 +27,23 @@ def write_lcd():
     return flask.render_template("index.html", lcdMessage=text)
 
 
-@app.route('/show_ring', methods=['POST'])
+@app.route('/show_ring', methods=['GET'])
 def show_ring():
-    show_method = flask.request.form['show_method']
+    #show_method = flask.request.form['show_method']
+    show_method = flask.request.args.get('show_method')
+    if show_method == None:
+        return "Gelieve een show_method mee te geven: /show_nmct_pixel?show_method=loopLed&color=(255,0,0)"
+
+    colorRing = flask.request.args.get('color')
+
+    if colorRing == None:
+        colorRing = (255, 0, 0)
+    else:
+        colorRing = tuple([int(x) for x in colorRing[1:-1].split(",")])
     # PixelThread.call_method(show_method)
     try:
         ring = nmct.hardware.get_pixel_ring()
-        ring.queue_effect(show_method)
+        ring.queue_effect(show_method,colorRing)
     except Exception as ex:
         # print("Exception")
         print_exception(ex, ex, ex.__traceback__)
@@ -64,11 +74,12 @@ def get_axes():
 def show_student():
     #http://169.254.10.11/student?number=3
     number = flask.request.args.get('number')
+    if number == None:
+        return 'Gelieve een studentnummer mee te geven : http://xxx.xxx.xxx.xxx/student?number=x'
     template = "student{0}.html".format(number)
 
     print(template)
     return flask.render_template(template)
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True)
