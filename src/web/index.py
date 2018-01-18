@@ -28,7 +28,7 @@ def write_lcd():
 
 @app.route('/show_ring', methods=['GET'])
 def show_ring():
-    #show_method = flask.request.form['show_method']
+    # show_method = flask.request.form['show_method']
     show_method = flask.request.args.get('show_method')
     if show_method == None:
         return "Gelieve een show_method mee te geven: /show_nmct_pixel?show_method=loopLed&color=(255,0,0)"
@@ -42,26 +42,26 @@ def show_ring():
     # PixelThread.call_method(show_method)
     try:
         ring = nmct.hardware.get_pixel_ring()
-        ring.queue_effect(show_method,colorRing)
+        ring.queue_effect(show_method, colorRing)
     except Exception as ex:
         # print("Exception")
         print_exception(ex, ex, ex.__traceback__)
     return flask.render_template("index.html", show_method=show_method)
 
 
-@app.route('/get_axes',methods=['POST'])
+@app.route('/get_axes', methods=['POST'])
 def get_axes():
     # axe = request.form['show_method']
-    sensor = request.form['sensor']
+    sensor = flask.request.form['sensor']
     show_text = ""
     try:
 
         accelero = nmct.hardware.get_accelerometer()
 
         if sensor == "gravity":
-            x = accelero.get_X_axe()
-            y = accelero.get_Y_axe()
-            z = accelero.get_Z_axe()
+            # x = accelero.get_X_axe()
+            # y = accelero.get_Y_axe()
+            # z = accelero.get_Z_axe()
             show_text = accelero.measure()
 
         if sensor == "tilt":
@@ -76,7 +76,7 @@ def get_axes():
     except Exception as ex:
         print("Exception")
         print(ex)
-    return flask.render_template("index.html",show_method='gravity',show_text=show_text)
+    return flask.render_template("index.html", show_method='gravity', show_text=show_text)
 
 
 @app.route('/student', methods=['POST', 'GET'])
@@ -90,5 +90,6 @@ def show_student():
     print(template)
     return flask.render_template(template)
 
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=1080, debug=True)

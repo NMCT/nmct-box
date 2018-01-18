@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ $(id -u) -ne 0 ]; then
+if [[ $EUID -ne 0 ]]; then
   printf "Script must be run as root! Try 'sudo %s'\n" $0 >&2
   exit 1
 fi
@@ -9,7 +9,7 @@ echo "This script is untested, good luck!:)"    # FIXME
 export NMCT_HOME="$(dirname "${PWD}")"
 readonly venv="${NMCT_HOME}/env"
 readonly temp="/tmp/nmct"
-readonly packages="python3-dev python3-venv swig libatlas-base-dev scons libffi-dev portaudio19-dev python3-pyaudio sox libssl-dev"
+readonly packages="python3-dev python3-venv swig libatlas-base-dev scons libffi-dev portaudio19-dev python3-pyaudio sox libssl-dev nginx ufw"
 
 apt update -y && apt install -y ${packages}
 
