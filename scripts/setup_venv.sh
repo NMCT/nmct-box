@@ -1,14 +1,14 @@
 #!/bin/bash
 if [ $(id -u) -ne 0 ]; then
-  printf "Script must be run as root! Try 'sudo %s'\n" $0
+  printf "Script must be run as root! Try 'sudo %s'\n" $0 >&2
   exit 1
 fi
 
 echo "This script is untested, good luck!:)"    # FIXME
 
-venv="env"
-temp="/tmp/nmct"
-packages="python3-dev python3-venv swig libatlas-base-dev"
+readonly venv="env"
+readonly temp="/tmp/nmct"
+readonly packages="python3-dev python3-venv swig libatlas-base-dev"
 
 apt update -y && apt install -y ${packages}
 

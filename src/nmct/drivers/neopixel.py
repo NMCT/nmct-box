@@ -1,13 +1,12 @@
 # Adafruit NeoPixel library port to the rpi_ws281x library.
 # Author: Tony DiCola (tony@tonydicola.com), Jeremy Garff (jer@jers.net)
+import _rpi_ws281x as ws
 import atexit
 # https://raspberrytips.nl/neopixel-ws2811-raspberry-pi/
 import functools
 import queue
 import threading
 import time
-
-import _rpi_ws281x as ws
 from matplotlib import colors
 
 
@@ -302,7 +301,8 @@ class PixelRing(PixelStrip):
                 time.sleep(1 / speed)
                 for i in range(0, len(self), 3):
                     self.set_pixel_color(i + q, OFF)
-
+        self.clear()
+        
     @staticmethod
     def _generate_rainbow(pos):
         """Generate rainbow colors across 0-255 positions."""

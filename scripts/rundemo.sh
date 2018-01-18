@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
+if [[ -z "${NMCT_HOME}" ]]; then
+    readonly NMCT_HOME"/opt/nmct-box-aiy"
+fi;
 
-source /opt/nmct-box-aiy/env/bin/activate
-pushd /opt/nmct-box-aiy/src/examples
+source "${NMCT_HOME}/env/bin/activate"
+pushd "${NMCT_HOME}/src/examples"
 python teammeeting_demo.py
 popd
