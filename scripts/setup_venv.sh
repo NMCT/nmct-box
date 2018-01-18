@@ -44,7 +44,7 @@ ${venv}/bin/python setup.py build install
 pushd "${NMCT_HOME}/src"
 python setup.py install
 
-echo "export NMCT_HOME={$NMCT_HOME}" > /etc/profile.d/nmct_box.sh
+echo "export NMCT_HOME=${NMCT_HOME}" > /etc/profile.d/nmct_box.sh
 source /etc/profile.d/nmct_box.sh
 
 deactivate
