@@ -34,7 +34,7 @@ MEASURE = 0x08
 AXES_DATA = 0x32
 
 Acceleration = namedtuple("Acceleration", "x y z")
-Tilt = namedtuple("Tilt","roll","pitch")
+Tilt = namedtuple("Tilt", "roll pitch")
 
 
 class ADXL345:
@@ -80,10 +80,10 @@ class ADXL345:
         return Acceleration(x, y, z)
 
     def tilt(self):
-        x,y,z = self.measure()
+        x, y, z = self.measure()
         roll = math.atan2(y, math.sqrt(x * x + z * z)) * 180 / math.pi
         pitch = math.atan2(x, math.sqrt(y * y + z * z)) * 180 / math.pi
-        return Tilt(roll,pitch)
+        return Tilt(roll, pitch)
 
 
 if __name__ == "__main__":
