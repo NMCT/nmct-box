@@ -5,9 +5,9 @@ After=network.target
 [Service]
 User=root
 Group=www-data
-WorkingDirectory=${NMCT_HOME}
+WorkingDirectory="${NMCT_HOME}/src/web"
 Environment="PATH=${NMCT_HOME}/env/bin"
-ExecStart=${NMCT_HOME}/env/bin/uwsgi --ini ${NMCT_HOME}/src/web/nmct-box.ini
+ExecStart="${NMCT_HOME}/env/bin/uwsgi" --ini "${NMCT_HOME}/src/web/nmct-box.ini"
 
 [Install]
 WantedBy=multi-user.target
