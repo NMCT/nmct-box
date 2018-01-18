@@ -6,10 +6,10 @@ fi
 
 echo "This script is untested, good luck!:)"    # FIXME
 
-readonly nmct_home="${PWD}/.."
-readonly venv="${nmct_home}/env"
+readonly NMCT_HOME="${PWD}/.."
+readonly venv="${NMCT_HOME}/env"
 readonly temp="/tmp/nmct"
-readonly packages="python3-dev python3-venv swig libatlas-base-dev scons"
+readonly packages="python3-dev python3-venv swig libatlas-base-dev scons libffi-dev portaudio19-dev python3-pyaudio sox libssl-dev"
 
 apt update -y && apt install -y ${packages}
 
@@ -41,8 +41,11 @@ scons
 pushd ${dir}/python
 ${venv}/bin/python setup.py build install
 
-pushd "${nmct_home}/src"
+pushd "${NMCT_HOME}/src"
 python setup.py install
+
+echo "export NMCT_HOME={$NMCT_HOME}" > /etc/profile.d/nmct_box.sh
+source /etc/profile.d/nmct_box.sh
 
 deactivate
 
