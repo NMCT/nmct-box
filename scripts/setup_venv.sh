@@ -6,7 +6,7 @@ fi
 
 echo "This script is untested, good luck!:)"    # FIXME
 
-readonly nmct_home="${PWD}/../"
+readonly nmct_home="${PWD}/.."
 readonly venv="${nmct_home}/env"
 readonly temp="/tmp/nmct"
 readonly packages="python3-dev python3-venv swig libatlas-base-dev scons"
