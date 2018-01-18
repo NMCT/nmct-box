@@ -41,7 +41,7 @@ scons
 pushd ${dir}/python
 ${venv}/bin/python setup.py build install
 
-pushd "${venv}/bin"
+pushd "${nmct_home}/src"
 python setup.py install
 
 deactivate
