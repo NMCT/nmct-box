@@ -9,7 +9,7 @@ echo "This script is untested, good luck!:)"    # FIXME
 readonly nmct_home="${PWD}../"
 readonly venv="${nmct_home}/env"
 readonly temp="/tmp/nmct"
-readonly packages="python3-dev python3-venv swig libatlas-base-dev"
+readonly packages="python3-dev python3-venv swig libatlas-base-dev scons"
 
 apt update -y && apt install -y ${packages}
 
@@ -36,6 +36,8 @@ popd
 
 dir=${temp}/rpi-ws821x
 git clone https://github.com/jgarff/rpi_ws281x.git ${dir}
+pushd ${dir}
+scons
 pushd ${dir}/python
 ${venv}/bin/python setup.py build install
 
