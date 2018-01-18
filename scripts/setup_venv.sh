@@ -6,7 +6,7 @@ fi
 
 echo "This script is untested, good luck!:)"    # FIXME
 
-readonly NMCT_HOME="${PWD}/.."
+export NMCT_HOME="$(dirname ${PWD}/..)"
 readonly venv="${NMCT_HOME}/env"
 readonly temp="/tmp/nmct"
 readonly packages="python3-dev python3-venv swig libatlas-base-dev scons libffi-dev portaudio19-dev python3-pyaudio sox libssl-dev"
@@ -44,8 +44,7 @@ ${venv}/bin/python setup.py build install
 pushd "${NMCT_HOME}/src"
 python setup.py install
 
-echo "export NMCT_HOME={$NMCT_HOME}" > /etc/profile.d/nmct_box.sh
-source /etc/profile.d/nmct_box.sh
+echo "export NMCT_HOME=${NMCT_HOME}" > /etc/profile.d/nmct_box.sh
 
 deactivate
 
