@@ -346,9 +346,10 @@ class NeoPixelThread(threading.Thread):
             effect = self._queue.get()
             effect()
 
-    def queue_effect(self, effect, *args, **kwargs):
+    def queue_effect(self, effect,colorRing, *args, **kwargs):
         if args is None:
             args = []
+
         self._queue.put(functools.partial(getattr(self._ring, effect), *args, **kwargs))
 
 

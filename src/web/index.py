@@ -49,25 +49,34 @@ def show_ring():
     return flask.render_template("index.html", show_method=show_method)
 
 
-@app.route('/get_axes')
+@app.route('/get_axes',methods=['POST'])
 def get_axes():
     # axe = request.form['show_method']
+    sensor = request.form['sensor']
+    show_text = ""
     try:
-        print("axe")
+
         accelero = nmct.hardware.get_accelerometer()
-        print(accelero.measure())
-        # x = accelero.get_X_axe()
-        # y = accelero.get_Y_axe()
-        # z = accelero.get_Z_axe()
-        # print(x)
-        # print(y)
-        # print(z)
+
+        if sensor == "gravity":
+            x = accelero.get_X_axe()
+            y = accelero.get_Y_axe()
+            z = accelero.get_Z_axe()
+            show_text = accelero.measure()
+
+        if sensor == "tilt":
+            roll = accelero.get_roll()
+            pitch = accelero.get_pitch()
+            print(roll)
+            print(pitch)
+            show_text = "roll: {0:5.2f}°  pitch : {1:5.2f}°".format(roll, pitch)
+
         print(accelero.tilt())
 
     except Exception as ex:
         print("Exception")
         print(ex)
-    return flask.render_template("index.html", show_method='axe')
+    return flask.render_template("index.html",show_method='gravity',show_text=show_text)
 
 
 @app.route('/student', methods=['POST', 'GET'])
