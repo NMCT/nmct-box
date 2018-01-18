@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='NMCT-Box',
-    version='0.3.12',
+    version='0.3.13',
     packages=['nmct', 'nmct.drivers', 'nmct.apis'],
     url='http://www.nmct.be',
     license='',
@@ -11,7 +11,7 @@ setup(
     description='',
     install_requires=[
         'aiy', 'RPi.GPIO', 'snowboy', 'watson-developer-cloud', 'autobahn', 'Flask', 'smbus-cffi',
-        'rpi-ws281x', 'spidev', 'matplotlib'
+        'rpi-ws281x', 'spidev', 'matplotlib', 'uwsgi'
     ],
     data_files=[
         "../resources/snowboy/common.res"

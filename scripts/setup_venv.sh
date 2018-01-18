@@ -6,9 +6,10 @@ fi
 
 echo "This script is untested, good luck!:)"    # FIXME
 
-readonly venv="env"
+export NMCT_HOME="$(dirname "${PWD}")"
+readonly venv="${NMCT_HOME}/env"
 readonly temp="/tmp/nmct"
-readonly packages="python3-dev python3-venv swig libatlas-base-dev"
+readonly packages="python3-dev python3-venv swig libatlas-base-dev scons libffi-dev portaudio19-dev python3-pyaudio sox libssl-dev"
 
 apt update -y && apt install -y ${packages}
 
@@ -35,8 +36,19 @@ popd
 
 dir=${temp}/rpi-ws821x
 git clone https://github.com/jgarff/rpi_ws281x.git ${dir}
+pushd ${dir}
+scons
 pushd ${dir}/python
 ${venv}/bin/python setup.py build install
+
+pushd "${NMCT_HOME}/src"
+python setup.py install
+
+echo "export NMCT_HOME=${NMCT_HOME}" > /etc/profile.d/nmct_box.sh
+
+for file in "${NMCT_HOME}/systemd/*"; do
+    cat ${file} | envsubst > "/etc/systemd/system/$(basename ${file})" ;
+done
 
 deactivate
 

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 #
 # Copy student html from dropbox to templates
+
+# TODO: desktop shortcut to this script
+
 if [[ -z "${NMCT_HOME}" ]]; then
     readonly NMCT_HOME"/opt/nmct-box-aiy"
 fi;
