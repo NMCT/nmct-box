@@ -6,7 +6,7 @@ fi
 
 echo "This script is untested, good luck!:)"    # FIXME
 
-export NMCT_HOME="$(dirname ${PWD}/..)"
+export NMCT_HOME="$(dirname "${PWD}")"
 readonly venv="${NMCT_HOME}/env"
 readonly temp="/tmp/nmct"
 readonly packages="python3-dev python3-venv swig libatlas-base-dev scons libffi-dev portaudio19-dev python3-pyaudio sox libssl-dev"
