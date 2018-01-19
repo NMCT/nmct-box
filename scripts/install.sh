@@ -49,6 +49,8 @@ echo "export NMCT_HOME=${NMCT_HOME}" > /etc/profile.d/nmct_box.sh
 for file in "${NMCT_HOME}/systemd/*"; do
     cat ${file} | envsubst > "/etc/systemd/system/$(basename ${file})" ;
 done
+systemctl daemon-reload
+#systemctl enable
 
 deactivate
 
