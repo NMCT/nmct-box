@@ -4,9 +4,9 @@ import logging
 from urllib.parse import urlparse
 
 import aiy.audio
-from autobahn.asyncio import WebSocketClientProtocol, WebSocketClientFactory
+from autobahn.asyncio import WebSocketClientFactory, WebSocketClientProtocol
 from autobahn.websocket.util import create_url
-from watson_developer_cloud import AuthorizationV1, ConversationV1, TextToSpeechV1, LanguageTranslatorV2, SpeechToTextV1
+from watson_developer_cloud import AuthorizationV1, ConversationV1, LanguageTranslatorV2, SpeechToTextV1, TextToSpeechV1
 
 log = logging.getLogger("Watson")
 
@@ -162,7 +162,11 @@ class WatsonConversation(object):
         #         self.on_intent(intent["intent"], intent["confidence"])
         if "context" in response:
             self.context = response["context"]
-        return [i["intent"] for i in response.get("intents")], response.get("entities"), response.get("output")
+        return (
+            [i["intent"] for i in response.get("intents")],
+            response.get("entities"),
+            response.get("output")
+        )
 
     def finish(self):
         self.context = {}

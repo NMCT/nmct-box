@@ -4,7 +4,7 @@ from bokeh.plotting import figure
 
 from nmct.hardware import get_accelerometer
 
-p = figure(x_range=(-180, 180), y_range=(-180, 180))
+p = figure(x_range=(-20, 20), y_range=(-20, 20))
 p.circle(x=0, y=0, radius=1, fill_color=None, line_width=2)
 
 # this is the data source we will stream to
@@ -15,8 +15,8 @@ am = get_accelerometer()
 
 
 def update():
-    acc = am.measure()
-    source.stream(dict(x=[acc.x], y=[acc.y]), rollover=8)
+    acc = am.tilt()
+    source.stream(dict(x=[acc.roll], y=[acc.pitch]), rollover=8)
 
 
 curdoc().add_periodic_callback(update, 150)

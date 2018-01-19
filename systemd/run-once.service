@@ -1,0 +1,10 @@
+[Unit]
+Description=Run script from boot partition if present
+ConditionPathExistsGlob=/boot/atboot.sh
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/env bash /boot/atboot.sh && rm -f /boot/atboot.sh; [[ -f /boot/nextboot.sh ]] && mv /boot/nextboot.sh /boot/atboot.sh
+
+[Install]
+WantedBy=multi-user.target

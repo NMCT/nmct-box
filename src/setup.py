@@ -29,6 +29,7 @@ setup(
     scripts=[
         "examples/watson_conversation.py",
         "examples/watson_translate.py",
+        "examples/watson_demo.py",
         "examples/hotwords.py",
         "examples/sensors.py",
         "examples/pixelring.py",

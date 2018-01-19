@@ -19,7 +19,6 @@ import logging
 
 import aiy.audio
 import aiy.voicehat
-
 import nmct.hardware
 import nmct.snowboy
 import nmct.watson
@@ -55,8 +54,12 @@ def conversation_demo():
             print(intents, entities)
             if "text" in output:
                 print(output["text"])
-                # aiy.audio.say(output["text"][0])
-                nmct.watson.say(output["text"][0])
+                # For some reason, sometimes Watson returns an empty text as first element
+                for text in output["text"]:
+                    if len(text) > 0:
+                        # aiy.audio.say(text)
+                        nmct.watson.say(text)
+                        break
             if "action" in output:
                 perform_action(output["action"])
             if "goodbyes" in intents:

@@ -22,7 +22,6 @@ import time
 
 import aiy.audio
 import aiy.voicehat
-
 import nmct.hardware
 import nmct.snowboy
 import nmct.watson
@@ -168,12 +167,16 @@ def teammeeting_demo():
                 print(intents, entities, output)
                 if "text" in output:
                     print(output["text"])
-                    kate.say(output["text"][0])
+                    # For some reason, sometimes Watson returns an empty text as first element
+                    for text in output["text"]:
+                        if len(text) > 0:
+                            # aiy.audio.say(text)
+                            kate.say(text)
+                            break
                 if "action" in output:
                     perform_action(output["action"])
                 if "goodbyes" in intents:
                     print('finish')
-
                     conversation.finish()
                 else:
                     led.set_state(aiy.voicehat.LED.ON)
