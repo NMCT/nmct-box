@@ -11,7 +11,8 @@ setup(
     description='',
     install_requires=[
         'aiy', 'RPi.GPIO', 'snowboy', 'watson-developer-cloud', 'autobahn', 'Flask', 'smbus-cffi',
-        'rpi-ws281x', 'spidev', 'matplotlib', 'uwsgi'
+        'rpi-ws281x', 'spidev', 'matplotlib', 'uwsgi', 'jupyter', 'jupyterthemes', 'jupyterhub', 'bokeh',
+        'pandas', 'widgetsnbextension'
     ],
     data_files=[
         "../resources/snowboy/common.res"

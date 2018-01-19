@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 if [[ -z "${NMCT_HOME}" ]]; then
-    readonly NMCT_HOME"/opt/nmct-box-aiy"
+    readonly NMCT_HOME="/opt/nmct-box"
 fi;
 
 source "${NMCT_HOME}/env/bin/activate"

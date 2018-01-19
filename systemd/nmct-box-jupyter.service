@@ -1,0 +1,13 @@
+[Unit]
+Description=Jupyter notebook for NMCT box
+After=network.target
+
+[Service]
+User=pi
+Group=www-data
+WorkingDirectory=${NMCT_HOME}/src/web
+Environment="PATH=${NMCT_HOME}/env/bin"
+ExecStart=${NMCT_HOME}/env/bin/jupyter notebook  --no-browser --port=2002 --NotebookApp.base_url="/notebook" --NotebookApp.allow_origin=* --NotebookApp.password="sha1:a33f88a5e165:83161a897645e01e7327c9fec69d48b20d70c5f6"
+
+[Install]
+WantedBy=multi-user.target
