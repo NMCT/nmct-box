@@ -1,8 +1,8 @@
+import math
 from collections import namedtuple
 from time import sleep
 
 import smbus
-import math
 
 # adxl address 0x53
 # select the correct i2c bus for this revision of Raspberry Pi
@@ -80,9 +80,9 @@ class ADXL345:
         return Acceleration(x, y, z)
 
     def tilt(self):
-        x, y, z = self.measure()
-        roll = math.atan2(y, math.sqrt(x * x + z * z)) * 180 / math.pi
-        pitch = math.atan2(x, math.sqrt(y * y + z * z)) * 180 / math.pi
+        g = self.measure()
+        roll = math.atan2(g.y, math.sqrt(g.x ** 2 + g.z ** 2)) * 180 / math.pi
+        pitch = math.atan2(g.x, math.sqrt(g.y ** 2 + g.z ** 2)) * 180 / math.pi
         return Tilt(roll, pitch)
 
 

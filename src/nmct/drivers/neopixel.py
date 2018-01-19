@@ -1,12 +1,14 @@
 # Adafruit NeoPixel library port to the rpi_ws281x library.
 # Author: Tony DiCola (tony@tonydicola.com), Jeremy Garff (jer@jers.net)
-import _rpi_ws281x as ws
 import atexit
 # https://raspberrytips.nl/neopixel-ws2811-raspberry-pi/
 import functools
 import queue
 import threading
 import time
+from traceback import print_exception
+
+import _rpi_ws281x as ws
 from matplotlib import colors
 
 
@@ -257,7 +259,7 @@ class PixelStrip(object):
 
 
 class PixelRing(PixelStrip):
-    def clear(self):
+    def clear(self, *args, **kwargs):
         for led in self:
             self.set_pixel_color(led, OFF)
             self.show()
@@ -265,23 +267,24 @@ class PixelRing(PixelStrip):
     def sleep(self, sec):
         time.sleep(sec)
 
-    def loop(self, color: Color, speed=20):
+    def loop(self, color: Color, *, speed=20, iterations=3):
         """Loop a single LED around the ring"""
-        for led in self:
-            self.set_pixel_color(led, color)
-            self.show()
-            time.sleep(1 / speed)
-            self.set_pixel_color(led, OFF)
-            self.show()
+        for i in range(iterations):
+            for led in self:
+                self.set_pixel_color(led, color)
+                self.show()
+                time.sleep(1 / speed)
+                self.set_pixel_color(led, OFF)
+                self.show()
 
-    def fill(self, color: Color, speed=20):
+    def fill(self, color: Color, *args, speed=20):
         """Light all LEDs one by one"""
         for led in self:
             self.set_pixel_color(led, color)
             self.show()
             time.sleep(1 / speed)
 
-    def unfill(self, color: Color, speed=20):
+    def unfill(self, color: Color, *args, speed=20):
         """Loop a single LED around the ring"""
         for led in self:
             self.set_pixel_color(led, color)
@@ -291,7 +294,7 @@ class PixelRing(PixelStrip):
             self.show()
             time.sleep(1 / speed)
 
-    def theater_chase(self, color, speed=20, iterations=10):
+    def theater_chase(self, color, *args, speed=20, iterations=10):
         """Movie theater light style chaser animation."""
         for j in range(iterations):
             for q in range(3):
@@ -302,7 +305,7 @@ class PixelRing(PixelStrip):
                 for i in range(0, len(self), 3):
                     self.set_pixel_color(i + q, OFF)
         self.clear()
-        
+
     @staticmethod
     def _generate_rainbow(pos):
         """Generate rainbow colors across 0-255 positions."""
@@ -315,14 +318,14 @@ class PixelRing(PixelStrip):
             pos -= 170
             return Color(0, pos * 3, 255 - pos * 3)
 
-    def rainbow(self, speed=20):
+    def rainbow(self, *args, speed=20):
         """Draw rainbow that uniformly distributes itself across all pixels."""
         for led in self:
             self.set_pixel_color(led, self._generate_rainbow((int(led * 256 / len(self))) & 255))
             self.show()
             time.sleep(1 / speed)
 
-    def rainbow_chase(self, speed=20):
+    def rainbow_chase(self, *args, speed=20):
         """Rainbow movie theater light style chaser animation."""
         for j in range(256):
             for q in range(3):
@@ -336,17 +339,22 @@ class PixelRing(PixelStrip):
 
 class NeoPixelThread(threading.Thread):
     def __init__(self):
-        super().__init__(daemon=False, name="NeoPixelThread")
+        super().__init__(daemon=True, name="NeoPixelThread")
         self._queue = queue.Queue()
         self._ring = PixelRing(24, 12)
         self._ring.begin()
 
     def run(self):
         while True:
-            effect = self._queue.get()
-            effect()
+            try:
+                effect = self._queue.get()
+                if effect is None:
+                    break
+                effect()
+            except Exception as ex:
+                print_exception(ex, ex, ex.__traceback__)
 
-    def queue_effect(self, effect,colorRing, *args, **kwargs):
+    def queue_effect(self, effect, *args, **kwargs):
         if args is None:
             args = []
 

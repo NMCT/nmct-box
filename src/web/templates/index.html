@@ -87,23 +87,23 @@
                                     <label>{{ show_method }}</label>
                                 </div>
                                 <!-- TODO: add color picker/dropdown/... -->
-                                <button type="submit" class="btn btn-default" name="show_method" value="loop">loop
+                                <button type="submit" class="btn btn-default" name="effect" value="loop">loop
                                     led
                                 </button>
-                                <button type="submit" class="btn btn-default" name="show_method" value="fill">fill
+                                <button type="submit" class="btn btn-default" name="effect" value="fill">fill
                                     led
                                 </button>
-                                <button type="submit" class="btn btn-default" name="show_method" value="theater_chase">
+                                <button type="submit" class="btn btn-default" name="effect" value="theater_chase">
                                     theater
                                     chase
                                 </button>
-                                <button type="submit" class="btn btn-default" name="show_method" value="rainbow">
+                                <button type="submit" class="btn btn-default" name="effect" value="rainbow">
                                     rainbow cycle
                                 </button>
-                                <button type="submit" class="btn btn-default" name="show_method" value="rainbow_chase">
+                                <button type="submit" class="btn btn-default" name="effect" value="rainbow_chase">
                                     theater chase rainbow
                                 </button>
-                                <button type="submit" class="btn btn-default" name="show_method" value="clear">
+                                <button type="submit" class="btn btn-default" name="effect" value="clear">
                                     clear
                                 </button>
 
@@ -130,7 +130,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-6">
-                            <form role="form" action="{{ url_for('get_axes') }}" method="post">
+                            <form role="form" action="{{ url_for('sensors') }}" method="get">
                                 <div class="form-group">
                                     <label>Sensorwaarde</label>
                                     <input class="form-control" name="Sensor" placeholder="{{ show_text }}">

@@ -1,11 +1,12 @@
-import flask
+from random import randint
 from traceback import print_exception
 
+import flask
 import nmct
-
-from src.nmct import Color
+from nmct import Color
 
 app = flask.Flask(__name__)
+ring = nmct.hardware.get_pixel_ring()
 
 
 @app.route('/')
@@ -30,31 +31,29 @@ def write_lcd():
 
 @app.route('/show_ring', methods=['GET'])
 def show_ring():
-    # show_method = flask.request.form['show_method']
-    show_method = flask.request.args.get('show_method')
-    if show_method is None:
-        return "Gelieve een show_method mee te geven: /show_nmct_pixel?show_method=loop&color=(255,0,0)"
+    # effect = flask.request.form['effect']
+    effect = flask.request.args.get('effect')
+    if effect is None:
+        return "Gelieve een effect mee te geven: /show_nmct_pixel?effect=loop&color=(255,0,0)"
 
     color = flask.request.args.get('color')
 
     if color is None:
-        color = Color(255, 0, 0)
+        color = Color(*[randint(0, 255) for x in range(3)])
     else:
-        color = tuple([int(x) for x in color[1:-1].split(",")])
-    # PixelThread.call_method(show_method)
+        color = Color(*[int(x) for x in color[1:-1].split(",")])
     try:
-        ring = nmct.hardware.get_pixel_ring()
-        ring.queue_effect(show_method, color)
+        ring.queue_effect(effect, color)
     except Exception as ex:
         # print("Exception")
         print_exception(ex, ex, ex.__traceback__)
-    return flask.render_template("index.html", show_method=show_method)
+    return flask.render_template("index.html", show_method=effect)
 
 
-@app.route('/get_axes', methods=['POST'])
-def get_axes():
+@app.route('/sensors', methods=['GET'])
+def sensors():
     # axe = request.form['show_method']
-    sensor = flask.request.form['sensor']
+    sensor = flask.request.args.get('sensor')
     show_text = ""
     try:
 
@@ -70,13 +69,16 @@ def get_axes():
             tilt = accelero.tilt()
             print(tilt.roll)
             print(tilt.pitch)
-            show_text = "roll: {0:5.2f}°  pitch : {1:5.2f}°".format(tilt.roll, tilt.pitch)
+            show_text = "roll: {0:5.2f}\N{DEGREE SIGN} pitch : {1:5.2f}\N{DEGREE SIGN}".format(tilt.roll, tilt.pitch)
+
+        if sensor == "temperature":
+            temp = nmct.hardware.measure_temperature()
+            show_text = "Temperature: {}\N{DEGREE SIGN}".format(temp)
 
         print(accelero.tilt())
 
     except Exception as ex:
-        print("Exception")
-        print(ex)
+        print_exception(ex, ex, ex.__traceback__)
     return flask.render_template("index.html", show_method='gravity', show_text=show_text)
 
 
