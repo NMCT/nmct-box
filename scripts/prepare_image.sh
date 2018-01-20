@@ -68,12 +68,13 @@ do_finish(){
 
 #########################################################
 
-#update_raspbian
-#create_user
-#do_system_settings
+update_raspbian
+create_user
+do_system_settings
 
 su - nmct<<EOF
 git clone https://github.com/nmctseb/nmct-box.git "${NMCT_HOME}"
 source "${NMCT_HOME}/scripts/install.sh"
-do_finish
 EOF
+
+do_finish

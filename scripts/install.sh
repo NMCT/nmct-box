@@ -19,7 +19,7 @@ readonly PYENV="${NMCT_HOME}/env/bin/python"
 
 # dependencies
 readonly APT_PACKAGES="python3-dev python3-venv swig libatlas-base-dev scons libffi-dev portaudio19-dev \
-            python3-pyaudio sox libssl-dev nginx python3-notebook npm"
+            python3-pyaudio sox libssl-dev nginx python3-notebook npm node-gyp"
 readonly NPM_PACKAGES="configurable-http-proxy"
 readonly PIP_PACKAGES="setuptools wheel distutils"
 
