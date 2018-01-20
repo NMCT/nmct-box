@@ -19,7 +19,7 @@ import logging
 
 import aiy.audio
 import aiy.voicehat
-import nmct.hardware
+import nmct.box
 import nmct.snowboy
 import nmct.watson
 

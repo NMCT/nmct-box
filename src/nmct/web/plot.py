@@ -2,7 +2,7 @@ from bokeh.io import curdoc
 from bokeh.models import ColumnDataSource
 from bokeh.plotting import figure
 
-from nmct.hardware import get_accelerometer
+from nmct.box import get_accelerometer
 
 p = figure(x_range=(-180, 180), y_range=(-180, 180))
 p.circle(x=0, y=0, radius=1, fill_color=None, line_width=2)

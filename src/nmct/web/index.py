@@ -5,8 +5,8 @@ import flask
 import nmct
 
 app = flask.Flask(__name__)
-ring = nmct.hardware.get_pixel_ring()
-display = nmct.hardware.get_display()
+ring = nmct.box.get_pixel_ring()
+display = nmct.box.get_display()
 
 
 @app.route('/')
@@ -56,7 +56,7 @@ def sensors():
     show_text = ""
     try:
 
-        accelero = nmct.hardware.get_accelerometer()
+        accelero = nmct.box.get_accelerometer()
 
         if sensor == "gravity":
             # x = accelero.get_X_axe()
@@ -71,7 +71,7 @@ def sensors():
             show_text = "roll: {0:5.2f}\N{DEGREE SIGN} pitch : {1:5.2f}\N{DEGREE SIGN}".format(tilt.roll, tilt.pitch)
 
         if sensor == "temperature":
-            temp = nmct.hardware.measure_temperature()
+            temp = nmct.box.measure_temperature()
             show_text = "Temperature: {}\N{DEGREE SIGN}".format(temp)
 
         print(accelero.tilt())

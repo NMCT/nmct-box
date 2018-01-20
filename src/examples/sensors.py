@@ -26,7 +26,7 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 
 def sensor_demo():
-    print(nmct.box.measure_acceleration())
+    print(dict(nmct.box.measure_acceleration()))
 
 
 if __name__ == '__main__':

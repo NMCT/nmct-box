@@ -18,7 +18,7 @@
 import logging
 import time
 
-import nmct.hardware
+import nmct.box
 from nmct.drivers.neopixel import COLORS
 
 logging.basicConfig()
@@ -26,7 +26,7 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 
 def pixelring_demo():
-    ring = nmct.hardware.get_pixel_ring()
+    ring = nmct.box.get_pixel_ring()
     # ring.queue_effect("rainbow")
     # ring.queue_effect("clear")
     # time.sleep(1)

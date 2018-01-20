@@ -23,7 +23,7 @@ import time
 import aiy.audio
 import aiy.voicehat
 
-import nmct.hardware
+import nmct.box
 import nmct.snowboy
 import nmct.watson
 from nmct.drivers.neopixel import COLORS
@@ -32,7 +32,7 @@ logging.basicConfig()
 logging.getLogger().setLevel(logging.DEBUG)
 
 
-def teammeeting_demo():
+def nmct_box_demo():
     button = aiy.voicehat.get_button()
     led = aiy.voicehat.get_led()
 
@@ -195,4 +195,4 @@ def teammeeting_demo():
 
 
 if __name__ == '__main__':
-    teammeeting_demo()
+    nmct_box_demo()

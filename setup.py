@@ -16,7 +16,7 @@ setup(
     install_requires=[
         'aiy', 'RPi.GPIO', 'snowboy', 'watson-developer-cloud', 'autobahn', 'flask', 'smbus-cffi',
         'rpi-ws281x', 'spidev', 'matplotlib', 'uwsgi', 'jupyter', 'jupyterthemes', 'jupyterhub', 'bokeh',
-        'pandas', 'widgetsnbextension'
+        'pandas', 'widgetsnbextension', 'netifaces'
     ],
     data_files=[
         #     ('share/doc/aiy', ['README.md']),
