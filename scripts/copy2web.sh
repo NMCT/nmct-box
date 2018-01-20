@@ -4,10 +4,9 @@
 
 # TODO: desktop shortcut to this script
 
-if [[ -z "${NMCT_HOME}" ]]; then
-    readonly NMCT_HOME"/opt/nmct-box-aiy"
-fi;
-readonly DROPBOX_UPLOADER="/home/pi/Dropbox-Uploader/dropbox_uploader.sh"
+[[ -z ${NMCT_HOME} ]] &&
+readonly DROPBOX_UPLOADER="${NMCT_HOME}/scripts/dropbox_uploader.sh" ||
+readonly DROPBOX_UPLOADER="${BASH_SOURCE}dropbox_uploader.sh"
 
 rm -f /home/pi/nmct_box/templates/student*.html
 for file in student{1..25}.html; do

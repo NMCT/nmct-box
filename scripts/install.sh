@@ -97,6 +97,7 @@ install_nmct_box(){
     pushd "${NMCT_HOME}/src"
     ${PYENV} -m pip install -r requirements.txt
     ${PYENV} setup.py install
+    echo "${NMCT_HOME}/src" > "${NMCT_HOME}/env/lib/python3.5/site-packages/nmct-box.pth"
     popd
 }
 
@@ -123,6 +124,11 @@ install_services(){
     #systemctl restart nginx
 }
 
+install_shortcuts(){
+    for file in ${NMCT_HOME}/shortcuts/*; do
+        cp ${file} ~/Desktop/
+    done
+}
 
 #
 # Command line options
@@ -132,6 +138,7 @@ for i in $*; do
     --nmct-only)
         install_nmct_box
         install_services
+        install_shortcuts
         exit $?
         ;;
     esac
@@ -145,5 +152,6 @@ install_snowboy
 install_neopixel
 install_nmct_box
 install_services
+install_shortcuts
 
 printf "Done. If you just installed the AIY drivers for the first time, reboot and run '%s/aiy-voicekit/checkpoints/check_audio.py'\n" ${NMCT_HOME}

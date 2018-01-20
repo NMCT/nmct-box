@@ -1,8 +1,6 @@
-import queue
-import threading
-from snowboy import snowboydetect
-
 import os
+import queue
+from snowboy import snowboydetect
 
 import aiy.audio
 
@@ -47,9 +45,12 @@ class SnowboyDetector:
         self._detector.SetSensitivity(sensitivity_str.encode())
         self._detector.SetAudioGain(self._gain)
 
-    def add_hotword(self, hotword):
-
-        self._hotwords.append(HotWord(os.path.join(RESOURCE_PATH, 'snowboy', hotword), "::".join(hotword.split('.')[:-1])))
+    def add_hotword(self, value):
+        if isinstance(value, HotWord):
+            self._hotwords.append(value)
+        else:
+            self._hotwords.append(HotWord(os.path.join(RESOURCE_PATH, 'snowboy', value),
+                                          "::".join(value.split('.')[:-1])))
         self.setup()
         return self
 
@@ -69,5 +70,6 @@ class SnowboyDetector:
             audio = self.buffer.get()
             result = self._detector.RunDetection(audio)
             if result > 0:
+                recorder.remove_processor(self)
                 hotword = self._hotwords[result - 1]
                 return hotword

@@ -15,12 +15,14 @@
 
 """A demo of Snowboy hotword detection."""
 
+import atexit
 import logging
 import time
 
 import aiy.audio
 import aiy.voicehat
 
+import nmct.box
 import nmct.hardware
 import nmct.snowboy
 import nmct.watson
@@ -33,18 +35,19 @@ def hotword_demo():
     led = aiy.voicehat.get_led()
 
     detector = nmct.snowboy.get_detector()
-    detector.add_hotword("NMCT.seb.pmdl")
-    detector.add_hotword("NMCT.chris.pmdl")
-    detector.add_hotword("NMCT.chrisv2.pmdl")
-    detector.add_hotword("NMCT.dieter.pmdl")
+
+    for hotword in nmct.snowboy.builtin_hotwords():
+        detector.add_hotword(hotword)
 
     aiy.audio.get_recorder().start()
+    atexit.register(aiy.audio.get_recorder().stop)
 
     while True:
         print('Waiting for hotword...')
         word = detector.wait_for_hotword()
         led.set_state(led.DECAY)
         print('Detected: {}...'.format(word.name))
+        nmct.box.play_sound('dong')
         time.sleep(1)
         led.set_state(led.OFF)
 
