@@ -77,7 +77,7 @@ install_snowboy(){
 
 install_neopixel(){
     # pull & install NeoPixel driver
-    dir="$(dirname "${NMCT_HOME}")/rpi-ws821x"
+    dir="$(dirname "${NMCT_HOME}")/neopixel"
     if [[ ! -d "${dir}" ]]; then
         git clone https://github.com/jgarff/rpi_ws281x.git ${dir}
         pushd "${dir}"

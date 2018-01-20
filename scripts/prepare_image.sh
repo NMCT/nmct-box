@@ -52,6 +52,13 @@ do_system_settings(){
     echo "alias ll='ls -al'" >> /etc/profile.d/nmct_box.sh
 }
 
+install_framework(){
+    su - nmct<<EOF
+git clone https://github.com/nmctseb/nmct-box.git "${NMCT_HOME}"
+chmod +x "${NMCT_HOME}"/scripts/*.sh
+source "${NMCT_HOME}"/scripts/install.sh
+EOF
+}
 
 do_finish(){
     echo -e "\n\Done! User 'pi' will be disabled, after rebooting you can connect with: \n
@@ -71,11 +78,5 @@ do_finish(){
 update_raspbian
 create_user
 do_system_settings
-
-su - nmct<<EOF
-git clone https://github.com/nmctseb/nmct-box.git "${NMCT_HOME}"
-chmod +x "${NMCT_HOME}"/scripts/*.sh
-source "${NMCT_HOME}"/scripts/install.sh
-EOF
-
+install_framework
 do_finish
