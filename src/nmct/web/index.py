@@ -6,6 +6,7 @@ import nmct
 
 app = flask.Flask(__name__)
 ring = nmct.hardware.get_pixel_ring()
+display = nmct.hardware.get_display()
 
 
 @app.route('/')
@@ -22,8 +23,6 @@ def show_dashboard():
 def write_lcd():
     text = flask.request.form['lcdMessage']
     text = text.rstrip("")
-    # sda en scl pin meegeven
-    display = nmct.hardware.get_display()
     display.write(text)
     return flask.render_template("index.html", lcdMessage=text)
 
