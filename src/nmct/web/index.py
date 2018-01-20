@@ -3,7 +3,6 @@ from traceback import print_exception
 
 import flask
 import nmct
-from nmct import Color
 
 app = flask.Flask(__name__)
 ring = nmct.hardware.get_pixel_ring()
@@ -36,6 +35,7 @@ def show_ring():
     if effect is None:
         return "Gelieve een effect mee te geven: /show_nmct_pixel?effect=loop&color=(255,0,0)"
 
+    from nmct import Color
     color = flask.request.args.get('color')
 
     if color is None:
