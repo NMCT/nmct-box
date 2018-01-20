@@ -20,7 +20,7 @@ readonly PYENV="${NMCT_HOME}/env/bin/python"
 # dependencies
 readonly APT_PACKAGES="python3-dev python3-venv swig libatlas-base-dev scons libffi-dev portaudio19-dev python3-pyaudio sox libssl-dev nginx python3-notebook"
 readonly NPM_PACKAGES="configurable-http-proxy"
-readonly PIP_PACKAGES="setuptools wheel distutils"
+readonly PIP_PACKAGES="setuptools wheel"
 
 
 install_apt_packages(){
@@ -40,10 +40,11 @@ create_venv(){
 
 install_aiy_voicekit(){
     # pull & install AIY drivers
-    dir="${NMCT_HOME}/aiy-voicekit"
+    dir="$(dirname "${NMCT_HOME}")/aiy-voicekit"
     git clone https://github.com/google/aiyprojects-raspbian.git "${dir}"
     pushd "${dir}"
     git checkout aiyprojects
+
     ./scripts/install-deps.sh
     sudo ./scripts/install-services.sh
     sudo ./scripts/configure-driver.sh
@@ -56,7 +57,7 @@ install_aiy_voicekit(){
 
 install_snowboy(){
     # pull & install Snowboy
-    dir=${NMCT_HOME}/snowboy
+    dir="$(dirname "${NMCT_HOME}")/snowboy"
     git clone https://github.com/Kitt-AI/snowboy.git ${dir}
     pushd ${dir}
     ${PYENV} setup.py build install
@@ -65,7 +66,7 @@ install_snowboy(){
 
 install_neopixel(){
     # pull & install NeoPixel driver
-    dir=${NMCT_HOME}/rpi-ws821x
+    dir="$(dirname "${NMCT_HOME}")/rpi-ws821x"
     git clone https://github.com/jgarff/rpi_ws281x.git ${dir}
     sed -i 's/^\(\#define GPIO_PIN\W*\)18$/\112/g' "${dir}/main.c"
     pushd ${dir} && scons && popd
