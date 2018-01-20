@@ -26,8 +26,7 @@ create_user(){
     groups=$(id pi -Gn | sed 's/^pi //g' | sed 's/ /,/g')
     useradd ${new_user} -s /bin/bash -m -G ${groups}
     echo "${new_user}:${new_pass}" | chpasswd
-    tee "/etc/sudoers.d/011_${new_user}-nopasswd" < sed "s/^pi/${new_user}/" /etc/sudoers.d/010_pi-nopasswd
-    chage -E 0 pi
+    sed "s/^pi/${new_user}/" /etc/sudoers.d/010_pi-nopasswd > "/etc/sudoers.d/011_${new_user}-nopasswd"
 }
 
 do_system_settings(){
@@ -39,7 +38,7 @@ do_system_settings(){
     ${cmd} do_wifi_country 'BE'
     ${cmd} do_change_timezone 'Europe/Brussels'
     ${cmd} do_configure_keyboard 'be'
-    su - ${new_user} ${cmd} do_boot_behaviour B1 #B1=console, B3=Desktop, n+1=autologon
+    ${cmd} do_boot_behaviour B1 #B1=console, B3=Desktop, n+1=autologon
     ${cmd} do_boot_wait 1
     ${cmd} do_boot_splash 1
 
@@ -61,6 +60,7 @@ do_finish(){
         password:\t\t\033[32m${new_pass}\033[0m
         \nPress any key to reboot...\n"
     read -sn 1
+    chage -E 0 pi
     rm -f "${BASH_SOURCE}"
     reboot
 }
@@ -68,11 +68,12 @@ do_finish(){
 
 #########################################################
 
-update_raspbian
-do_system_settings
-create_user
+#update_raspbian
+#create_user
+#do_system_settings
 
-su - nmct
+su - nmct<<EOF
 git clone https://github.com/nmctseb/nmct-box.git "${NMCT_HOME}"
 source "${NMCT_HOME}/scripts/install.sh"
 do_finish
+EOF

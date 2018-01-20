@@ -15,11 +15,11 @@ error_log  /tmp/nmct-nginx-error.log;
 	}
 	upstream jupyterhub {
 
-		server localhost:2004;
+		server localhost:2003;
 	}
 	upstream bokeh {
 
-		server localhost:2003;
+		server localhost:2004;
 	}
 	server {
 
