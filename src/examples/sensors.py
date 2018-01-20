@@ -17,7 +17,7 @@
 
 import logging
 
-import nmct.hardware
+import nmct.box
 import nmct.snowboy
 import nmct.watson
 
@@ -26,7 +26,7 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 
 def sensor_demo():
-    print(nmct.hardware.measure_acceleration())
+    print(nmct.box.measure_acceleration())
 
 
 if __name__ == '__main__':

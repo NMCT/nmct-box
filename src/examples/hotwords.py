@@ -33,10 +33,9 @@ def hotword_demo():
     led = aiy.voicehat.get_led()
 
     detector = nmct.snowboy.get_detector()
-    detector.add_hotword("NMCT.seb.pmdl")
-    detector.add_hotword("NMCT.chris.pmdl")
-    detector.add_hotword("NMCT.chrisv2.pmdl")
-    detector.add_hotword("NMCT.dieter.pmdl")
+
+    for hotword in nmct.snowboy.builtin_hotwords():
+        detector.add_hotword(hotword)
 
     aiy.audio.get_recorder().start()
 
