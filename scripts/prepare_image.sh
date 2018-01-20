@@ -69,6 +69,7 @@ do_finish(){
         \nPress any key to reboot...\n"
     read -sn 1
     chage -E 0 pi
+    usermod -L pi
     rm -f "${BASH_SOURCE}"
     reboot
 }
