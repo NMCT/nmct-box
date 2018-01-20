@@ -30,7 +30,7 @@ install_apt_packages(){
 
 install_npm_packages(){
     sudo apt install -y npm
-    npm install -g ${NPM_PACKAGES}
+    sudo npm install -g ${NPM_PACKAGES}
 }
 
 create_venv(){
