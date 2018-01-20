@@ -44,7 +44,7 @@ install_aiy_voicekit(){
     git clone https://github.com/google/aiyprojects-raspbian.git "${dir}"
     pushd "${dir}"
     git checkout aiyprojects
-
+    sed -i 's#/home/pi/AIY-projects-python/##' ./scripts/install-deps.sh
     ./scripts/install-deps.sh
     sudo ./scripts/install-services.sh
     sudo ./scripts/configure-driver.sh
