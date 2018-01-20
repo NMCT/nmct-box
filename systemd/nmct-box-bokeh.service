@@ -7,7 +7,7 @@ User=nmct
 Group=www-data
 WorkingDirectory=${NMCT_HOME}/src/web
 Environment="PATH=${NMCT_HOME}/env/bin"
-ExecStart="${NMCT_HOME}/env/bin/bokeh" serve "${NMCT_HOME}/src/web/plot.py" --prefix=/plot/ --port=2004 --allow-websocket-origin=*
+ExecStart="${NMCT_HOME}/env/bin/bokeh" serve "${NMCT_HOME}/src/nmct/web/plot.py" --prefix=/plot/ --port=2004 --allow-websocket-origin=*
 
 [Install]
 WantedBy=multi-user.target

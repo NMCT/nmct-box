@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='NMCT-Box',
     version='0.3.21',
-    packages=['nmct', 'nmct.drivers', 'nmct.apis'],
+    packages=['nmct', 'nmct.drivers', 'nmct.apis', 'nmct.web'],
     url='http://www.nmct.be',
     license='',
     author='Howest NMCT',

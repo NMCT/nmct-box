@@ -1,4 +1,4 @@
-from index import app
+from nmct.web import app
 from nmct.hardware import get_pixel_ring
 
 if __name__ == "__main__":
