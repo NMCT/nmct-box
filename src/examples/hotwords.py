@@ -15,12 +15,14 @@
 
 """A demo of Snowboy hotword detection."""
 
+import atexit
 import logging
 import time
 
 import aiy.audio
 import aiy.voicehat
 
+import nmct.box
 import nmct.hardware
 import nmct.snowboy
 import nmct.watson
@@ -38,12 +40,14 @@ def hotword_demo():
         detector.add_hotword(hotword)
 
     aiy.audio.get_recorder().start()
+    atexit.register(aiy.audio.get_recorder().stop)
 
     while True:
         print('Waiting for hotword...')
         word = detector.wait_for_hotword()
         led.set_state(led.DECAY)
         print('Detected: {}...'.format(word.name))
+        nmct.box.play_sound('dong')
         time.sleep(1)
         led.set_state(led.OFF)
 

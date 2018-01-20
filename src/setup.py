@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='NMCT-Box',
-    version='0.3.17',
+    version='0.3.21',
     packages=['nmct', 'nmct.drivers', 'nmct.apis'],
     url='http://www.nmct.be',
     license='',
@@ -29,11 +29,9 @@ setup(
     scripts=[
         "examples/watson_conversation.py",
         "examples/watson_translate.py",
-        "examples/watson_demo.py",
+        "examples/nmct_box_demo.py",
         "examples/hotwords.py",
         "examples/sensors.py",
         "examples/pixelring.py",
-
     ]
-
 )

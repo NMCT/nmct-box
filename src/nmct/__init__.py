@@ -1,5 +1,5 @@
-from . import hardware as box
-from .apis import watson, snowboy
+from . import box, hardware, settings, snowboy, watson
+from .apis.snowboy import HotWord
 from .drivers.neopixel import Color
 
-__ALL__ = ['watson', 'snowboy', 'box']
+__ALL__ = ['box', 'watson', 'snowboy', 'hardware', 'Color', 'HotWord']
