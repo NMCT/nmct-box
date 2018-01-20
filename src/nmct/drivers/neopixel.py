@@ -9,6 +9,7 @@ import time
 from traceback import print_exception
 
 import _rpi_ws281x as ws
+import os
 from matplotlib import colors
 
 
@@ -341,8 +342,10 @@ class NeoPixelThread(threading.Thread):
     def __init__(self):
         super().__init__(daemon=True, name="NeoPixelThread")
         self._queue = queue.Queue()
-        self._ring = PixelRing(24, 12)
-        self._ring.begin()
+        self._ring = None
+        if os.geteuid() == 0:
+            self._ring = PixelRing(24, 12)
+            self._ring.begin()
 
     def run(self):
         while True:
@@ -357,8 +360,8 @@ class NeoPixelThread(threading.Thread):
     def queue_effect(self, effect, *args, **kwargs):
         if args is None:
             args = []
-
-        self._queue.put(functools.partial(getattr(self._ring, effect), *args, **kwargs))
+        if os.geteuid() == 0:
+            self._queue.put(functools.partial(getattr(self._ring, effect), *args, **kwargs))
 
 
 if __name__ == "__main__":
