@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User=root
 Group=www-data
-WorkingDirectory=${NMCT_HOME}/src/web
+WorkingDirectory=${NMCT_HOME}/src/nmct/web
 Environment="PATH=${NMCT_HOME}/env/bin"
 ExecStart="${NMCT_HOME}/env/bin/uwsgi" --ini "${NMCT_HOME}/src/nmct/web/nmct-box.ini"
 
