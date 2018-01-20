@@ -124,6 +124,18 @@ install_services(){
 }
 
 
+#
+# Command line options
+#
+for i in $*; do
+    case ${i} in
+    --nmct-only)
+        install_nmct_box
+        install_services
+        exit $?
+        ;;
+    esac
+done
 
 install_apt_packages
 install_npm_packages
