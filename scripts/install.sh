@@ -41,8 +41,13 @@ create_venv(){
 install_aiy_voicekit(){
     # pull & install AIY drivers
     dir="$(dirname "${NMCT_HOME}")/aiy-voicekit"
-    git clone https://github.com/google/aiyprojects-raspbian.git "${dir}"
-    pushd "${dir}"
+    if [[ ! -d "${dir}" ]]; then
+        git clone https://github.com/google/aiyprojects-raspbian.git "${dir}"
+        pushd "${dir}"
+    else
+        pushd "${dir}"
+        git pull
+    fi
     git checkout aiyprojects
     sed -i 's#/home/pi/AIY-projects-python/##' ./scripts/install-deps.sh
     chmod +x ./scripts/*.sh
@@ -59,8 +64,13 @@ install_aiy_voicekit(){
 install_snowboy(){
     # pull & install Snowboy
     dir="$(dirname "${NMCT_HOME}")/snowboy"
-    git clone https://github.com/Kitt-AI/snowboy.git ${dir}
-    pushd ${dir}
+    if [[ ! -d "${dir}" ]]; then
+        git clone https://github.com/Kitt-AI/snowboy.git ${dir}
+        pushd "${dir}"
+    else
+        pushd "${dir}"
+        git pull
+    fi
     ${PYENV} setup.py build install
     popd
 }
@@ -68,9 +78,15 @@ install_snowboy(){
 install_neopixel(){
     # pull & install NeoPixel driver
     dir="$(dirname "${NMCT_HOME}")/rpi-ws821x"
-    git clone https://github.com/jgarff/rpi_ws281x.git ${dir}
-    sed -i 's/^\(\#define GPIO_PIN\W*\)18$/\112/g' "${dir}/main.c"
-    pushd ${dir} && scons && popd
+    if [[ ! -d "${dir}" ]]; then
+        git clone https://github.com/jgarff/rpi_ws281x.git ${dir}
+        pushd "${dir}"
+    else
+        pushd "${dir}"
+        git pull
+    fi
+    sed -i 's/^\(\#define GPIO_PIN\W*\)18$/\112/g' main.c
+    scons && popd
     pushd ${dir}/python
     ${PYENV} setup.py build install
     popd
