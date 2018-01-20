@@ -49,12 +49,14 @@ def ipconfig():
         else:
             lcd.write_line("No Internet  :-(", 2)
         time.sleep(delay)
+
         interfaces = nmct.box.get_ipconfig()
         for iface, addresses in interfaces.items():
             lcd.write_line("{}: ".format(iface).ljust(16), 1)
             for addr in addresses:
                 lcd.write_line(addr.rjust(16), 2)
                 time.sleep(delay)
+
         lcd.write_line("hostname:".ljust(16), 1)
         lcd.write_line(nmct.box.get_hostname().rjust(16), 2)
         time.sleep(delay)
