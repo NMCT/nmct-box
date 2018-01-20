@@ -18,17 +18,18 @@ echo "Installing to ${NMCT_HOME}"
 readonly PYENV="${NMCT_HOME}/env/bin/python"
 
 # dependencies
-readonly APT_PACKAGES="python3-dev python3-venv swig libatlas-base-dev scons libffi-dev portaudio19-dev \
-            python3-pyaudio sox libssl-dev nginx python3-notebook npm node-gyp"
+readonly APT_PACKAGES="python3-dev python3-venv swig libatlas-base-dev scons libffi-dev portaudio19-dev python3-pyaudio sox libssl-dev nginx python3-notebook"
 readonly NPM_PACKAGES="configurable-http-proxy"
 readonly PIP_PACKAGES="setuptools wheel distutils"
 
 
 install_apt_packages(){
-    sudo apt update -y && sudo apt install -y ${APT_PACKAGES}
+    sudo apt update -y
+    sudo apt install -y ${APT_PACKAGES}
 }
 
 install_npm_packages(){
+    sudo apt install -y npm
     npm install -g ${NPM_PACKAGES}
 }
 
