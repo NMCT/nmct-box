@@ -85,6 +85,7 @@ class LCDisplay:
         self.__lcd_byte(0x0C, LCDisplay.LCD_CMD)  # 001100 Display On,Cursor Off, Blink Off
         self.__lcd_byte(0x01, LCDisplay.LCD_CMD)  # 000001 Clear display
         time.sleep(LCDisplay.E_DELAY)
+        self.__lcd_byte(LCDisplay.LCD_LINE_1, LCDisplay.LCD_CMD)    # Move to start
 
     def __lcd_byte(self, bits, mode):
         # Send byte to data pins
