@@ -74,6 +74,7 @@ do_system_settings
 
 su - nmct<<EOF
 git clone https://github.com/nmctseb/nmct-box.git "${NMCT_HOME}"
+chmod +x "${NMCT_HOME}/scripts/*.sh"
 source "${NMCT_HOME}/scripts/install.sh"
 EOF
 

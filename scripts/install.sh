@@ -45,6 +45,7 @@ install_aiy_voicekit(){
     pushd "${dir}"
     git checkout aiyprojects
     sed -i 's#/home/pi/AIY-projects-python/##' ./scripts/install-deps.sh
+    chmod +x ./scripts/*.sh
     ./scripts/install-deps.sh
     sudo ./scripts/install-services.sh
     sudo ./scripts/configure-driver.sh
