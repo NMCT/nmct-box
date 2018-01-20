@@ -39,7 +39,7 @@ do_system_settings(){
     ${cmd} do_wifi_country 'BE'
     ${cmd} do_change_timezone 'Europe/Brussels'
     ${cmd} do_configure_keyboard 'be'
-    su - ${cmd} do_boot_behaviour B1 #B1=console, B3=Desktop, n+1=autologon
+    su - ${new_user} ${cmd} do_boot_behaviour B1 #B1=console, B3=Desktop, n+1=autologon
     ${cmd} do_boot_wait 1
     ${cmd} do_boot_splash 1
 
