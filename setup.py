@@ -29,13 +29,13 @@ setup(
         #     ])
     ],
     # TODO: audio files, see https://docs.python.org/3.6/distutils/setupscript.html#installing-package-data
-    long_description=open('../README.md').read(),
+    long_description=open('README.md').read(),
     scripts=[
-        "examples/watson_conversation.py",
-        "examples/watson_translate.py",
-        "examples/nmct_box_demo.py",
-        "examples/hotwords.py",
-        "examples/sensors.py",
-        "examples/pixelring.py",
+        "src/examples/watson_conversation.py",
+        "src/examples/watson_translate.py",
+        "src/examples/nmct_box_demo.py",
+        "src/examples/hotwords.py",
+        "src/examples/sensors.py",
+        "src/examples/pixelring.py",
     ]
 )
