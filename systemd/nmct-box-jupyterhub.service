@@ -6,7 +6,7 @@ After=network.target
 User=nmct
 Group=www-data
 WorkingDirectory=${NMCT_HOME}/notebooks
-Environment="PATH=${NMCT_HOME}/env/bin"
+Environment="PATH=${NMCT_HOME}/env/bin:/usr/local/lib/node_modules/configurable-http-proxy/bin/"
 Environment="NMCT_HOME=${NMCT_HOME}"
 ExecStart=${NMCT_HOME}/env/bin/jupyterhub --port=2003 --base-url=/hub
 

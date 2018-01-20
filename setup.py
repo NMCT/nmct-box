@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='NMCT-Box',
-    version='0.3.21',
+    version='0.3.33',
     description='NMCT Box framework',
     package_dir={'': 'src'},
     packages=['nmct', 'nmct.drivers', 'nmct.apis', 'nmct.web'],
@@ -14,7 +14,7 @@ setup(
     maintainer='NMCT',
     maintainer_email='info@nmct.be',
     install_requires=[
-        'aiy', 'RPi.GPIO', 'snowboy', 'watson-developer-cloud', 'autobahn', 'Flask', 'smbus-cffi',
+        'aiy', 'RPi.GPIO', 'snowboy', 'watson-developer-cloud', 'autobahn', 'flask', 'smbus-cffi',
         'rpi-ws281x', 'spidev', 'matplotlib', 'uwsgi', 'jupyter', 'jupyterthemes', 'jupyterhub', 'bokeh',
         'pandas', 'widgetsnbextension'
     ],
