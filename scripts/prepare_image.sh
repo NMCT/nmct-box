@@ -41,6 +41,7 @@ do_system_settings(){
     ${cmd} do_boot_behaviour B1 #B1=console, B3=Desktop, n+1=autologon
     ${cmd} do_boot_wait 1
     ${cmd} do_boot_splash 1
+    ${cmd} do_vnc 0
 
     # interfaces
     ${cmd} do_ssh 0
@@ -61,10 +62,10 @@ EOF
 }
 
 do_finish(){
-    echo -e "\n\Done! User 'pi' will be disabled, after rebooting you can connect with: \n
-        hostname: \t\t\033[32m${new_hostname}\033[0m
-        user: \t\t\033[32m${new_user}\033[0m
-        password:\t\t\033[32m${new_pass}\033[0m
+    echo -e "\n\nDone! User 'pi' will be disabled, after rebooting you can connect with: \n
+        hostname:\t\033[32m${new_hostname}\033[0m
+        username:\t\033[32m${new_user}\033[0m
+        password:\t\033[32m${new_pass}\033[0m
         \nPress any key to reboot...\n"
     read -sn 1
     chage -E 0 pi
