@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=Watson Conversation
+Comment=A demo of IBM Watson Speech-to-Text, Conversation and Text-to-Speech.
+Exec=${NMCT_HOME}/env/bin/python ${NMCT_HOME}/src/examples/watson_conversation.py
+Terminal=true

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=Watson Translate
+Comment=A demo of IBM Watson Speech-to-Text, Language Translator and Text-to-Speech.
+Exec=${NMCT_HOME}/env/bin/python ${NMCT_HOME}/src/examples/watson_translate.py
+Terminal=true

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=Snowboy Hotwords
+Comment=A demo of Sonowboy Hotword detection
+Exec=${NMCT_HOME}/env/bin/python ${NMCT_HOME}/src/examples/hotwords.py
+Terminal=true
