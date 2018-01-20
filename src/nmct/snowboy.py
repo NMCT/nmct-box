@@ -3,9 +3,8 @@ from pathlib import Path
 from snowboy import snowboydetect
 
 from nmct.apis.snowboy import HotWord, SnowboyDetector
-from nmct.settings import RESOURCE_PATH
 
-RESOURCE_FILE = os.path.join(RESOURCE_PATH, "snowboy", "common.res")
+RESOURCE_FILE = os.path.join(os.path.dirname(snowboydetect.__file__), 'resources', 'common.res')
 
 _detector = None
 
