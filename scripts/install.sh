@@ -145,12 +145,12 @@ for i in $*; do
 done
 
 install_apt_packages
-install_npm_packages
 create_venv
 install_aiy_voicekit
 install_snowboy
 install_neopixel
 install_nmct_box
+install_npm_packages
 install_services
 install_shortcuts
 

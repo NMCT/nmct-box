@@ -3,10 +3,10 @@ Description=Jupyter notebook for NMCT box
 After=network.target
 
 [Service]
-User=nmct
+User=root
 Group=www-data
 WorkingDirectory=${NMCT_HOME}/notebooks
-Environment="PATH=${NMCT_HOME}/env/bin:/usr/local/lib/node_modules/configurable-http-proxy/bin/"
+Environment="PATH=${NMCT_HOME}/env/bin:/usr/local/lib/node_modules/configurable-http-proxy/bin/:/usr/bin"
 Environment="NMCT_HOME=${NMCT_HOME}"
 ExecStart=${NMCT_HOME}/env/bin/jupyterhub --port=2003 --base-url=/hub
 
