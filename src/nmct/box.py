@@ -1,3 +1,4 @@
+import socket
 from pathlib import Path
 import os
 
@@ -61,7 +62,21 @@ def list_sounds():
     return [f.stem for f in _audio_path.glob('*.wav')]
 
 
-def get_ipaddress():
+def test_internet():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(('www.google.com', 80))
+        s.close()
+        return True
+    except OSError:
+        return False
+
+
+def get_ipconfig():
     return {iface: [i['addr'] for i in
-                    netifaces.ifaddresses().setdefault(netifaces.AF_INET, [{'addr': 'No IP addr'}])]
-            for iface in netifaces.interfaces()}
+                    netifaces.ifaddresses(iface).setdefault(netifaces.AF_INET, [{'addr': 'No IP addr'}])]
+            for iface in netifaces.interfaces() if iface != 'lo'}
+
+
+def get_hostname():
+    return socket.gethostname()

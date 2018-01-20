@@ -111,10 +111,10 @@ class LCDisplay:
 
     def clear(self):
         self.__lcd_byte(LCDisplay.LCD_LINE_1, LCDisplay.LCD_CMD)
-        for i in range(15):
+        for i in range(16):
             self.__lcd_byte(ord(" "), LCDisplay.LCD_CHR)
         self.__lcd_byte(LCDisplay.LCD_LINE_2, LCDisplay.LCD_CMD)
-        for i in range(15):
+        for i in range(16):
             self.__lcd_byte(ord(" "), LCDisplay.LCD_CHR)
         self.__lcd_byte(LCDisplay.LCD_LINE_1, LCDisplay.LCD_CMD)
 
@@ -127,8 +127,8 @@ class LCDisplay:
             if i == 31:
                 self.__lcd_byte(LCDisplay.LCD_SCROLL, LCDisplay.LCD_CMD)
 
-    def write_line(self, message, line):  # FIXME
-        self.__lcd_byte(line, LCDisplay.LCD_CMD)
+    def write_line(self, message, line):
+        self.__lcd_byte(0x80 | line-1 << 6, LCDisplay.LCD_CMD)
         for c in message:
             self.__lcd_byte(ord(c), LCDisplay.LCD_CHR)
 
