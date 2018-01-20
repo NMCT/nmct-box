@@ -94,10 +94,10 @@ install_neopixel(){
 
 install_nmct_box(){
     # install our package(s)
-    pushd "${NMCT_HOME}/src"
+    pushd "${NMCT_HOME}"
     ${PYENV} -m pip install -r requirements.txt
     ${PYENV} setup.py install
-    echo "${NMCT_HOME}/src" > "${NMCT_HOME}/env/lib/python3.5/site-packages/nmct-box.pth"
+#    echo "${NMCT_HOME}/src" > "${NMCT_HOME}/env/lib/python3.5/site-packages/nmct-box.pth"
     popd
 }
 
