@@ -5,9 +5,10 @@ After=network.target
 [Service]
 User=nmct
 Group=www-data
-WorkingDirectory=${NMCT_HOME}/Notebooks
+WorkingDirectory=${NMCT_HOME}/notebooks
 Environment="PATH=${NMCT_HOME}/env/bin"
-ExecStart=${NMCT_HOME}/env/bin/jupyterhub --ip=0.0.0.0 --port=2003 --base-url=/hub
+Environment="NMCT_HOME=${NMCT_HOME}"
+ExecStart=${NMCT_HOME}/env/bin/jupyterhub --port=2003 --base-url=/hub
 
 [Install]
 WantedBy=multi-user.target
