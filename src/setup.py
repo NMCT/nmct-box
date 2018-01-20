@@ -3,19 +3,22 @@ from setuptools import setup
 setup(
     name='NMCT-Box',
     version='0.3.21',
+    description='NMCT Box framework',
+    package_dir={'': 'src'},
     packages=['nmct', 'nmct.drivers', 'nmct.apis', 'nmct.web'],
+    package_data={'nmct.web': ['static/*', 'templates/*']},
     url='http://www.nmct.be',
     license='',
     author='Howest NMCT',
     author_email='',
-    description='',
+    maintainer='NMCT',
+    maintainer_email='info@nmct.be',
     install_requires=[
         'aiy', 'RPi.GPIO', 'snowboy', 'watson-developer-cloud', 'autobahn', 'Flask', 'smbus-cffi',
         'rpi-ws281x', 'spidev', 'matplotlib', 'uwsgi', 'jupyter', 'jupyterthemes', 'jupyterhub', 'bokeh',
         'pandas', 'widgetsnbextension'
     ],
     data_files=[
-        "../resources/snowboy/common.res"
         #     ('share/doc/aiy', ['README.md']),
         #     ('share/doc/aiy/examples', [
         #         "examples/vision/buzzer/congratulations.track",
@@ -25,6 +28,7 @@ setup(
         #         "examples/vision/buzzer/tetris.track",
         #     ])
     ],
+    # TODO: audio files, see https://docs.python.org/3.6/distutils/setupscript.html#installing-package-data
     long_description=open('../README.md').read(),
     scripts=[
         "examples/watson_conversation.py",
