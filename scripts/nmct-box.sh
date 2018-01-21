@@ -208,7 +208,7 @@ function install_services(){
     if [[ ! -f /etc/nginx/sites-enabled/nmct-box ]]; then
         sudo ln -s /etc/nginx/sites-available/nmct-box /etc/nginx/sites-enabled/nmct-box
     fi
-    systemctl restart nginx
+    sudo systemctl restart nginx
     sudo ln -s "${1}/scripts/nmct-box.sh" /usr/bin/nmct-box
 }
 
