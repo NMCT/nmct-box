@@ -8,6 +8,7 @@ app = flask.Flask(__name__)
 ring = nmct.box.get_pixel_ring()
 display = nmct.box.get_display()
 
+
 @app.route('/')
 def hello_world():
     return 'Hello World!'
@@ -15,7 +16,8 @@ def hello_world():
 
 @app.route('/dashboard')
 def show_dashboard():
-    return flask.render_template("index.html")
+    w1ids = nmct.box.list_onewire_ids()
+    return flask.render_template("index.html", w1ids=w1ids)
 
 
 @app.route('/write_lcd', methods=['POST'])
@@ -23,12 +25,15 @@ def write_lcd():
     text = flask.request.form['lcdMessage']
     text = text.rstrip("")
     display.write(text)
-    return flask.render_template("index.html", lcdMessage=text)
+    w1ids = nmct.box.list_onewire_ids()
+
+    return flask.render_template("index.html", lcdMessage=text, w1ids=w1ids)
 
 
 @app.route('/show_ring', methods=['GET'])
 def show_ring():
     # effect = flask.request.form['effect']
+    w1ids = nmct.box.list_onewire_ids()
     effect = flask.request.args.get('effect')
     if effect is None:
         return "Gelieve een effect mee te geven: /show_nmct_pixel?effect=loop&color=(255,0,0)"
@@ -45,11 +50,12 @@ def show_ring():
     except Exception as ex:
         # print("Exception")
         print_exception(ex, ex, ex.__traceback__)
-    return flask.render_template("index.html", show_method=effect)
+    return flask.render_template("index.html", show_method=effect, w1ids=w1ids)
 
 
 @app.route('/sensors', methods=['GET'])
 def sensors():
+    w1ids = nmct.box.list_onewire_ids()
     # axe = request.form['show_method']
     sensor = flask.request.args.get('sensor')
     show_text = ""
@@ -58,9 +64,6 @@ def sensors():
         accelero = nmct.box.get_accelerometer()
 
         if sensor == "gravity":
-            # x = accelero.get_X_axe()
-            # y = accelero.get_Y_axe()
-            # z = accelero.get_Z_axe()
             show_text = accelero.measure()
 
         if sensor == "tilt":
@@ -77,25 +80,25 @@ def sensors():
 
     except Exception as ex:
         print_exception(ex, ex, ex.__traceback__)
-    return flask.render_template("index.html", show_method='gravity', show_text=show_text)
+    return flask.render_template("index.html", show_method='gravity', show_text=show_text, w1ids=w1ids)
 
 
-@app.route('/temperatuur',methods=['GET'])
+@app.route('/temperatuur', methods=['GET'])
 def show_temperature():
     show_text = ""
+    w1ids = nmct.box.list_onewire_ids()
     serial = flask.request.args.get('serial_number')
-    if serial == None:
+    if serial is None:
         return 'Gelieve een serieel nummer mee te geven : http://xxx.xxx.xxx.xxx/temperauur?serial_number=28-xxxx'
     try:
         temperatuur = nmct.box.get_thermometer(serial).measure()
-        show_text = "De temperatuur is {0:3.2f} °C".format(temperatuur)
+        show_text = "De temperatuur is {0:3.2f} \N{DEGREE SIGN}C".format(temperatuur)
 
     except Exception as ex:
         print("Exception")
         print(ex)
 
-    return flask.render_template("index.html", show_method='gravity', show_text=show_text)
-
+    return flask.render_template("index.html", show_method='show_temperature', show_text=show_text, w1ids=w1ids)
 
 
 @app.route('/student', methods=['POST', 'GET'])

@@ -9,7 +9,7 @@ from nmct import settings
 from nmct.drivers.adxl345 import ADXL345
 from nmct.drivers.lcd import LCDisplay
 from nmct.drivers.neopixel import NeoPixelThread
-from nmct.drivers.onewire import Thermometer
+from nmct.drivers.onewire import OneWire, Thermometer
 
 _audio_path = Path(os.path.join(os.path.dirname(settings.RESOURCE_PATH), 'audio'))
 _accelerometer = None
@@ -19,7 +19,12 @@ _pixelring = None
 
 
 def measure_temperature():
-    return get_thermometer().measure()
+    devs = list_onewire_ids()
+    if len(devs) == 1:
+        w1id = devs[0]
+        return get_thermometer(w1id).measure()
+    else:
+        raise OSError("No temperature probe detected!")
 
 
 def measure_acceleration():
@@ -27,8 +32,13 @@ def measure_acceleration():
     return acc.measure()
 
 
-def get_thermometer(w1id="28-0417b27173ff"):
-    return Thermometer(w1id)  # TODO: autodetect ID?
+def get_thermometer(w1id):
+    return Thermometer(w1id)
+
+
+def list_onewire_ids():
+    devs = OneWire().slaves
+    return devs
 
 
 def get_accelerometer():
