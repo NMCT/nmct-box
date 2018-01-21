@@ -8,7 +8,6 @@ app = flask.Flask(__name__)
 ring = nmct.box.get_pixel_ring()
 display = nmct.box.get_display()
 
-
 @app.route('/')
 def hello_world():
     return 'Hello World!'
@@ -79,6 +78,24 @@ def sensors():
     except Exception as ex:
         print_exception(ex, ex, ex.__traceback__)
     return flask.render_template("index.html", show_method='gravity', show_text=show_text)
+
+
+@app.route('/temperatuur',methods=['GET'])
+def show_temperature():
+    show_text = ""
+    serial = flask.request.args.get('serial_number')
+    if serial == None:
+        return 'Gelieve een serieel nummer mee te geven : http://xxx.xxx.xxx.xxx/temperauur?serial_number=28-xxxx'
+    try:
+        temperatuur = nmct.box.get_thermometer(serial).measure()
+        show_text = "De temperatuur is {0:3.2f} °C".format(temperatuur)
+
+    except Exception as ex:
+        print("Exception")
+        print(ex)
+
+    return flask.render_template("index.html", show_method='gravity', show_text=show_text)
+
 
 
 @app.route('/student', methods=['POST', 'GET'])
