@@ -105,8 +105,7 @@ function do_system_settings(){
     ${cmd} do_i2c ${TRUE}
     ${cmd} do_onewire ${TRUE}
 
-    echo "export NMCT_HOME=${NMCT_HOME}" | sudo tee /etc/profile.d/nmct_box
-    echo "alias ll='ls -al'" | sudo tee -a /etc/profile.d/nmct_box
+    echo "alias ll='ls -al'" | sudo tee /etc/profile.d/nmct_box
 }
 
 function install_framework(){
@@ -195,9 +194,6 @@ function install_nmct_box(){
     popd
 }
 
-#deactivate
-#sudo -s
-
 function install_services(){
 # FIXME! incorrect user when ran separately
     for file in ${NMCT_HOME}/systemd/*; do
@@ -224,3 +220,45 @@ function install_shortcuts(){
         cp ${file} ~/Desktop/
     done
 }
+
+##################################################################
+# Purpose: Prepare fresh Raspbian image
+# Arguments:
+#   $1 -> Hostname prefix (will be appended with MAC address)
+#   $2 -> Username to create
+#   $3 -> Password forv new user
+# #################################################################
+function prepare_image(){
+    update_raspbian
+    do_system_settings
+    change_hostname ${1}
+    new_default_user ${2} ${3}
+}
+
+##################################################################
+# Purpose: Install system packages, create and activate
+#  virtual environment
+# Arguments:
+#   $1 -> Install directory (NMCT_HOME)
+# #################################################################
+function prepare_install(){
+    install_packages
+    git clone https://github.com/nmctseb/nmct-box.git "${1}"
+    create_venv "${1}/env"
+    source "${1}/env/bin/activate"
+    echo "export NMCT_HOME=${1}" | sudo tee -a /etc/profile.d/nmct_box
+}
+
+
+##################################################################
+# Purpose: Install AIY & NeoPixel dependencies
+# Arguments:
+#   $1 -> Install directory (NMCT_HOME)
+# #################################################################
+function install_dependencies(){
+    install_aiy_voicekit
+    install_neopixel
+#    install_snowboy
+    install_npm_packages configurable-http-proxy
+}
+
