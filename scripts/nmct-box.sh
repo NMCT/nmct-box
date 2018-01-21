@@ -242,7 +242,7 @@ function prepare_image(){
 #   $1 -> Install directory (NMCT_HOME)
 # #################################################################
 function prepare_install(){
-    install_packages
+    install_packages "${1}/packages.txt"
     git clone https://github.com/nmctseb/nmct-box.git "${1}"
     create_venv "${1}/env"
     source "${1}/env/bin/activate"
