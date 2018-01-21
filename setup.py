@@ -14,9 +14,8 @@ setup(
     maintainer='NMCT',
     maintainer_email='info@nmct.be',
     install_requires=[
-        'aiy', 'RPi.GPIO', 'snowboy', 'watson-developer-cloud', 'autobahn', 'flask', 'smbus-cffi',
-        'rpi-ws281x', 'spidev', 'matplotlib', 'uwsgi', 'jupyter', 'jupyterthemes', 'jupyterhub', 'bokeh',
-        'pandas', 'widgetsnbextension', 'netifaces'
+        'aiy', 'snowboy', 'RPi.GPIO', 'watson-developer-cloud', 'autobahn', 'flask', 'smbus-cffi',
+        'rpi-ws281x', 'spidev', 'matplotlib', 'uwsgi', 'bokeh', 'netifaces'
     ],
     data_files=[
         #     ('share/doc/aiy', ['README.md']),
