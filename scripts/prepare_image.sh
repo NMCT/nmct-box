@@ -7,10 +7,10 @@ declare -r CREATE_USER=nmct
 declare -r PASSWORD=smartthings
 declare -r HOSTNAME_PREFIX="nmct-box"
 
-source ./nmct-box.sh
+source "$(dirname "${BASH_SOURCE}")/nmct-box.sh"
 
 do_system_settings
-new_hostname=$(change_hostname ${HOSTNAME_PREFIX})
+change_hostname ${HOSTNAME_PREFIX}
 new_default_user ${CREATE_USER} ${PASSWORD}
 update_raspbian
 

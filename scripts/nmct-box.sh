@@ -83,9 +83,8 @@ function update_raspbian(){
 
 function change_hostname(){
     local cmd='sudo raspi-config nonint'
-    local name="${1}-$(cut -d: -f4- < /sys/class/net/wlan0/address | tr -d :)"
-    ${cmd} do_hostname ${name}
-    return ${name}
+    new_hostname="${1}-$(cut -d: -f4- < /sys/class/net/wlan0/address | tr -d :)"
+    ${cmd} do_hostname ${new_hostname}
 }
 
 function do_system_settings(){
@@ -120,7 +119,7 @@ EOF
 
 function install_packages(){
     sudo apt update -y
-    grep --color=auto -v '#' packages.txt | xargs sudo apt-get install -y
+    grep -v '#' $(realpath "${1}") | xargs sudo apt-get install -y
 }
 
 function install_npm_packages(){
