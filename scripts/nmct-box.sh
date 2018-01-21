@@ -128,7 +128,7 @@ function install_npm_packages(){
 }
 
 function create_venv(){
-    python3 -m venv --system-site-packages
+    python3 -m venv --system-site-packages ${1}
     python3 -m pip install --upgrade pip setuptools wheel
 }
 

@@ -2,11 +2,12 @@
 
 set -o errexit
 
-declare -rx NMCT_HOME="/home/nmct/nmct-box"
 declare -r CREATE_USER=nmct
 declare -r PASSWORD=smartthings
 declare -r HOSTNAME_PREFIX="nmct-box"
 
+
+declare -rx NMCT_HOME="/home/${CREATE_USER}/nmct-box"
 source "$(dirname "${BASH_SOURCE}")/nmct-box.sh"
 #readonly PYENV="${NMCT_HOME}/env/bin/python"
 
@@ -15,7 +16,7 @@ do_system_settings
 change_hostname ${HOSTNAME_PREFIX}
 new_default_user ${CREATE_USER} ${PASSWORD}
 sudo -E su ${CREATE_USER}
-git clone https://github.com/nmctseb/nmct-box.git
+git clone https://github.com/nmctseb/nmct-box.git "${NMCT_HOME}"
 create_venv "${NMCT_HOME}/env"
 source "${NMCT_HOME}/env/bin/activate"
 source "$(dirname "${BASH_SOURCE}")/install.sh"
