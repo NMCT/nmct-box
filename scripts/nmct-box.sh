@@ -129,6 +129,7 @@ function install_npm_packages(){
 function create_venv(){
     python3 -m pip install --upgrade pip wheel setuptools
     python3 -m venv --system-site-packages ${1}
+    ${1}/bin/python -m pip install -I setuptools
 }
 
 function install_aiy_voicekit(){
@@ -185,31 +186,39 @@ function install_neopixel(){
     popd
 }
 
-
+##################################################################
+# Purpose: Install NMCT Box systemd unit files
+# Arguments:
+#   $1 -> Install directory (NMCT_HOME)
+# #################################################################
 function install_services(){
-# FIXME! incorrect user when ran separately
-    NMCT_HOME="$1"
-    for file in ${NMCT_HOME}/systemd/*; do
+    for file in ${1}/systemd/*; do
         cat ${file} | envsubst | sudo tee "/etc/systemd/system/$(basename ${file})"
-    #    systemctl daemon-reload
+        sudo systemctl daemon-reload
         sudo systemctl enable "$(basename ${file})"
-    #    systemctl start "$(basename ${file})"
+        sudo systemctl start "$(basename ${file})"
     done
 
     if [[ -f /etc/nginx/sites-enabled/default ]]; then
         sudo rm /etc/nginx/sites-enabled/default
     fi
 
-    cat "${NMCT_HOME}/resources/conf/nginx" | envsubst '${NMCT_HOME} ${USER}' | sudo tee /etc/nginx/sites-available/nmct-box
+    cat "${1}/resources/conf/nginx" | envsubst '${NMCT_HOME} ${USER}' | sudo tee /etc/nginx/sites-available/nmct-box
 
     if [[ ! -f /etc/nginx/sites-enabled/nmct-box ]]; then
         sudo ln -s /etc/nginx/sites-available/nmct-box /etc/nginx/sites-enabled/nmct-box
     fi
-    #systemctl restart nginx
+    systemctl restart nginx
+    sudo ln -s "${1}/scripts/nmct-box.sh" /usr/bin/nmct-box
 }
 
+##################################################################
+# Purpose: Add NMCT Box desktop shortcuts
+# Arguments:
+#   $1 -> Install directory (NMCT_HOME)
+# #################################################################
 function install_shortcuts(){
-    for file in ${NMCT_HOME}/shortcuts/*; do
+    for file in ${1}/shortcuts/*; do
         cp ${file} ~/Desktop/
     done
 }
@@ -239,7 +248,7 @@ function prepare_install(){
     install_packages "${1}/packages.txt"
     create_venv "${1}/env"
     source "${1}/env/bin/activate"
-    echo "export NMCT_HOME=${1}" | sudo tee -a /etc/profile.d/nmct_box
+    echo "export NMCT_HOME=${1}" | sudo tee -a /etc/profile.d/nmct_box.sh
 }
 
 
@@ -279,5 +288,20 @@ function install_nmct_box(){
     install_dependencies "${1}"
     install_framework "${1}"
     install_services "${1}"
-    install_shortcuts
+    install_shortcuts "${1}"
 }
+
+
+##################################################################
+# Purpose: Install NMCT Box venv + deps + framework + services
+# Arguments:
+#   $1 -> Install directory (NMCT_HOME)
+# #################################################################
+function update_nmct_box(){
+    pushd "${1}"
+    git pull
+    install_framework "${1}"
+    install_services "${1}"
+    install_shortcuts "${1}"
+}
+

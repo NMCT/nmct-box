@@ -4,7 +4,7 @@ ConditionPathExistsGlob=/boot/atboot.sh
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/env bash /boot/atboot.sh && rm -f /boot/atboot.sh; [[ -f /boot/nextboot.sh ]] && mv /boot/nextboot.sh /boot/atboot.sh
+ExecStart=/usr/bin/env bash -c '/boot/atboot.sh && rm -f /boot/atboot.sh; [[ -f /boot/nextboot.sh ]] && mv -f /boot/nextboot.sh /boot/atboot.sh'
 
 [Install]
 WantedBy=multi-user.target
