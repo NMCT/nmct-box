@@ -5,24 +5,9 @@
 
 set -o errexit
 
-[[ -z ${NMCT_HOME} ]] && export NMCT_HOME="$(dirname "${PWD}")"
-echo "Installing to ${NMCT_HOME}"
 
 source "$(dirname "${BASH_SOURCE}")/nmct-box.sh"
 
-#
-# Command line options
-#
-for i in $*; do
-    case ${i} in
-    --nmct-only)
-        install_nmct_box
-        install_services
-        install_shortcuts
-        exit $?
-        ;;
-    esac
-done
 
 install_packages
 create_venv

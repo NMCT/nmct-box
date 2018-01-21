@@ -155,6 +155,20 @@ function install_aiy_voicekit(){
     popd
 }
 
+##################################################################
+# Purpose: Change state of default user (pi)
+# Arguments:
+#   $1 -> Boolean: (en/dis)able
+# #################################################################
+function do_pi_user(){
+    if [[ ${1} ]]; then
+        sudo chage -E -1 pi
+        sudo usermod -U pi
+    else
+        sudo chage -E 1 pi
+        sudo usermod -L pi
+   fi
+}
 function install_snowboy(){
     # pull & install Snowboy
     dir="$1"
@@ -305,3 +319,36 @@ function update_nmct_box(){
     install_shortcuts "${1}"
 }
 
+###################################################################
+# Command line options
+# #################################################################
+[[ -z ${NMCT_HOME} ]] && export NMCT_HOME="$(dirname "${PWD}")"
+
+echo "NMCT-Box home: ${NMCT_HOME}"
+
+for i in $*; do
+    case ${i} in
+    prepare)
+        declare -r CREATE_USER=nmct
+        declare -r PASSWORD=smartthings
+        declare -r HOSTNAME_PREFIX="nmct-box"
+        prepare_image
+        echo -e "\n\n\n\nDone! User 'pi' will be disabled, after rebooting you can connect with: \n
+        hostname:\t\033[32m${new_hostname}\033[0m
+        username:\t\033[32m${CREATE_USER}\033[0m
+        password:\t\033[32m${PASSWORD}\033[0m
+        \nPress any key to reboot...\n\n\n"
+        read -sn 1
+        do_pi_user ${FALSE}
+        sudo reboot
+        ;;
+    install)
+        install_nmct_box "${NMCT_HOME}"
+        exit $?
+        ;;
+    update)
+        update_nmct_box "${NMCT_HOME}"
+        exit $?
+        ;;
+    esac
+done
