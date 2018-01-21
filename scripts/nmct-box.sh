@@ -322,7 +322,7 @@ function update_nmct_box(){
 ###################################################################
 # Command line options
 # #################################################################
-[[ -z ${NMCT_HOME} ]] && export NMCT_HOME="$(dirname "${PWD}")"
+[[ -z ${NMCT_HOME} ]] && export NMCT_HOME="$(dirname "${PWD}")" # FIXME!
 
 echo "NMCT-Box home: ${NMCT_HOME}"
 
@@ -332,7 +332,7 @@ for i in $*; do
         declare -r CREATE_USER=nmct
         declare -r PASSWORD=smartthings
         declare -r HOSTNAME_PREFIX="nmct-box"
-        prepare_image
+        prepare_image ${HOSTNAME_PREFIX} ${CREATE_USER} ${PASSWORD}
         echo -e "\n\n\n\nDone! User 'pi' will be disabled, after rebooting you can connect with: \n
         hostname:\t\033[32m${new_hostname}\033[0m
         username:\t\033[32m${CREATE_USER}\033[0m

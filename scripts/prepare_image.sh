@@ -11,7 +11,7 @@ declare -rx NMCT_HOME="/home/${CREATE_USER}/nmct-box"
 source "$(dirname "${BASH_SOURCE}")/nmct-box.sh"
 #readonly PYENV="${NMCT_HOME}/env/bin/python"
 
-prepare_image ${HOSTNAME_PREFIX} ${CREATE_USER} ${PASSWORD}
+prepare_image
 sudo -E su ${CREATE_USER}
 
 install_nmct_box "${NMCT_HOME}"
