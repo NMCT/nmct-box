@@ -128,8 +128,8 @@ function install_npm_packages(){
 }
 
 function create_venv(){
-    python3 -m venv "${NMCT_HOME}/env"
-    ${PYENV} -m pip install --upgrade pip setuptools wheel
+    python3 -m venv --system-site-packages
+    python3 -m pip install --upgrade pip setuptools wheel
 }
 
 function install_aiy_voicekit(){
@@ -151,7 +151,7 @@ function install_aiy_voicekit(){
     sudo ./scripts/install-alsa-config.sh
     popd
     pushd "${dir}/src"
-    ${PYENV} setup.py install
+    python3 setup.py install
     popd
 }
 
@@ -165,7 +165,7 @@ function install_snowboy(){
         pushd "${dir}"
         git pull
     fi
-    ${PYENV} setup.py build install
+    python3 setup.py build install
     popd
 }
 
@@ -182,15 +182,15 @@ function install_neopixel(){
     sed -i 's/^\(\#define GPIO_PIN\W*\)18$/\112/g' main.c
     scons && popd
     pushd ${dir}/python
-    ${PYENV} setup.py build install
+    python3 setup.py build install
     popd
 }
 
 function install_nmct_box(){
     # install our package(s)
     pushd "${NMCT_HOME}"
-    ${PYENV} -m pip install -r requirements.txt
-    ${PYENV} setup.py install
+    python3 -m pip install -r requirements.txt
+    python3 setup.py install
 #    echo "${NMCT_HOME}/src" > "${NMCT_HOME}/env/lib/python3.5/site-packages/nmct-box.pth"
     popd
 }

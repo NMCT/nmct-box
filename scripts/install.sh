@@ -7,14 +7,8 @@ set -o errexit
 
 [[ -z ${NMCT_HOME} ]] && export NMCT_HOME="$(dirname "${PWD}")"
 echo "Installing to ${NMCT_HOME}"
-readonly PYENV="${NMCT_HOME}/env/bin/python"
 
-# dependencies
-readonly APT_PACKAGES="python3-dev python3-venv swig libatlas-base-dev scons libffi-dev portaudio19-dev python3-pyaudio sox libssl-dev nginx python3-notebook"
-readonly NPM_PACKAGES=
-
-
-source ./nmct-box.sh
+source "$(dirname "${BASH_SOURCE}")/nmct-box.sh"
 
 #
 # Command line options

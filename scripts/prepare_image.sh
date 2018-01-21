@@ -8,12 +8,17 @@ declare -r PASSWORD=smartthings
 declare -r HOSTNAME_PREFIX="nmct-box"
 
 source "$(dirname "${BASH_SOURCE}")/nmct-box.sh"
+#readonly PYENV="${NMCT_HOME}/env/bin/python"
 
+update_raspbian
 do_system_settings
 change_hostname ${HOSTNAME_PREFIX}
 new_default_user ${CREATE_USER} ${PASSWORD}
-update_raspbian
-
+sudo -E su ${CREATE_USER}
+git clone https://github.com/nmctseb/nmct-box.git
+create_venv "${NMCT_HOME}/env"
+source "${NMCT_HOME}/env/bin/activate"
+source "$(dirname "${BASH_SOURCE}")/install.sh"
 
 
 echo -e "\n\n\n\nDone! User 'pi' will be disabled, after rebooting you can connect with: \n
@@ -22,7 +27,7 @@ echo -e "\n\n\n\nDone! User 'pi' will be disabled, after rebooting you can conne
     password:\t\033[32m${PASSWORD}\033[0m
     \nPress any key to reboot...\n\n\n"
 read -sn 1
-chage -E 0 pi
-usermod -L pi
-rm -f "${BASH_SOURCE}"
-reboot
+sudo chage -E 0 pi
+sudo usermod -L pi
+#rm -f "${BASH_SOURCE}"
+sudo reboot
