@@ -4,6 +4,7 @@ at
 dnsutils
 etckeeper
 git
+jupyter-notebook
 jupyter-client
 jupyter-console
 jupyter-core
@@ -23,12 +24,16 @@ python3-dev
 python3-flask
 python3-gpiozero
 python-gpiozero-doc
+python3-jupyter-core
+python3-jupyter-client
 python3-jupyter-console
+python3-ipywidgets
+python3-widgetsnbextension
 python3-matplotlib
+python3-notebook
 python3-nbconvert
 python3-nbformat
 python3-netifaces
-python3-notebook
 python3-numpy
 python3-pandas
 python3-pip
@@ -39,7 +44,6 @@ python3-smbus
 python3-spidev
 python3-venv
 python3-websockets
-python3-widgetsnbextension
 rsync
 scons
 screen

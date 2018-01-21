@@ -14,11 +14,8 @@ source "$(dirname "${BASH_SOURCE}")/nmct-box.sh"
 prepare_image ${HOSTNAME_PREFIX} ${CREATE_USER} ${PASSWORD}
 sudo -E su ${CREATE_USER}
 
-prepare_install "${NMCT_HOME}"
-git clone https://github.com/nmctseb/nmct-box.git "${NMCT_HOME}"
-create_venv "${NMCT_HOME}/env"
-source "${NMCT_HOME}/env/bin/activate"
-source "$(dirname "${BASH_SOURCE}")/install.sh"
+install_nmct_box "${NMCT_HOME}"
+
 
 
 echo -e "\n\n\n\nDone! User 'pi' will be disabled, after rebooting you can connect with: \n

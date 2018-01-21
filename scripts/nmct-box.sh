@@ -108,13 +108,13 @@ function do_system_settings(){
     echo "alias ll='ls -al'" | sudo tee /etc/profile.d/nmct_box
 }
 
-function install_framework(){
-    su - nmct<<EOF
-git clone https://github.com/nmctseb/nmct-box.git "${NMCT_HOME}"
-chmod +x "${NMCT_HOME}"/scripts/*.sh
-source "${NMCT_HOME}"/scripts/install.sh
-EOF
-}
+#    function install_framework(){
+#        su - nmct<<EOF
+#    git clone https://github.com/nmctseb/nmct-box.git "${NMCT_HOME}"
+#    chmod +x "${NMCT_HOME}"/scripts/*.sh
+#    source "${NMCT_HOME}"/scripts/install.sh
+#    EOF
+#    }
 
 function install_packages(){
     sudo apt update -y
@@ -127,13 +127,13 @@ function install_npm_packages(){
 }
 
 function create_venv(){
+    python3 -m pip install --upgrade pip wheel setuptools
     python3 -m venv --system-site-packages ${1}
-    python3 -m pip install --upgrade pip setuptools wheel
 }
 
 function install_aiy_voicekit(){
     # pull & install AIY drivers
-    dir="$(dirname "${NMCT_HOME}")/aiy-voicekit"
+    dir="$1"
     if [[ ! -d "${dir}" ]]; then
         git clone https://github.com/google/aiyprojects-raspbian.git "${dir}"
         pushd "${dir}"
@@ -156,7 +156,7 @@ function install_aiy_voicekit(){
 
 function install_snowboy(){
     # pull & install Snowboy
-    dir="$(dirname "${NMCT_HOME}")/snowboy"
+    dir="$1"
     if [[ ! -d "${dir}" ]]; then
         git clone https://github.com/Kitt-AI/snowboy.git ${dir}
         pushd "${dir}"
@@ -170,7 +170,7 @@ function install_snowboy(){
 
 function install_neopixel(){
     # pull & install NeoPixel driver
-    dir="$(dirname "${NMCT_HOME}")/neopixel"
+    dir="$1"
     if [[ ! -d "${dir}" ]]; then
         git clone https://github.com/jgarff/rpi_ws281x.git ${dir}
         pushd "${dir}"
@@ -185,17 +185,10 @@ function install_neopixel(){
     popd
 }
 
-function install_nmct_box(){
-    # install our package(s)
-    pushd "${NMCT_HOME}"
-    python3 -m pip install -r requirements.txt
-    python3 setup.py install
-#    echo "${NMCT_HOME}/src" > "${NMCT_HOME}/env/lib/python3.5/site-packages/nmct-box.pth"
-    popd
-}
 
 function install_services(){
 # FIXME! incorrect user when ran separately
+    NMCT_HOME="$1"
     for file in ${NMCT_HOME}/systemd/*; do
         cat ${file} | envsubst | sudo tee "/etc/systemd/system/$(basename ${file})"
     #    systemctl daemon-reload
@@ -207,7 +200,7 @@ function install_services(){
         sudo rm /etc/nginx/sites-enabled/default
     fi
 
-    cat "${NMCT_HOME}/resources/conf/nginx" | envsubst '${NMCT_HOME}' | sudo tee /etc/nginx/sites-available/nmct-box
+    cat "${NMCT_HOME}/resources/conf/nginx" | envsubst '${NMCT_HOME} ${USER}' | sudo tee /etc/nginx/sites-available/nmct-box
 
     if [[ ! -f /etc/nginx/sites-enabled/nmct-box ]]; then
         sudo ln -s /etc/nginx/sites-available/nmct-box /etc/nginx/sites-enabled/nmct-box
@@ -242,8 +235,8 @@ function prepare_image(){
 #   $1 -> Install directory (NMCT_HOME)
 # #################################################################
 function prepare_install(){
-    install_packages "${1}/packages.txt"
     git clone https://github.com/nmctseb/nmct-box.git "${1}"
+    install_packages "${1}/packages.txt"
     create_venv "${1}/env"
     source "${1}/env/bin/activate"
     echo "export NMCT_HOME=${1}" | sudo tee -a /etc/profile.d/nmct_box
@@ -256,9 +249,35 @@ function prepare_install(){
 #   $1 -> Install directory (NMCT_HOME)
 # #################################################################
 function install_dependencies(){
-    install_aiy_voicekit
-    install_neopixel
-#    install_snowboy
+    install_aiy_voicekit "$(dirname "${1}")/aiy-voicekit"
+    install_neopixel "$(dirname "${1}")/neopixel"
+#    install_snowboy "$(dirname "${1}")/snowboy"
     install_npm_packages configurable-http-proxy
 }
 
+##################################################################
+# Purpose: Install NMCT Box framework
+# Arguments:
+#   $1 -> Install directory (NMCT_HOME)
+# #################################################################
+function install_framework(){
+    # install our package
+    pushd "${1}"
+    python3 -m pip install -r requirements.txt
+    python3 setup.py install
+#    echo "${NMCT_HOME}/src" > "${NMCT_HOME}/env/lib/python3.5/site-packages/nmct-box.pth"
+    popd
+}
+
+##################################################################
+# Purpose: Install NMCT Box venv + deps + framework + services
+# Arguments:
+#   $1 -> Install directory (NMCT_HOME)
+# #################################################################
+function install_nmct_box(){
+    prepare_install "${1}"
+    install_dependencies "${1}"
+    install_framework "${1}"
+    install_services "${1}"
+    install_shortcuts
+}
