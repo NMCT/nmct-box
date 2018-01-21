@@ -105,6 +105,7 @@ install_nmct_box(){
 #sudo -s
 
 install_services(){
+# FIXME! incorrect user when ran separately
     for file in ${NMCT_HOME}/systemd/*; do
         cat ${file} | envsubst | sudo tee "/etc/systemd/system/$(basename ${file})"
     #    systemctl daemon-reload

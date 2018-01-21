@@ -39,3 +39,8 @@ setup(
         "src/examples/pixelring.py",
     ]
 )
+# python3-autobahn python3-websockets python3-flask python3-matplotlib uwsgi python3-smbus python3-spidev
+# python3-notebook python3-widgetsnbextension python3-nbformat python3-nbconvert python3-jupyter-console
+# jupyter-nbformat jupyter-nbformat jupyter-nbextension-jupyter-js-widgets jupyter-nbconvert jupyter-core
+# jupyter-client jupyter-console python3-pandas python3-netifaces python3-numpy
+

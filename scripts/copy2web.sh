@@ -2,7 +2,6 @@
 #
 # Copy student html from dropbox to templates
 
-# TODO: desktop shortcut to this script
 
 [[ -z ${NMCT_HOME} ]] &&
 readonly DROPBOX_UPLOADER="${NMCT_HOME}/scripts/dropbox_uploader.sh" ||
