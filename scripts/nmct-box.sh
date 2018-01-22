@@ -383,7 +383,6 @@ function update_project(){
     git add .
     git stash
     git pull
-    source "${1}/scripts/nmct-box.sh"
 }
 
 function apply_update(){
@@ -493,8 +492,10 @@ for i in $*; do
     ;;
     update|refresh)
         arg=${@}
+        do_service stop *
         update_project "${NMCT_HOME}"
-        apply_${arg} "${NMCT_HOME}"
+        "$0" -f apply_${arg} "${NMCT_HOME}"
+        do_service start *
         exit $?
     ;;
     --function|-f)
