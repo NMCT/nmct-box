@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -8,184 +8,40 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Vul gegevens in:</title>
+    <title>{% block title %}{% endblock %} - NMCT-Box web UI</title>
+    {% block styles %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/3.3.7/css/sb-admin-2.css">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/3.3.7/css/sb-admin-2.css">
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="./styles/nmctbox.css"/>
+        <link rel="stylesheet" href="./styles/graphs.css"/>
+    {% endblock %}
+    {% block scripts %}
+            <!-- TODO: fix local lib-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/3.3.7/js/sb-admin-2.js"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+                integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+                crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="./styles/nmctbox.css" />
-    <link rel="stylesheet" href="./styles/graphs.css" />
-
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/3.3.7/js/sb-admin-2.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
-            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-            crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+    {% endblock %}
 </head>
 
 <body>
-
-
-<div id="page-wrapper">
-    <div class="row">
-        <div class="col-lg-12">
-            <h1 class="page-header">NMCT BOX!!!</h1>
-        </div>
-        <!-- /.col-lg-12 -->
+<div id="page-wrapper">{% block content %}{% endblock %}</div>
+    <div id="footer">
+        {% block footer %}
+        &copy; Copyright 2018 <a href="http://www.nmct.be/">Howest/NMCT</a>.
+        {% endblock %}
     </div>
-    <!-- /.row -->
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    LCD display
-                </div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <form role="form" action="{{ url_for('write_lcd') }}" method="post">
-                                <div class="form-group">
-                                    <label>LCD Input</label>
-                                    <input class="form-control" name="lcdMessage" placeholder="{{ lcdMessage }}">
-                                    <p class="help-block">Geef hier tekst in om naar het LCD display te sturen.</p>
-                                </div>
-
-
-                                <button type="submit" class="btn btn-default" name="show_method">Schrijf naar LCD
-                                    display
-                                </button>
-                            </form>
-                        </div>
-
-                    </div>
-
-
-                </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
-    <!-- /.row -->
-
-
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Neopixel
-                </div>
-                <div class="panel-body">
-
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <form role="form" action="{{ url_for('show_ring') }}" method="get">
-                                <div class="form-group">
-                                    <label>Neo pixel</label>
-                                    <label>{{ show_method }}</label>
-                                </div>
-                                <!-- TODO: add color picker/dropdown/... -->
-                                <button type="submit" class="btn btn-default" name="effect" value="loop">loop
-                                    led
-                                </button>
-                                <button type="submit" class="btn btn-default" name="effect" value="fill">fill
-                                    led
-                                </button>
-                                <button type="submit" class="btn btn-default" name="effect" value="theater_chase">
-                                    theater
-                                    chase
-                                </button>
-                                <button type="submit" class="btn btn-default" name="effect" value="rainbow">
-                                    rainbow cycle
-                                </button>
-                                <button type="submit" class="btn btn-default" name="effect" value="rainbow_chase">
-                                    theater chase rainbow
-                                </button>
-                                <button type="submit" class="btn btn-default" name="effect" value="clear">
-                                    clear
-                                </button>
-
-                            </form>
-                        </div>
-
-                    </div>
-
-                </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
-
-
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Sensors
-                </div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <form role="form" action="{{ url_for('sensors') }}" method="get">
-                                <div class="form-group">
-                                    <label>Sensorwaarde</label>
-                                    <input class="form-control" name="Sensor" placeholder="{{ show_text }}">
-
-                                </div>
-
-
-                                <button type="submit" class="btn btn-default" name="sensor" value="gravity">Gravity
-                                </button>
-                                <button type="submit" class="btn btn-default" name="sensor" value="tilt">Tilt</button>
-
-                            </form>
-                            <br/>
-
-                            <form role="form" action="{{ url_for('show_temperature') }}" method="get" class="form-group">
-                                <label>
-                                    <select name="serial_number" class="form-control">
-                                        {% for id in w1ids %}
-                                            <option value="{{ id }}" SELECTED>{{ id }}</option>
-
-                                        {% endfor %}
-                                    </select>
-                                <button type="submit" class="btn btn-default" name="sensor"
-                                        value="temperature">Temperature
-                                </button>
-                                </label>
-                            </form>
-                        </div>
-
-                    </div>
-
-
-                </div>
-                <!-- /.panel-body -->
-            </div>
-            <!-- /.panel -->
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
-
-
-</div>
-<!-- /#page-wrapper -->
-
 </body>
-
 </html>

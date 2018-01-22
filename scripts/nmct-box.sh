@@ -253,12 +253,12 @@ function install_services(){
 #   $2 -> Destination directory (default: /usr/bin)
 # #################################################################
 function install_nmct_tool(){
-    dst=${1}; dst="$(realpath "${dst:=/usr/bin}")/nmct-box"
+    dst=${2}; dst="$(realpath "${dst:=/usr/bin}")/nmct-box"
     echo "Installing tool to ${dst}..."
     if [[ -a ${dst} ]]; then
         sudo rm -f ${dst}
     fi
-    sudo ln -s "${1}/scripts/nmct-box.sh" ${dst}
+    sudo ln -fs "${1}/scripts/nmct-box.sh" ${dst}
 }
 ##################################################################
 # Purpose: Start/stop/restart NMCT-box systemd services units
@@ -275,7 +275,7 @@ function do_service(){
 #        echo "sudo systemctl ${action} "$(basename ${svc})""
         sudo systemctl ${action} "$(basename ${svc})"
     done
-        sudo systemctl ${action} nginx
+    sudo systemctl ${action} nginx
 }
 
 ##################################################################
@@ -323,6 +323,7 @@ function prepare_image(){
 # #################################################################
 function prepare_install(){
     echo "export NMCT_HOME=${1}" | sudo tee -a /etc/profile.d/nmct_box.sh
+    do_git_config
     git clone ${REPO_URL} "${1}"
     install_packages "${1}/packages.txt"
     create_venv "${1}/env"
@@ -364,6 +365,7 @@ function install_nmct_box(){
     prepare_install "${1}"
     install_dependencies "${1}"
     install_framework "${1}"
+    install_nmct_tool "${1}"
     install_services "${1}"
     install_shortcuts "${1}"
     do_service start
@@ -486,24 +488,23 @@ for i in $*; do
         set_boot_script "${NMCT_HOME}"
     ;;
     start|stop|restart|status|enable|disable)
-        shift
         do_service ${@}
         exit $?
     ;;
     update|refresh)
+        arg=${@}
         update_project "${NMCT_HOME}"
-        shift
-        "apply_${@} ${NMCT_HOME}"
+        apply_${arg} "${NMCT_HOME}"
         exit $?
     ;;
-    --function)
+    --function|-f)
         shift
         "${@}"
         exit $?
     ;;
     --help|-h)
-        usage ${0}
-                exit 0
+        usage
+        exit 0
     ;;
     *)
         die "Unknown command: ${i}. See ${0} --help for details."
