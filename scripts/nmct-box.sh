@@ -4,7 +4,7 @@
 # Installation Defaults                                          #
 ##################################################################
 #                                                                #
-declare -r CREATE_USER=nmct                                      #
+declare -r NEW_USER=nmct                                      #
 declare -r PASSWORD=smartthings                                  #
 declare -r HOSTNAME_PREFIX="box"                                 #
 declare -r DEFAULT_HOME=/home/nmct/nmct-box                      #
@@ -406,16 +406,16 @@ function apply_refresh(){
 # #################################################################
 
 function do_phase1(){
-    prepare_image ${HOSTNAME_PREFIX} ${CREATE_USER} ${PASSWORD} ${DEFAULT_HOME}
+    prepare_image ${HOSTNAME_PREFIX} ${NEW_USER} ${PASSWORD} ${DEFAULT_HOME}
     [[ -z ${SSH_CONNECTION} ]] &&
         ip="$(ip a s scope global up | awk '/inet /{print substr($2,0)}' | tr '\n' '\t' )" ||
         ip="$(echo ${SSH_CONNECTION} | awk '{print $3}')"
-    sudo -u ${CREATE_USER} git clone "${REPO_URL}" "${1}"
+    sudo -u ${NEW_USER} git clone "${REPO_URL}" "${1}"
     install_nmct_tool "${DEFAULT_HOME}"
     echo -e "\n\n\n\nDone! User 'pi' will be disabled, after rebooting you can connect with: \n
     address:\t\033[32m${ip}\033[0m
     hostname:\t\033[32m${new_hostname}\033[0m
-    username:\t\033[32m${CREATE_USER}\033[0m
+    username:\t\033[32m${NEW_USER}\033[0m
     password:\t\033[32m${PASSWORD}\033[0m
     \nPress any key to reboot...\n\n\n"
     read -sn 1
@@ -492,6 +492,7 @@ for i in $*; do
     ;;
     update|refresh)
         update_project "${NMCT_HOME}"
+        shift
         apply_${@} "${NMCT_HOME}"
         exit $?
     ;;
