@@ -8,7 +8,7 @@ Group=www-data
 WorkingDirectory=${NMCT_HOME}/notebooks
 Environment="PATH=${NMCT_HOME}/env/bin"
 Environment="NMCT_HOME=${NMCT_HOME}"
-ExecStart=jupyter-notebook --no-browser --port=2002 --NotebookApp.base_url="/notebook" --NotebookApp.allow_origin=* --NotebookApp.password="sha1:a33f88a5e165:83161a897645e01e7327c9fec69d48b20d70c5f6"
+ExecStart=/usr/bin/jupyter-notebook --no-browser --port=2002 --NotebookApp.base_url="/notebook" --NotebookApp.allow_origin=* --NotebookApp.password="sha1:a33f88a5e165:83161a897645e01e7327c9fec69d48b20d70c5f6"
 
 [Install]
 WantedBy=multi-user.target
