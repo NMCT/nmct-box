@@ -50,6 +50,7 @@ scons
 screen
 sox
 swig
+tcpdump
 telnet
 ufw
 uwsgi

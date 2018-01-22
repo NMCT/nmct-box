@@ -1,1 +1,1 @@
-from .index import app
+from .dashboard import app

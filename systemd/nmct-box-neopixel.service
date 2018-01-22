@@ -1,14 +1,14 @@
 [Unit]
-Description=uWSGI instance to serve NMCT Box Flask web interface
+Description=uWSGI instance to serve NeoPixel ring web interface
 After=network.target
 
 [Service]
-User=nmct
+User=root
 Group=www-data
 WorkingDirectory=${NMCT_HOME}/src/nmct/web
 Environment="PATH=${NMCT_HOME}/env/bin"
 Environment="NMCT_HOME=${NMCT_HOME}"
-ExecStart="${NMCT_HOME}/env/bin/uwsgi" --ini "${NMCT_HOME}/src/nmct/web/nmct-box.ini"
+ExecStart="${NMCT_HOME}/env/bin/uwsgi" --ini "${NMCT_HOME}/src/nmct/web/nmct-box-neopixel.ini"
 
 [Install]
 WantedBy=multi-user.target

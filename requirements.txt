@@ -19,4 +19,4 @@ matplotlib
 uwsgi
 bokeh
 netifaces
-
+Flask-Colorpicker

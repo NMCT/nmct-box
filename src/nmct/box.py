@@ -84,7 +84,7 @@ def test_internet():
 
 def get_ipconfig():
     return {iface: [i['addr'] for i in
-                    netifaces.ifaddresses(iface).setdefault(netifaces.AF_INET, [{'addr': 'No IP addr'}])]
+                    netifaces.ifaddresses(iface).setdefault(netifaces.AF_INET, [{'addr': 'No IP address'}])]
             for iface in netifaces.interfaces() if iface != 'lo'}
 
 
