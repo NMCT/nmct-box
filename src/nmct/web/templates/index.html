@@ -20,7 +20,7 @@
         <link rel="stylesheet" href="./styles/graphs.css"/>
     {% endblock %}
     {% block scripts %}
-            <!-- TODO: fix local lib-->
+        <!-- TODO: fix local lib-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/3.3.7/js/sb-admin-2.js"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"
                 integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
@@ -37,11 +37,12 @@
 </head>
 
 <body>
-<div id="page-wrapper">{% block content %}{% endblock %}</div>
+<div id="page-wrapper">{% block content %}{% endblock %}
     <div id="footer">
         {% block footer %}
-        &copy; Copyright 2018 <a href="http://www.nmct.be/">Howest/NMCT</a>.
+            &copy; Copyright 2018 <a href="http://www.nmct.be/">Howest/NMCT</a>.
         {% endblock %}
     </div>
+</div>
 </body>
 </html>
