@@ -411,7 +411,7 @@ function do_phase1(){
         ip="$(ip a s scope global up | awk '/inet /{print substr($2,0)}' | tr '\n' '\t' )" ||
         ip="$(echo ${SSH_CONNECTION} | awk '{print $3}')"
     sudo -u ${CREATE_USER} git clone "${REPO_URL}" "${1}"
-        install_nmct_tool "${1}"
+    install_nmct_tool "${DEFAULT_HOME}"
     echo -e "\n\n\n\nDone! User 'pi' will be disabled, after rebooting you can connect with: \n
     address:\t\033[32m${ip}\033[0m
     hostname:\t\033[32m${new_hostname}\033[0m
