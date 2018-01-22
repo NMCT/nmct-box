@@ -425,7 +425,7 @@ function do_phase1(){
     }
 
 function set_boot_script() {
-#TODO
+#FIXME
 
     sudo cp "${1}/systemd/nmct-box-atboot.service" /etc/systemd/system/
     sudo systemctl daemon-reload
