@@ -6,6 +6,7 @@ import functools
 import queue
 import threading
 import time
+from enum import Enum
 from traceback import print_exception
 
 import _rpi_ws281x as ws
@@ -60,10 +61,13 @@ class Color:
         return cls(*[round(x * 255) for x in colors.hex2color(colors.CSS4_COLORS.get(value))])
 
 
-COLORS = dict(list({str.upper(n): Color(*[round(x * 255) for x in v])
-                    for n, v in colors.BASE_COLORS.items()}.items())
-              + list({str.upper(n): Color(*[round(x * 255) for x in colors.hex2color(v)])
-                      for n, v in colors.CSS4_COLORS.items()}.items()))
+CSS4_COLORS = {str.upper(n): Color(*[round(x * 255) for x in v])
+               for n, v in colors.BASE_COLORS.items()}
+LETTER_COLORS = {str.upper(n): Color(*[round(x * 255) for x in colors.hex2color(v)])
+                 for n, v in colors.CSS4_COLORS.items()}
+
+Palette = Enum("Palette", dict(list(CSS4_COLORS.items())
+                               + list(LETTER_COLORS.items())))
 
 for n, v in colors.CSS4_COLORS.items():
     setattr(Color, n, Color(*[round(x * 255) for x in colors.hex2color(v)]))

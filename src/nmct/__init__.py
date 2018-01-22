@@ -1,4 +1,4 @@
-from .drivers.neopixel import Color
+from .drivers.neopixel import Color, Palette
 from .apis.snowboy import HotWord
 from . import settings, snowboy, watson, box, web
 

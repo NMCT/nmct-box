@@ -16,12 +16,15 @@ class AuthenticationError(Exception):
 
 
 class ServiceCredential(object):
-    def __init__(self, name, secrets="../../.secret/credentials.json"):  # TODO: path
+    def __init__(self, name, data=None, secrets="../../.secret/credentials.json"):  # TODO: path
         try:
-            with open(secrets) as f:
-                self.data = json.load(f)["watson"][name]
-                self.authorization = AuthorizationV1(**self.data)
-                self.url = self.data["url"]
+            if data is None:
+                with open(secrets) as f:
+                    self.data = json.load(f)["watson"][name]
+            else:
+                self.data = data
+            self.authorization = AuthorizationV1(**self.data)
+            self.url = self.data["url"]
         except IOError:
             raise AuthenticationError("Failed to open secrets file")
         except KeyError:
@@ -119,7 +122,7 @@ class WatsonSpeechToTextClientFactory(WatsonClientFactory):
         asyncio.run_coroutine_threadsafe(self.audio_queue.put(data), self.loop)
 
 
-class _WatsonRecognizer(object):
+class WatsonRecognizer(object):
     def __init__(self, model="en-US_BroadbandModel"):
         self.model = model
         self.client = SpeechToTextV1(**ServiceCredential('speech-to-text').data)
@@ -141,16 +144,17 @@ class _WatsonRecognizer(object):
 
 
 class WatsonConversation(object):
-    def __init__(self, workspace_id):
+    def __init__(self, workspace_id, credentials=None):
         print('init\n\n')
 
         self.workspace_id = workspace_id
-        auth = ServiceCredential("conversation")
+        auth = ServiceCredential("conversation", data=credentials)
         self.client = ConversationV1(version="2017-05-26", **auth.data)
         self.context = {}
         self._finished = False
 
     def message(self, text):
+        self._finished = False
         response = self.client.message(self.workspace_id, {'text': text}, context=self.context)
         # if "output" in response:
         #     if "text" in response["output"]:
@@ -219,7 +223,7 @@ class WatsonTextToSpeechClientFactory(WatsonClientFactory):
         self.audio = asyncio.Future()
 
 
-class _WatsonSynthesizer:
+class WatsonSynthesizer:
     def __init__(self, voice):
         self.voice = voice
         self.client = TextToSpeechV1(**ServiceCredential('text-to-speech').data)

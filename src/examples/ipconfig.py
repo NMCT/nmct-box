@@ -38,7 +38,10 @@ def ipconfig():
     def shutdown():
         lcd.clear()
         time.sleep(1)
-        sys.exit(0)
+        try:
+            sys.exit(0)
+        except Exception:
+            pass
 
     button.on_press(shutdown)
 

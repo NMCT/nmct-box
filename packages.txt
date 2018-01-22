@@ -4,6 +4,7 @@ at
 dnsutils
 etckeeper
 git
+htop
 jupyter-notebook
 jupyter-client
 jupyter-console

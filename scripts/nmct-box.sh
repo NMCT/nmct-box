@@ -105,6 +105,7 @@ function do_system_settings(){
     ${cmd} do_i2c ${TRUE}
     ${cmd} do_onewire ${TRUE}
 
+
     echo "alias ll='ls -al'" | sudo tee /etc/profile.d/nmct_box
 }
 
@@ -226,6 +227,13 @@ function install_services(){
     sudo ln -s "${1}/scripts/nmct-box.sh" /usr/bin/nmct-box
 }
 
+function restart_services(){
+    sudo systemctl daemon-reload
+    for svc in /etc/systemd/system/nmct-box*.service; do
+        sudo systemctl restart "$(basename ${svc})"
+    done
+        sudo systemctl restart nginx
+}
 ##################################################################
 # Purpose: Add NMCT Box desktop shortcuts
 # Arguments:
@@ -258,6 +266,8 @@ function prepare_image(){
 #   $1 -> Install directory (NMCT_HOME)
 # #################################################################
 function prepare_install(){
+    git config --global user.email "nmct@box"
+    git config --global user.name "NMCT Box"
     git clone https://github.com/nmctseb/nmct-box.git "${1}"
     install_packages "${1}/packages.txt"
     create_venv "${1}/env"
@@ -313,34 +323,50 @@ function install_nmct_box(){
 # #################################################################
 function update_nmct_box(){
     pushd "${1}"
+    git add .
+    git stash
     git pull
     install_framework "${1}"
     install_services "${1}"
     install_shortcuts "${1}"
 }
 
-###################################################################
+
+##################################################################
 # Command line options
 # #################################################################
+
+declare -r CREATE_USER=nmct
+declare -r PASSWORD=smartthings
+declare -r HOSTNAME_PREFIX="nmct-box"
+
 #[[ -z ${NMCT_HOME} ]] && export NMCT_HOME="$(dirname "${PWD}")" # FIXME!
 [[ -z ${NMCT_HOME} ]] && export NMCT_HOME=/home/nmct/nmct-box
 
-echo "NMCT-Box home: ${NMCT_HOME}"
+function do_phase1(){
+    prepare_image ${HOSTNAME_PREFIX} ${CREATE_USER} ${PASSWORD}
+    echo -e "\n\n\n\nDone! User 'pi' will be disabled, after rebooting you can connect with: \n
+    hostname:\t\033[32m${new_hostname}\033[0m
+    username:\t\033[32m${CREATE_USER}\033[0m
+    password:\t\033[32m${PASSWORD}\033[0m
+    \nPress any key to reboot...\n\n\n"
+    read -sn 1
+    do_pi_user ${FALSE}
+    }
+function set_boot_script() {
+#TODO
+#    cp "/etc/systemd/system/$(basename ${file})"
+    sudo systemctl daemon-reload
+#    sudo systemctl enable "$(basename ${file})"
+#    sudo systemctl start "$(basename ${file})"
 
+}
+
+echo "NMCT-Box home: ${NMCT_HOME}"
 for i in $*; do
     case ${i} in
     prepare)
-        declare -r CREATE_USER=nmct
-        declare -r PASSWORD=smartthings
-        declare -r HOSTNAME_PREFIX="nmct-box"
-        prepare_image ${HOSTNAME_PREFIX} ${CREATE_USER} ${PASSWORD}
-        echo -e "\n\n\n\nDone! User 'pi' will be disabled, after rebooting you can connect with: \n
-        hostname:\t\033[32m${new_hostname}\033[0m
-        username:\t\033[32m${CREATE_USER}\033[0m
-        password:\t\033[32m${PASSWORD}\033[0m
-        \nPress any key to reboot...\n\n\n"
-        read -sn 1
-        do_pi_user ${FALSE}
+        do_phase1
         sudo reboot
         ;;
     install)
@@ -349,7 +375,15 @@ for i in $*; do
         ;;
     update)
         update_nmct_box "${NMCT_HOME}"
+        install_nmct_box "${NMCT_HOME}"
         exit $?
+        ;;
+    autoinstall)
+        do_phase1
+        set_boot_script
+        ;;
+    restart)
+        restart_services
         ;;
     esac
 done

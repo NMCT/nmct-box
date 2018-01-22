@@ -1,6 +1,6 @@
 import aiy.audio
 
-from .apis.watson import WatsonConversation, _WatsonSynthesizer, _WatsonRecognizer, WatsonTranslator
+from .apis.watson import WatsonConversation, WatsonSynthesizer, WatsonRecognizer, WatsonTranslator
 from .settings import DEFAULT_MODEL, DEFAULT_VOICE
 
 _recognizers = {}
@@ -10,19 +10,19 @@ _synthesizers = {}
 
 def get_recognizer(model=DEFAULT_MODEL):
     global _recognizers
-    _recognizers.setdefault(model, _WatsonRecognizer(model))
+    _recognizers.setdefault(model, WatsonRecognizer(model))
     return _recognizers[model]
 
 
-def get_conversation(workspace_id):
+def get_conversation(workspace_id, credentials=None):
     global _conversation
-    _conversation.setdefault(workspace_id, WatsonConversation(workspace_id))
+    _conversation.setdefault(workspace_id, WatsonConversation(workspace_id, credentials=credentials))
     return _conversation[workspace_id]
 
 
 def get_synthesizer(voice=DEFAULT_VOICE):
     global _synthesizers
-    _synthesizers.setdefault(voice, _WatsonSynthesizer(voice))
+    _synthesizers.setdefault(voice, WatsonSynthesizer(voice))
     return _synthesizers[voice]
 
 
