@@ -321,16 +321,20 @@ function install_nmct_box(){
 # Arguments:
 #   $1 -> Install directory (NMCT_HOME)
 # #################################################################
-function update_nmct_box(){
-    pushd "${1}"
-    git add .
-    git stash
-    git pull
+function apply_update(){
     install_framework "${1}"
     install_services "${1}"
     install_shortcuts "${1}"
 }
 
+function update_nmct_box(){
+    pushd "${1}"
+    git add .
+    git stash
+    git pull
+    source "${1}/scripts/nmct-box.sh"
+    apply_update "${1}"
+}
 
 ##################################################################
 # Command line options
