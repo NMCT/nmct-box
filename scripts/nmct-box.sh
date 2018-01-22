@@ -492,7 +492,7 @@ for i in $*; do
     ;;
     update|refresh)
         arg=${@}
-        do_service stop *
+        do_service stop
         update_project "${NMCT_HOME}"
         "$0" -f apply_${arg} "${NMCT_HOME}"
         do_service start *
