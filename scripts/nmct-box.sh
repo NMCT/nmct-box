@@ -297,7 +297,7 @@ function install_framework(){
     # install our package
     pushd "${1}"
     python3 -m pip install -r requirements.txt
-    python3 setup.py install
+    python3 -m pip install .
 #    echo "${NMCT_HOME}/src" > "${NMCT_HOME}/env/lib/python3.5/site-packages/nmct-box.pth"
     popd
 }
