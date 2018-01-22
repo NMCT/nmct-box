@@ -9,29 +9,27 @@ error_log  /tmp/nmct-nginx-error.log;
     }
 
 	upstream jupyter {
-
 		server localhost:2002;
 	}
 	upstream jupyterhub {
-
 		server localhost:2003;
 	}
 	upstream bokeh {
-
 		server localhost:2004;
+	}
+    upstream flask_dev {
+    	server localhost:3001;
 	}
     upstream jupyter_dev {
-
-	server localhost:2002;
+    	server localhost:3002;
 	}
-	upstream jupyterhub {
-
-		server localhost:2003;
+	upstream jupyterhub_dev {
+		server localhost:3003;
 	}
-	upstream bokeh {
-
-		server localhost:2004;
+	upstream bokeh_dev {
+		server localhost:3004;
 	}
+
 	server {
 
 		listen [::]:80 default_server;
