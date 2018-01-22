@@ -268,10 +268,11 @@ function install_nmct_tool(){
 # #################################################################
 function do_service(){
     action=${1}; action=${action:=status}
-    service=${2}; service=${action:=*}
+    service=${2}; service=${service:=*}
 
     sudo systemctl daemon-reload
     for svc in /etc/systemd/system/nmct-box-${service}; do
+#        echo "sudo systemctl ${action} "$(basename ${svc})""
         sudo systemctl ${action} "$(basename ${svc})"
     done
         sudo systemctl ${action} nginx
