@@ -493,7 +493,7 @@ for i in $*; do
     update|refresh)
         update_project "${NMCT_HOME}"
         shift
-        apply_${@} "${NMCT_HOME}"
+        "apply_${@} ${NMCT_HOME}"
         exit $?
     ;;
     --function)
