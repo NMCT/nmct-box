@@ -152,9 +152,9 @@
                             </form>
                             <br/>
 
-                            <form role="form" action="{{ url_for('show_temperature') }}" method="get">
+                            <form role="form" action="{{ url_for('show_temperature') }}" method="get" class="form-group">
                                 <label>
-                                    <select name="serial_number">
+                                    <select name="serial_number" class="form-control">
                                         {% for id in w1ids %}
                                             <option value="{{ id }}" SELECTED>{{ id }}</option>
 

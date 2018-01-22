@@ -227,10 +227,17 @@ function install_services(){
     sudo ln -s "${1}/scripts/nmct-box.sh" /usr/bin/nmct-box
 }
 
-function restart_services(){
+##################################################################
+# Purpose: Start/stop/restart NMCT-box systemd services units
+# Arguments:
+#   $1 -> Install directory (NMCT_HOME)
+# #################################################################
+function do_services(){
+    [[ -z ${1} ]] && local action=${1} || local action=restart
+
     sudo systemctl daemon-reload
     for svc in /etc/systemd/system/nmct-box*.service; do
-        sudo systemctl restart "$(basename ${svc})"
+        sudo systemctl ${action} "$(basename ${svc})"
     done
         sudo systemctl restart nginx
 }
@@ -342,7 +349,7 @@ function update_nmct_box(){
 
 declare -r CREATE_USER=nmct
 declare -r PASSWORD=smartthings
-declare -r HOSTNAME_PREFIX="nmct-box"
+declare -r HOSTNAME_PREFIX="box"
 
 #[[ -z ${NMCT_HOME} ]] && export NMCT_HOME="$(dirname "${PWD}")" # FIXME!
 [[ -z ${NMCT_HOME} ]] && export NMCT_HOME=/home/nmct/nmct-box
@@ -359,10 +366,11 @@ function do_phase1(){
     }
 function set_boot_script() {
 #TODO
-#    cp "/etc/systemd/system/$(basename ${file})"
+    sudo cp "${NMCT_HOME}/systemd/nmct-box-atboot.service" /etc/systemd/system/
     sudo systemctl daemon-reload
-#    sudo systemctl enable "$(basename ${file})"
-#    sudo systemctl start "$(basename ${file})"
+    sudo systemctl enable nmct-box-atboot.service
+    sudo systemctl start nmct-box-atboot.service
+    echo -e "/usr/bin/env bash \n\n source "
 
 }
 
@@ -372,22 +380,28 @@ for i in $*; do
     prepare)
         do_phase1
         sudo reboot
-        ;;
+    ;;
     install)
         install_nmct_box "${NMCT_HOME}"
         exit $?
-        ;;
+    ;;
     update)
         update_nmct_box "${NMCT_HOME}"
-        install_nmct_box "${NMCT_HOME}"
         exit $?
-        ;;
+    ;;
+    reinstall)
+        sudo rm -rf "${NMCT_HOME}"
+        install_nmct_box "${NMCT_HOME}"
+    ;;
     autoinstall)
         do_phase1
         set_boot_script
-        ;;
-    restart)
-        restart_services
-        ;;
+    ;;
+    start|stop|restart|status)
+        do_services ${i}
+    ;;
+    *)
+        die "Unknown command: ${i}"
+    ;;
     esac
 done

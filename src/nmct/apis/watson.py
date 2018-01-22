@@ -4,9 +4,12 @@ import logging
 from urllib.parse import urlparse
 
 import aiy.audio
+import os
 from autobahn.asyncio import WebSocketClientFactory, WebSocketClientProtocol
 from autobahn.websocket.util import create_url
 from watson_developer_cloud import AuthorizationV1, ConversationV1, LanguageTranslatorV2, SpeechToTextV1, TextToSpeechV1
+
+from nmct import settings
 
 log = logging.getLogger("Watson")
 
@@ -16,7 +19,7 @@ class AuthenticationError(Exception):
 
 
 class ServiceCredential(object):
-    def __init__(self, name, data=None, secrets="../../.secret/credentials.json"):  # TODO: path
+    def __init__(self, name, data=None, secrets=os.path.join(settings.SECRETS_PATH, "credentials.json")):
         try:
             if data is None:
                 with open(secrets) as f:

@@ -39,7 +39,6 @@ def nmct_box_demo():
     ring = nmct.box.get_pixel_ring()
     lcd = nmct.box.get_display()
     acc = nmct.box.get_accelerometer()
-    temp = nmct.box.get_thermometer()
 
     detector = nmct.snowboy.get_detector()
     detector.add_hotword("NMCT.seb.pmdl")
@@ -90,7 +89,7 @@ def nmct_box_demo():
         ring.queue_effect("clear")
         button.wait_for_press()
         michael.say("Your temperature measures {:.2f} degrees. I'd say that's cause for concern!"
-                    .format(temp.measure()))
+                    .format(nmct.box.measure_temperature()))
         ring.queue_effect("theater_chase", COLORS["RED"])
         ring.queue_effect("clear")
 
