@@ -5,7 +5,7 @@
 - If you previously installed in another location, you need to unset or change `$NMCT_HOME` before installation
 
 ```bash
-git clone https://github.com/nmctseb/nmct-box.git
+git clone https://github.com/NMCT/nmct-box.git
 cd nmct-box/scripts
 ./install.sh
 ```
@@ -22,8 +22,6 @@ git pull
 - Put a suitable `wpa_supplicant.conf`, `ssh` and [prepare_image.sh](scripts/) on the boot partition
 - After boot, run `sudo /boot/prepare_image.sh`
 - Wait ~2.5 hours 
-- Note the credentials and hostname displayed before the reboot at the end!
-
 
 ## Usage
 > write me!

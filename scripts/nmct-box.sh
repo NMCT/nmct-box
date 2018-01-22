@@ -8,7 +8,7 @@ declare -r CREATE_USER=nmct                                      #
 declare -r PASSWORD=smartthings                                  #
 declare -r HOSTNAME_PREFIX="box"                                 #
 declare -r DEFAULT_HOME=/home/nmct/nmct-box                      #
-declare -r REPO_URL="https://github.com/nmctseb/nmct-box.git"    #
+declare -r REPO_URL="https://github.com/NMCT/nmct-box.git"    #
 #                                                                #
 ##################################################################
 #                                                                #
