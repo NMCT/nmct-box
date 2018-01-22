@@ -1,0 +1,15 @@
+[Unit]
+Description=Jupyter notebook for NMCT box
+After=network.target
+
+[Service]
+Type=oneshot
+User=${USER}
+Group=${USER}
+WorkingDirectory=${NMCT_HOME}
+Environment="PATH=${NMCT_HOME}/env/bin"
+Environment="NMCT_HOME=${NMCT_HOME}"
+ExecStart=${NMCT_HOME}/env/bin/python ${NMCT_HOME}/src/examples/ipconfig.py
+
+[Install]
+WantedBy=multi-user.target

@@ -322,7 +322,8 @@ function update_nmct_box(){
 ###################################################################
 # Command line options
 # #################################################################
-[[ -z ${NMCT_HOME} ]] && export NMCT_HOME="$(dirname "${PWD}")" # FIXME!
+#[[ -z ${NMCT_HOME} ]] && export NMCT_HOME="$(dirname "${PWD}")" # FIXME!
+[[ -z ${NMCT_HOME} ]] && export NMCT_HOME=/home/nmct/nmct-box
 
 echo "NMCT-Box home: ${NMCT_HOME}"
 
