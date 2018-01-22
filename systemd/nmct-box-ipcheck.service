@@ -1,5 +1,5 @@
 [Unit]
-Description=Jupyter notebook for NMCT box
+Description=IP connection check and display on LCD
 After=network.target
 
 [Service]

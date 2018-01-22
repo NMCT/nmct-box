@@ -20,6 +20,18 @@ error_log  /tmp/nmct-nginx-error.log;
 
 		server localhost:2004;
 	}
+    upstream jupyter_dev {
+
+	server localhost:2002;
+	}
+	upstream jupyterhub {
+
+		server localhost:2003;
+	}
+	upstream bokeh {
+
+		server localhost:2004;
+	}
 	server {
 
 		listen [::]:80 default_server;

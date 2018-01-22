@@ -1,3 +1,4 @@
+PyYAML
 
 git+https://github.com/Kitt-AI/snowboy#egg=snowboy
 -e git+https://github.com/google/aiyprojects-raspbian.git@aiyprojects#egg=aiy&subdirectory=src
