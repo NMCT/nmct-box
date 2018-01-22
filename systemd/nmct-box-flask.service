@@ -1,5 +1,5 @@
 [Unit]
-Description=uWSGI instance to serve NMCT Box web interface
+Description=uWSGI instance to serve NMCT Box Flask web interface
 After=network.target
 
 [Service]

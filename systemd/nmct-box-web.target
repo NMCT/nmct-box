@@ -1,0 +1,11 @@
+[Unit]
+Description=NMCT-Box WebUI
+BindsTo=nmct-box-flask.service
+BindsTo=nmct-box-jupyter.service
+BindsTo=nmct-box-jupyterhub.service
+BindsTo=nmct-box-bokeh.service
+BindsTo=nginx.service
+After=network.target
+
+[Install]
+WantedBy=multi-user.target
