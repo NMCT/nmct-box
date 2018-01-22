@@ -407,7 +407,13 @@ function apply_refresh(){
 
 function do_phase1(){
     prepare_image ${HOSTNAME_PREFIX} ${CREATE_USER} ${PASSWORD} ${DEFAULT_HOME}
+    [[ -z ${SSH_CONNECTION} ]] &&
+        ip="$(ip a s scope global up | awk '/inet /{print substr($2,0)}' | tr '\n' '\t' )" ||
+        ip="$(echo ${SSH_CONNECTION} | awk '{print $3}')"
+    sudo -u ${CREATE_USER} git clone "${REPO_URL}" "${1}"
+        install_nmct_tool "${1}"
     echo -e "\n\n\n\nDone! User 'pi' will be disabled, after rebooting you can connect with: \n
+    address:\t\033[32m${ip}\033[0m
     hostname:\t\033[32m${new_hostname}\033[0m
     username:\t\033[32m${CREATE_USER}\033[0m
     password:\t\033[32m${PASSWORD}\033[0m
@@ -418,12 +424,13 @@ function do_phase1(){
 
 function set_boot_script() {
 #TODO
-    install_nmct_tool "${1}"
+
     sudo cp "${1}/systemd/nmct-box-atboot.service" /etc/systemd/system/
     sudo systemctl daemon-reload
     sudo systemctl enable nmct-box-atboot.service
     sudo systemctl start nmct-box-atboot.service
-    echo -e "/usr/bin/env bash \n\n source "
+    echo -e "#!/usr/bin/env bash \n\n ${1}/scipts/nmct-box.sh install | wall ; exit $?" |
+        sudo tee /boot/atboot.sh >/dev/null
 
 }
 
