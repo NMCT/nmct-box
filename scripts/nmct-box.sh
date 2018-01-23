@@ -365,6 +365,7 @@ function install_framework(){
     pushd "${1}"
     ./env/bin/python3 -m pip install -r requirements.txt -e .
     mkdir uploads
+    mkdir ./src/nmct/web/run
     popd
 }
 

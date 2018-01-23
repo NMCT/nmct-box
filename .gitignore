@@ -9,6 +9,8 @@
 # User-specific stuff:
 .idea
 uploads
+run
+notebooks/jupyterhub_cookie_secret
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
@@ -214,4 +216,3 @@ tags
 .dropbox.attr
 .dropbox.cache
 
-notebooks/jupyterhub_cookie_secret

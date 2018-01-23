@@ -18,21 +18,6 @@ error_log  /tmp/nmct-nginx-error.log;
 		server localhost:2004;
 	}
 
-    upstream flask_dev {
-    	server localhost:3001;
-	}
-    upstream jupyter_dev {
-    	server localhost:3002;
-	}
-	upstream jupyterhub_dev {
-		server localhost:3003;
-	}
-	upstream bokeh_dev {
-		server localhost:3004;
-	}
-	upstream neopixel_dev {
-		server localhost:3005;
-	}
 
 	server {
 
@@ -41,7 +26,7 @@ error_log  /tmp/nmct-nginx-error.log;
 		location / {
 
 			include uwsgi_params;
-			uwsgi_pass unix:${NMCT_HOME}/src/nmct/web/nmct-flask.sock;
+			uwsgi_pass unix:${NMCT_HOME}/src/nmct/web/run/nmct-flask.sock;
 			proxy_set_header Host $host;
 			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 			proxy_set_header X-Real-IP $remote_addr;
@@ -52,13 +37,24 @@ error_log  /tmp/nmct-nginx-error.log;
 		location /ring {
 
 			include uwsgi_params;
-			uwsgi_pass unix:${NMCT_HOME}/src/nmct/web/nmct-neopixel.sock;
+			uwsgi_pass unix:${NMCT_HOME}/src/nmct/web/run/nmct-neopixel.sock;
 			proxy_set_header Host $host;
 			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 			proxy_set_header X-Real-IP $remote_addr;
 			uwsgi_param     UWSGI_SCHEME $scheme;
             uwsgi_param     SERVER_SOFTWARE    nginx/$nginx_version;
-            }
+        }
+
+		location /student {
+
+			include uwsgi_params;
+			uwsgi_pass unix:${NMCT_HOME}/src/nmct/web/run/nmct-student.sock;
+			proxy_set_header Host $host;
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+			proxy_set_header X-Real-IP $remote_addr;
+			uwsgi_param     UWSGI_SCHEME $scheme;
+            uwsgi_param     SERVER_SOFTWARE    nginx/$nginx_version;
+        }
 
 		location /notebook {
 
