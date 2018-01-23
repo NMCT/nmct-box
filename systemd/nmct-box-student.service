@@ -1,0 +1,14 @@
+[Unit]
+Description=uWSGI instance to serve NMCT Box Flask web interface
+After=network.target
+
+[Service]
+User=nmct
+Group=www-data
+WorkingDirectory=${NMCT_HOME}/src/nmct/web
+Environment="PATH=${NMCT_HOME}/env/bin"
+Environment="NMCT_HOME=${NMCT_HOME}"
+ExecStart="${NMCT_HOME}/env/bin/uwsgi" --ini "${NMCT_HOME}/src/nmct/web/wsgi-flask.ini"
+
+[Install]
+WantedBy=multi-user.target
