@@ -1,4 +1,5 @@
 import time
+from threading import RLock
 
 import RPi.GPIO as GPIO
 
@@ -50,6 +51,12 @@ class I2C:
 
 
 class LCDisplay:
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = object.__new__(cls)
+        return cls._instance
+
     # display werkt goed zonder levelshifter maar moet een voeding krijgen van 5 Volt.
     I2C_ADDR = 0x4E  # 0x7e  # I2C device address  0x3f   #adres in de pi dus nog 1 naar links shiften
     LCD_WIDTH = 16  # Maximum characters per line
@@ -75,39 +82,43 @@ class LCDisplay:
 
     def __init__(self, sda, scl):
         self._driver = I2C(sda, scl, LCDisplay.I2C_ADDR)
+        self._lock = RLock()
         self.__lcd_init()
 
     def __lcd_init(self):
         # Initialise display
-        self.__lcd_byte(0x33, LCDisplay.LCD_CMD)  # 110011 Initialise
-        self.__lcd_byte(0x32, LCDisplay.LCD_CMD)  # 110010 Initialise
-        self.__lcd_byte(0x28, LCDisplay.LCD_CMD)  # 101000 Data length, number of lines, font size
-        self.__lcd_byte(0x0C, LCDisplay.LCD_CMD)  # 001100 Display On,Cursor Off, Blink Off
-        self.__lcd_byte(0x01, LCDisplay.LCD_CMD)  # 000001 Clear display
-        time.sleep(LCDisplay.E_DELAY)
-        self.__lcd_byte(LCDisplay.LCD_LINE_1, LCDisplay.LCD_CMD)    # Move to start
+        with self._lock:
+            self.__lcd_byte(0x33, LCDisplay.LCD_CMD)  # 110011 Initialise
+            self.__lcd_byte(0x32, LCDisplay.LCD_CMD)  # 110010 Initialise
+            self.__lcd_byte(0x28, LCDisplay.LCD_CMD)  # 101000 Data length, number of lines, font size
+            self.__lcd_byte(0x0C, LCDisplay.LCD_CMD)  # 001100 Display On,Cursor Off, Blink Off
+            self.__lcd_byte(0x01, LCDisplay.LCD_CMD)  # 000001 Clear display
+            time.sleep(LCDisplay.E_DELAY)
+            self.__lcd_byte(LCDisplay.LCD_LINE_1, LCDisplay.LCD_CMD)    # Move to start
 
     def __lcd_byte(self, bits, mode):
-        # Send byte to data pins
-        # bits = the data
-        # mode = 1 for data
-        #        0 for command
-        bits_high = mode | (bits & 0xF0) | LCDisplay.LCD_BACKLIGHT
-        bits_low = mode | ((bits << 4) & 0xF0) | LCDisplay.LCD_BACKLIGHT
-        # High bits
-        self._driver.write(bits_high)
-        self.__lcd_toggle_enable(bits_high)
-        # Low bits
-        self._driver.write(bits_low)
-        self.__lcd_toggle_enable(bits_low)
+        with self._lock:
+            # Send byte to data pins
+            # bits = the data
+            # mode = 1 for data
+            #        0 for command
+            bits_high = mode | (bits & 0xF0) | LCDisplay.LCD_BACKLIGHT
+            bits_low = mode | ((bits << 4) & 0xF0) | LCDisplay.LCD_BACKLIGHT
+            # High bits
+            self._driver.write(bits_high)
+            self.__lcd_toggle_enable(bits_high)
+            # Low bits
+            self._driver.write(bits_low)
+            self.__lcd_toggle_enable(bits_low)
 
     def __lcd_toggle_enable(self, bits):
-        # Toggle enable
-        time.sleep(LCDisplay.E_DELAY)
-        self._driver.write(bits | LCDisplay.ENABLE)
-        time.sleep(LCDisplay.E_PULSE)
-        self._driver.write(bits & ~LCDisplay.ENABLE)
-        time.sleep(LCDisplay.E_DELAY)
+        with self._lock:
+            # Toggle enable
+            time.sleep(LCDisplay.E_DELAY)
+            self._driver.write(bits | LCDisplay.ENABLE)
+            time.sleep(LCDisplay.E_PULSE)
+            self._driver.write(bits & ~LCDisplay.ENABLE)
+            time.sleep(LCDisplay.E_DELAY)
 
     def clear(self):
         self.__lcd_byte(LCDisplay.LCD_LINE_1, LCDisplay.LCD_CMD)
