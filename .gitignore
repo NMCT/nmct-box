@@ -9,7 +9,7 @@
 # User-specific stuff:
 .idea
 uploads
-run
+src/nmct/web/run
 notebooks/jupyterhub_cookie_secret
 
 # Sensitive or high-churn files:

@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 User=www-data
-Group=www-data
+Group=nmct
 WorkingDirectory=${NMCT_HOME}/src/nmct/web
 Environment="PATH=${NMCT_HOME}/env/bin"
 Environment="NMCT_HOME=${NMCT_HOME}"
