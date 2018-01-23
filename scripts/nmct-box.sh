@@ -482,6 +482,8 @@ fi
 
 NMCT_HOME="${NMCT_HOME:=$PWD}"
 echo -e "\nNMCT-Box home: ${NMCT_HOME}\n"
+source "${NMCT_HOME}/env/bin/activate"
+
 for i in $*; do
     case ${i} in
     prepare)
