@@ -3,6 +3,7 @@
 import atexit
 # https://raspberrytips.nl/neopixel-ws2811-raspberry-pi/
 import functools
+import logging
 import queue
 import threading
 import time
@@ -12,6 +13,8 @@ from traceback import print_exception
 import _rpi_ws281x as ws
 import os
 from matplotlib import colors
+
+log = logging.getLogger(__name__)
 
 
 class Color:
@@ -73,6 +76,12 @@ for n, v in colors.CSS4_COLORS.items():
     setattr(Color, n, Color(*[round(x * 255) for x in colors.hex2color(v)]))
 
 OFF = Color()
+
+_effects = []
+
+
+def effect(func):
+    _effects.append(func)
 
 
 class _LedArray(object):
@@ -205,13 +214,14 @@ class PixelStrip(object):
 
             self._init_successful = True
 
-    def show(self):
+    def show(self, t=0.0):
         """Update the display with the data from the LED buffer."""
         with self._lock:
             resp = ws.ws2811_render(self._leds)
             if resp != 0:
                 str_resp = ws.ws2811_get_return_t_str(resp)
                 raise RuntimeError('ws2811_render failed with code {0} ({1})'.format(resp, str_resp))
+            time.sleep(t)
 
     def set_pixel_color(self, n, color):
         """Set LED at position n to the provided 24-bit color value (in RGB order).
@@ -264,24 +274,25 @@ class PixelStrip(object):
 
 
 class PixelRing(PixelStrip):
+    @effect
     def clear(self, *args, **kwargs):
         for led in self:
             self.set_pixel_color(led, OFF)
             self.show()
 
-    def sleep(self, sec):
-        time.sleep(sec)
+    sleep = PixelStrip.show
 
+    @effect
     def loop(self, color: Color, *, speed=20, iterations=3):
         """Loop a single LED around the ring"""
         for i in range(iterations):
             for led in self:
                 self.set_pixel_color(led, color)
-                self.show()
-                time.sleep(1 / speed)
+                self.sleep(1 / speed)
                 self.set_pixel_color(led, OFF)
                 self.show()
 
+    @effect
     def fill(self, color: Color, *args, speed=20):
         """Light all LEDs one by one"""
         for led in self:
@@ -289,6 +300,7 @@ class PixelRing(PixelStrip):
             self.show()
             time.sleep(1 / speed)
 
+    @effect
     def unfill(self, color: Color, *args, speed=20):
         """Loop a single LED around the ring"""
         for led in self:
@@ -299,6 +311,7 @@ class PixelRing(PixelStrip):
             self.show()
             time.sleep(1 / speed)
 
+    @effect
     def theater_chase(self, color, *args, speed=20, iterations=10):
         """Movie theater light style chaser animation."""
         for j in range(iterations):
@@ -323,6 +336,7 @@ class PixelRing(PixelStrip):
             pos -= 170
             return Color(0, pos * 3, 255 - pos * 3)
 
+    @effect
     def rainbow(self, *args, speed=20):
         """Draw rainbow that uniformly distributes itself across all pixels."""
         for led in self:
@@ -330,6 +344,7 @@ class PixelRing(PixelStrip):
             self.show()
             time.sleep(1 / speed)
 
+    @effect
     def rainbow_chase(self, *args, speed=20):
         """Rainbow movie theater light style chaser animation."""
         for j in range(256):
@@ -366,35 +381,41 @@ class NeoPixelThread(threading.Thread):
             args = []
         if os.geteuid() == 0:
             self._queue.put(functools.partial(getattr(self._ring, effect), *args, **kwargs))
+        else:
+            log.error("No root, no ring!")
+
+    @staticmethod
+    def list_effects():
+        return set(_effects)
 
 
 if __name__ == "__main__":
     ring = PixelRing(24, 12)
     ring.begin()
     print("loop")
-    ring.loop(COLORS["RED"])
+    ring.loop(Palette.RED)
     time.sleep(1)
     print("fill")
-    ring.fill(COLORS["GREEN"])
+    ring.fill(Palette.GREEN)
     time.sleep(1)
     print("fill off")
-    ring.fill(OFF)
+    ring.fill(Palette.BLACK)
     time.sleep(1)
     print("unfill")
-    ring.unfill(COLORS["GREEN"])
+    ring.unfill(Palette.GREEN)
     time.sleep(1)
     print("rainbow chase")
     ring.rainbow_chase()
     time.sleep(1)
     print("theater chase")
-    ring.theater_chase(COLORS["BLUE"])
+    ring.theater_chase(Palette.BLUE)
     time.sleep(1)
     print("rainbow")
     ring.rainbow()
     time.sleep(1)
     print("clear")
     ring.clear()
-    for name, col in COLORS.items():
+    for name, col in dict(Palette).items():
         print("{}: {}".format(name, col))
         for led in ring:
             ring.set_pixel_color(led, col)
@@ -403,5 +424,5 @@ if __name__ == "__main__":
             # ring.set_pixel_color(led, Color(0, 0, 0))
             # ring.show()
     for led in ring:
-        ring.set_pixel_color(led, COLORS["K"])
+        ring.set_pixel_color(led, Palette.BLACK)
         ring.show()
