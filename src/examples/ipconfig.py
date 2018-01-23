@@ -36,7 +36,7 @@ def ipconfig():
     button = aiy.voicehat.get_button()
     delay = 3
 
-    def shutdown():
+    def shutdown(*args):
         lcd.clear()
         time.sleep(1)
         try:
@@ -68,4 +68,5 @@ def ipconfig():
 
 
 if __name__ == '__main__':
+    time.sleep(30)      # make sure we are fully booted and online
     ipconfig()
