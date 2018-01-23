@@ -42,7 +42,7 @@
                     Neopixel
                 </div>
                 <div class="panel-body">
-                    <iframe src="ring/"></iframe>
+                    <iframe src="/ring"></iframe>
                 </div><!-- /.panel-body -->
             </div> <!-- /.panel -->
         </div><!-- /.col-lg-12 -->
@@ -97,10 +97,14 @@
                     Upload
                 </div>
                 <div class="panel-body">
-                    <form action="{{ url_for('upload_file') }}" method=post enctype=multipart/form-data role="form" >
+                    {% if upload_success %}
+                        <span>Upload successful</span>
+                    {% endif %}
+                    <form action="{{ url_for('upload_file') }}" method=post enctype=multipart/form-data role="form">
                         <p><input type=file name=file>
                             <input type=submit value=Upload>
                     </form>
+                <a href="{{ url_for('show_uploads') }}">Uploads</a>
                 </div><!-- /.panel-body -->
             </div> <!-- /.panel -->
         </div><!-- /.col-lg-12 -->

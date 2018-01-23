@@ -72,7 +72,7 @@ def nmct_box_demo():
         ring.queue_effect("fill", COLORS["ORANGE"])
         ring.queue_effect("sleep", 0.5)
         ring.queue_effect("fill", COLORS["BLACK"])
-        lisa.say("Hi. I'm the NMCT box of doom and I'd like you to meet some of my friends."
+        lisa.say("Hi. I'm the NMCT box of arbitrary code execution and I'd like you to meet some of my friends."
                  "Press my big, round button to get started.")
         button.wait_for_press()
 

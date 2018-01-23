@@ -61,27 +61,27 @@ class Color:
 
     @classmethod
     def by_name(cls, value):
-        return cls(*[round(x * 255) for x in colors.hex2color(colors.CSS4_COLORS.get(value))])
+        return cls(*[round(x) * 255 for x in colors.hex2color(colors.CSS4_COLORS[value])])
 
 
-CSS4_COLORS = {str.upper(n): Color(*[round(x * 255) for x in v])
+CSS4_COLORS = {n: Color(*[round(x * 255) for x in v])
                for n, v in colors.BASE_COLORS.items()}
-LETTER_COLORS = {str.upper(n): Color(*[round(x * 255) for x in colors.hex2color(v)])
+LETTER_COLORS = {n: Color(*[round(x * 255) for x in colors.hex2color(v)])
                  for n, v in colors.CSS4_COLORS.items()}
 
-Palette = Enum("Palette", dict(list(CSS4_COLORS.items())
-                               + list(LETTER_COLORS.items())))
+Palette = Enum("Palette", dict(list(CSS4_COLORS.items())))
 
 for n, v in colors.CSS4_COLORS.items():
     setattr(Color, n, Color(*[round(x * 255) for x in colors.hex2color(v)]))
 
 OFF = Color()
 
-_effects = []
+_animations = []
 
 
-def effect(func):
-    _effects.append(func)
+def animation(func):
+    _animations.append(func)
+    return func
 
 
 class _LedArray(object):
@@ -274,7 +274,7 @@ class PixelStrip(object):
 
 
 class PixelRing(PixelStrip):
-    @effect
+    @animation
     def clear(self, *args, **kwargs):
         for led in self:
             self.set_pixel_color(led, OFF)
@@ -282,7 +282,7 @@ class PixelRing(PixelStrip):
 
     sleep = PixelStrip.show
 
-    @effect
+    @animation
     def loop(self, color: Color, *, speed=20, iterations=3):
         """Loop a single LED around the ring"""
         for i in range(iterations):
@@ -292,7 +292,7 @@ class PixelRing(PixelStrip):
                 self.set_pixel_color(led, OFF)
                 self.show()
 
-    @effect
+    @animation
     def fill(self, color: Color, *args, speed=20):
         """Light all LEDs one by one"""
         for led in self:
@@ -300,7 +300,7 @@ class PixelRing(PixelStrip):
             self.show()
             time.sleep(1 / speed)
 
-    @effect
+    @animation
     def unfill(self, color: Color, *args, speed=20):
         """Loop a single LED around the ring"""
         for led in self:
@@ -311,7 +311,7 @@ class PixelRing(PixelStrip):
             self.show()
             time.sleep(1 / speed)
 
-    @effect
+    @animation
     def theater_chase(self, color, *args, speed=20, iterations=10):
         """Movie theater light style chaser animation."""
         for j in range(iterations):
@@ -336,7 +336,7 @@ class PixelRing(PixelStrip):
             pos -= 170
             return Color(0, pos * 3, 255 - pos * 3)
 
-    @effect
+    @animation
     def rainbow(self, *args, speed=20):
         """Draw rainbow that uniformly distributes itself across all pixels."""
         for led in self:
@@ -344,7 +344,7 @@ class PixelRing(PixelStrip):
             self.show()
             time.sleep(1 / speed)
 
-    @effect
+    @animation
     def rainbow_chase(self, *args, speed=20):
         """Rainbow movie theater light style chaser animation."""
         for j in range(256):
@@ -369,24 +369,26 @@ class NeoPixelThread(threading.Thread):
     def run(self):
         while True:
             try:
-                effect = self._queue.get()
-                if effect is None:
+                funct = self._queue.get()
+                if funct is None:
                     break
-                effect()
+                funct()
             except Exception as ex:
                 print_exception(ex, ex, ex.__traceback__)
 
-    def queue_effect(self, effect, *args, **kwargs):
+    def queue_animation(self, ani, *args, **kwargs):
         if args is None:
             args = []
         if os.geteuid() == 0:
-            self._queue.put(functools.partial(getattr(self._ring, effect), *args, **kwargs))
+            self._queue.put(functools.partial(getattr(self._ring, ani), *args, **kwargs))
         else:
-            log.error("No root, no ring!")
+            msg = "No root, no ring!"
+            log.error(msg)
+            raise OSError(msg)
 
     @staticmethod
-    def list_effects():
-        return set(_effects)
+    def list_animations():
+        return set(_animations)
 
 
 if __name__ == "__main__":

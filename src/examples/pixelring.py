@@ -18,6 +18,8 @@
 import logging
 import time
 
+from nmct import Palette
+
 import nmct.box
 from nmct.drivers.neopixel import COLORS
 
@@ -30,7 +32,7 @@ def pixelring_demo():
     # ring.queue_effect("rainbow")
     # ring.queue_effect("clear")
     # time.sleep(1)
-    yellow_ = COLORS["YELLOW"]
+    yellow_ = Palette.YELLOW
     ring.queue_effect("fill", yellow_)
     print(yellow_)
     time.sleep(2)

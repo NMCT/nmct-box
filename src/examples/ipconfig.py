@@ -16,6 +16,7 @@
 """Internet check and IP configuration with LCD display"""
 
 import logging
+import signal
 
 import aiy.voicehat
 import sys
@@ -44,6 +45,7 @@ def ipconfig():
             pass
 
     button.on_press(shutdown)
+    signal.signal(signal.SIGTERM, shutdown)
 
     while True:
         lcd.write_line("NMCT-Box".center(16), 1)

@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='NMCT-Box',
-    version='0.4.0',
+    version='0.4.1',
     description='NMCT Box framework',
     package_dir={'': 'src'},
     packages=['nmct', 'nmct.drivers', 'nmct.apis', 'nmct.web'],

@@ -7,10 +7,10 @@
 <body>
 <div class="row">
     <div class="col-lg-6">
-        <form role="form" action="{{ url_for('neopixel') }}" method="post">
+        <form role="form" action="{{ url_for('show_animation') }}" method="post">
             <div class="form-group">
                 <label>NeoPixel</label>
-                <label>{{ effect }}</label>
+                <label>{{ animation }}</label>
             </div>
             <!-- TODO: add color picker? https://github.com/mrf345/flask_colorpicker/-->
             <div class="form-group">
@@ -18,23 +18,26 @@
                 <label>Color palette:
                     <select name="color" class="form-control">
                         {% for col in palette %}
-                            <option value="{{ col }}" SELECTED>{{ col }}</option>
+                            <option value="{{ col.name }}" selected>{{ col.name }}</option>
                         {% endfor %}
                     </select>
                 </label></div>
+            <label>
+                <input type="checkbox" name="rgb" value="rgb">
+            </label>
             <div class="form-group">
                 <label>Red: <input type="number" name="red" value="232"/> </label>
                 <label>Green: <input type="number" name="green" value="94"> </label>
                 <label>Blue: <input type="number" name="blue" value="0"> </label>
             </div>
             <div class="form-group">
-                <!-- TODO: programatically enumerate effects? -->
-                <button type="submit" class="btn btn-default" name="effect" value="loop">loop led</button>
-                <button type="submit" class="btn btn-default" name="effect" value="fill">fill ring</button>
-                <button type="submit" class="btn btn-default" name="effect" value="theater_chase">theater chase</button>
-                <button type="submit" class="btn btn-default" name="effect" value="rainbow">rainbow cycle</button>
-                <button type="submit" class="btn btn-default" name="effect" value="rainbow_chase">rainbow chase</button>
-                <button type="submit" class="btn btn-default" name="effect" value="clear">clear</button>
+                <!-- TODO: programatically enumerate animations? -->
+                <button type="submit" class="btn btn-default" name="animation" value="loop">loop led</button>
+                <button type="submit" class="btn btn-default" name="animation" value="fill">fill ring</button>
+                <button type="submit" class="btn btn-default" name="animation" value="theater_chase">theater chase</button>
+                <button type="submit" class="btn btn-default" name="animation" value="rainbow">rainbow cycle</button>
+                <button type="submit" class="btn btn-default" name="animation" value="rainbow_chase">rainbow chase</button>
+                <button type="submit" class="btn btn-default" name="animation" value="clear">clear</button>
             </div>
         </form>
     </div>

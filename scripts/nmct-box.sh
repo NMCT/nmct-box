@@ -138,23 +138,27 @@ function do_system_settings(){
 #    }
 
 function install_packages(){
+    echo -e "Installing apt packages from $1"
     sudo apt update -y
     grep -v '#' $(realpath "${1}") | xargs sudo apt-get install -y
 }
 
 function install_npm_packages(){
+    echo -e "Installing npm packages $1"
     sudo apt install -y npm
     sudo npm install -g ${@}
 }
 
 function create_venv(){
+    echo -e "Setting up venv in $1"
+
     python3 -m pip install --upgrade pip wheel setuptools
     python3 -m venv --system-site-packages ${1}
     ${1}/bin/python -m pip install -I setuptools
 }
 
 function install_aiy_voicekit(){
-    # pull & install AIY drivers
+    echo -e "Installing AIY voicekit to $1"
     dir="$1"
     if [[ ! -d "${dir}" ]]; then
         git clone https://github.com/google/aiyprojects-raspbian.git "${dir}"
@@ -183,9 +187,11 @@ function install_aiy_voicekit(){
 # #################################################################
 function do_pi_user(){
     if [[ ${1} ]]; then
+        echo -e "Enabling pi user"
         sudo chage -E -1 pi
         sudo usermod -U pi
     else
+        echo -e "Disabling pi user"
         sudo chage -E 1 pi
         sudo usermod -L pi
    fi
@@ -193,6 +199,8 @@ function do_pi_user(){
 function install_snowboy(){
     # pull & install Snowboy
     dir="$1"
+    echo -e "Installing snowboy in $dir"
+
     if [[ ! -d "${dir}" ]]; then
         git clone https://github.com/Kitt-AI/snowboy.git ${dir}
         pushd "${dir}"
@@ -205,7 +213,7 @@ function install_snowboy(){
 }
 
 function install_neopixel(){
-    # pull & install NeoPixel driver
+    echo -e "Pull & install NeoPixel driver"
     dir="$1"
     if [[ ! -d "${dir}" ]]; then
         git clone https://github.com/jgarff/rpi_ws281x.git ${dir}
@@ -227,23 +235,22 @@ function install_neopixel(){
 #   $1 -> Install directory (NMCT_HOME)
 # #################################################################
 function install_services(){
+    echo -e "Installing systemd units"
     for file in ${1}/systemd/*; do
-        cat ${file} | envsubst | sudo tee "/etc/systemd/system/$(basename ${file})"
-#        sudo systemctl daemon-reload
-#        sudo systemctl enable "$(basename ${file})"
-#        sudo systemctl start "$(basename ${file})"
+        cat ${file} | envsubst | sudo tee "/etc/systemd/system/$(basename ${file})" >/dev/null
+        sudo systemctl enable "$(basename ${file})"
     done
 
     if [[ -a /etc/nginx/sites-enabled/default ]]; then
         sudo rm -f /etc/nginx/sites-enabled/default
     fi
 
-    cat "${1}/resources/conf/nginx" | envsubst '${NMCT_HOME} ${USER}' | sudo tee /etc/nginx/sites-available/nmct-box
+    cat "${1}/resources/conf/nginx" | envsubst '${NMCT_HOME} ${USER}' |
+        sudo tee /etc/nginx/sites-available/nmct-box >/dev/null
 
     if [[ ! -f /etc/nginx/sites-enabled/nmct-box ]]; then
         sudo ln -s /etc/nginx/sites-available/nmct-box /etc/nginx/sites-enabled/nmct-box
     fi
-#    sudo systemctl restart nginx
 }
 
 ##################################################################
@@ -253,6 +260,7 @@ function install_services(){
 #   $2 -> Destination directory (default: /usr/bin)
 # #################################################################
 function install_nmct_tool(){
+    echo -e "Installing nmct-box tool "
     dst=${2}; dst="$(realpath "${dst:=/usr/bin}")/nmct-box"
     echo "Installing tool to ${dst}..."
     if [[ -a ${dst} ]]; then
@@ -266,9 +274,10 @@ function install_nmct_tool(){
 #   $1 -> Action: start|stop|restart|status|enable|disable
 #   $1 -> Service: flask|jupyter|jupyterhub|bokeh|ipcheck
 # #################################################################
-function do_service(){
+function do_services(){
     action=${1}; action=${action:=status}
     service=${2}; service=${service:=*}
+    echo -e "Service $service $action"
 
     sudo systemctl daemon-reload
     for svc in /etc/systemd/system/nmct-box-${service}; do
@@ -284,6 +293,8 @@ function do_service(){
 #   $1 -> Install directory (NMCT_HOME)
 # #################################################################
 function install_shortcuts(){
+       echo -e "Installing shortcuts"
+
     for file in ${1}/shortcuts/*; do
         cp ${file} ~/Desktop/
     done
@@ -294,6 +305,8 @@ function install_shortcuts(){
 # Arguments: None
 # #################################################################
 function do_git_config(){
+    echo -e "Setting git config"
+
     git config --global user.name "NMCT-Box"
     git config --global user.email "box@nmct.be"
 
@@ -307,11 +320,12 @@ function do_git_config(){
 #   $3 -> Password forv new user
 # #################################################################
 function prepare_image(){
+
     update_raspbian
     do_system_settings
     change_hostname ${1}
     new_default_user ${2} ${3}
-    echo "export NMCT_HOME=${4}" | sudo tee -a /etc/profile.d/nmct_box.sh
+    echo "export NMCT_HOME=${4}" | sudo tee -a /etc/profile.d/nmct_box.sh >/dev/null
     do_git_config
 }
 
@@ -322,7 +336,7 @@ function prepare_image(){
 #   $1 -> Install directory (NMCT_HOME)
 # #################################################################
 function prepare_install(){
-    echo "export NMCT_HOME=${1}" | sudo tee -a /etc/profile.d/nmct_box.sh
+    echo "export NMCT_HOME=${1}" | sudo tee -a /etc/profile.d/nmct_box.sh >/dev/null
     do_git_config
     git clone ${REPO_URL} "${1}"
     install_packages "${1}/packages.txt"
@@ -350,9 +364,7 @@ function install_dependencies(){
 function install_framework(){
     # install our package
     pushd "${1}"
-    python3 -m pip install -r requirements.txt
-    python3 -m pip install .
-#    echo "${NMCT_HOME}/src" > "${NMCT_HOME}/env/lib/python3.5/site-packages/nmct-box.pth"
+    ./env/bin/python3 -m pip install .
     popd
 }
 
@@ -368,8 +380,8 @@ function install_nmct_box(){
     install_nmct_tool "${1}"
     install_services "${1}"
     install_shortcuts "${1}"
-    do_service start
-    do_service enable
+    do_services start
+    do_services enable
 
 }
 
@@ -386,17 +398,17 @@ function update_project(){
 }
 
 function apply_update(){
+    do_services stop
     install_framework "${1}"
     install_services "${1}"
     install_shortcuts "${1}"
-    do_service restart
+    do_services start
 }
 function apply_refresh(){
     pushd "${1}"
-    python3 -m pip install .
     install_services "${1}"
     install_shortcuts "${1}"
-    do_service restart
+    do_services restart
 }
 
 
@@ -487,16 +499,21 @@ for i in $*; do
         set_boot_script "${NMCT_HOME}"
     ;;
     start|stop|restart|status|enable|disable)
-        do_service ${@}
+        do_services ${@}
         exit $?
     ;;
-    update|refresh)
+    update)
         arg=${@}
-        do_service stop
+        do_services stop
         update_project "${NMCT_HOME}"
         "$0" -f apply_${arg} "${NMCT_HOME}"
-        do_service start *
+        do_services start *
         exit $?
+    ;;
+    reload)
+        do_services stop
+        install_framework "${NMCT_HOME}"
+        do_services start
     ;;
     --function|-f)
         shift
