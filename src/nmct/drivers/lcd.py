@@ -51,6 +51,7 @@ class I2C:
 
 
 class LCDisplay:
+    _instance = None
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
@@ -94,7 +95,7 @@ class LCDisplay:
             self.__lcd_byte(0x0C, LCDisplay.LCD_CMD)  # 001100 Display On,Cursor Off, Blink Off
             self.__lcd_byte(0x01, LCDisplay.LCD_CMD)  # 000001 Clear display
             time.sleep(LCDisplay.E_DELAY)
-            self.__lcd_byte(LCDisplay.LCD_LINE_1, LCDisplay.LCD_CMD)    # Move to start
+            self.__lcd_byte(LCDisplay.LCD_LINE_1, LCDisplay.LCD_CMD)  # Move to start
 
     def __lcd_byte(self, bits, mode):
         with self._lock:
@@ -139,7 +140,7 @@ class LCDisplay:
                 self.__lcd_byte(LCDisplay.LCD_SCROLL, LCDisplay.LCD_CMD)
 
     def write_line(self, message, line):
-        self.__lcd_byte(0x80 | line-1 << 6, LCDisplay.LCD_CMD)
+        self.__lcd_byte(0x80 | line - 1 << 6, LCDisplay.LCD_CMD)
         for c in message:
             self.__lcd_byte(ord(c), LCDisplay.LCD_CHR)
 

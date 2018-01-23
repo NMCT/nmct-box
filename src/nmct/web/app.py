@@ -1,20 +1,20 @@
-from random import randint
 from traceback import print_exception
 
 import flask
-from flask import request
+from pathlib import Path
 
 import nmct
 import os
-from flask import request, flash, redirect, url_for
+from flask import request, flash, redirect
 from werkzeug.utils import secure_filename
 
-ALLOWED_EXTENSIONS = {'htm', 'html', 'png', 'jpg', 'jpeg', 'gif', 'py'}
+from nmct.box import get_pixel_ring
+from nmct.settings import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, MAX_UPLOAD_SIZE
 
 app = flask.Flask(__name__)
 
-app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
-app.config['UPLOAD_FOLDER'] = '/home/nmct/uploads'
+app.config['MAX_CONTENT_LENGTH'] = MAX_UPLOAD_SIZE
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 display = nmct.box.get_display()
 
@@ -101,6 +101,7 @@ def allowed_file(filename):
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     w1ids = nmct.box.list_onewire_ids()
+    success=False
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -115,9 +116,15 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            show_text="Upload successful"
-    return flask.render_template("dashboard.html", show_method='show_temperature', show_text=show_text, w1ids=w1ids)
+            success = True
+    return flask.render_template("dashboard.html", show_method='upload', w1ids=w1ids, upload_success=success)
+
+
+@app.route('/uploads', methods=['GET'])
+def show_uploads():
+    p = Path(UPLOAD_FOLDER)
+    return flask.render_template("uploads.html", files=[(f.name, f.owner(), f.suffix) for f in p.iterdir()])
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=3001, debug=True)
+    app.run(debug=True)

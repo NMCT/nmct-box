@@ -1,1 +1,2 @@
-from .dashboard import app
+from .app import app
+from .ring import app as ring
