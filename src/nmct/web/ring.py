@@ -20,7 +20,7 @@ def neopixel():
 def show_animation():
     animation = flask.request.form['animation']
     color = flask.request.form['color']
-    rgb = flask.request.form['rgb']
+    rgb = flask.request.form['rgbvalues']
     red = flask.request.form['red']
     green = flask.request.form['green']
     blue = flask.request.form['blue']

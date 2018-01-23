@@ -64,7 +64,7 @@ def sensors():
         # print(accelero.tilt())
 
     except Exception as ex:
-        print_exception(ex, ex, ex.__traceback__)
+        return flask.render_template("error.html", exc=ex, message=ex.args)
     return flask.render_template("dashboard.html", show_method='gravity', show_text=show_text, w1ids=w1ids)
 
 
@@ -74,31 +74,18 @@ def show_temperature():
     w1ids = nmct.box.list_onewire_ids()
     serial = flask.request.args.get('serial_number')
     if serial is None:
-        return 'Gelieve een serieel nummer mee te geven : http://xxx.xxx.xxx.xxx/temperauur?serial_number=28-xxxx'
+        error = 'Gelieve een serieel nummer mee te geven : http://xxx.xxx.xxx.xxx/temperauur?serial_number=28-xxxx'
+        return flask.render_template("error.html", exc=None, message=error)
     try:
         temperatuur = nmct.box.get_thermometer(serial).measure()
         show_text = "De temperatuur is {0:3.2f} \N{DEGREE SIGN}C".format(temperatuur)
     except Exception as ex:
-        print_exception(ex, ex, ex.__traceback__)
-
+        return flask.render_template("error.html", exc=ex, message=ex.args)
     return flask.render_template("dashboard.html", show_method='show_temperature', show_text=show_text, w1ids=w1ids)
 
 
-@app.route('/student', methods=['POST', 'GET'])
-def show_student():
-    # http://169.254.10.11/student?number=3
-    number = flask.request.args.get('number')
-    if number is None:
-        return 'Gelieve een studentnummer mee te geven : http://xxx.xxx.xxx.xxx/student?number=x'
-    template = "student{0}.html".format(number)
-
-    print(template)
-    return flask.render_template(template)
-
-
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -131,7 +118,8 @@ def show_uploads():
 
 @app.route("/fplot")
 def hello():
-    script = bokeh.embed.autoload_server(model=None, app_path="/fplot", url=request.url.replace("fplot", "plot/plot"))
+    script = bokeh.embed.autoload_server(model=None, app_path="/fplot",
+                                         url=request.url.replace("fplot", "plot/plot"))
     return flask.render_template('plot.html', bokS=script)
 
 
