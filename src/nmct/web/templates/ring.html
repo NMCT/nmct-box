@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>NeoPixel LED Ring</title>
-</head>
-<body>
+{% extends "index.html" %}
+{% block title %}NMCT-Box LED ring{% endblock %}
+
+{% block content %}
 <div class="row">
     <div class="col-lg-6">
         <form role="form" action="{{ url_for('show_animation') }}" method="post">
@@ -18,14 +15,14 @@
                 <label>Color palette:
                     <select name="color" class="form-control">
                         {% for col in palette %}
-                            <option value="{{ col.name }}" selected>{{ col.name }}</option>
+                            <option value="{{ col.name }}">{{ col.name }}</option>
                         {% endfor %}
                     </select>
                 </label></div>
-            <label>
-                <input type="checkbox" name="rgb" value="rgb">
-            </label>
             <div class="form-group">
+            <label>
+                <input type="checkbox" name="rgbvalues" checked>
+            </label>
                 <label>Red: <input type="number" name="red" value="232"/> </label>
                 <label>Green: <input type="number" name="green" value="94"> </label>
                 <label>Blue: <input type="number" name="blue" value="0"> </label>
@@ -43,5 +40,4 @@
     </div>
 
 </div>
-</body>
-</html>
+{% endblock %}

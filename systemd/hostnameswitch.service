@@ -1,0 +1,11 @@
+[Unit]
+Description=Update hostname if /boot/hostname is present
+ConditionPathExistsGlob=/boot/hostname{,.txt}
+After=regenerate_ssh_host_keys.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "${NMCT_HOME}/scripts/nmct-box.sh set-hostname && rm -f /boot/hostname ; rm -f /boot/hostname.txt"
+
+[Install]
+WantedBy=multi-user.target

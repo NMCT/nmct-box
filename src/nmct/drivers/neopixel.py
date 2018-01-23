@@ -61,15 +61,15 @@ class Color:
 
     @classmethod
     def by_name(cls, value):
-        return cls(*[round(x) * 255 for x in colors.hex2color(colors.CSS4_COLORS[value])])
+        return cls(*[round(x * 255) for x in colors.hex2color(colors.CSS4_COLORS[value])])
 
 
 CSS4_COLORS = {n: Color(*[round(x * 255) for x in v])
-               for n, v in colors.BASE_COLORS.items()}
+               for n, v in colors.CSS4_COLORS.items()}
 LETTER_COLORS = {n: Color(*[round(x * 255) for x in colors.hex2color(v)])
                  for n, v in colors.CSS4_COLORS.items()}
 
-Palette = Enum("Palette", dict(list(CSS4_COLORS.items())))
+Palette = Enum("Palette", dict(list(colors.CSS4_COLORS.items())))
 
 for n, v in colors.CSS4_COLORS.items():
     setattr(Color, n, Color(*[round(x * 255) for x in colors.hex2color(v)]))
