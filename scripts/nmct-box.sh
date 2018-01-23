@@ -282,7 +282,7 @@ function do_services(){
     sudo systemctl daemon-reload
     for svc in /etc/systemd/system/nmct-box-${service}; do
 #        echo "sudo systemctl ${action} "$(basename ${svc})""
-        sudo systemctl ${action} "$(basename ${svc})"
+        sudo systemctl ${action} "$(basename "${svc}")"
     done
     sudo systemctl ${action} nginx
 }
@@ -522,7 +522,7 @@ for i in $*; do
     ;;
     reload)
         do_services stop
-        pushd
+        pushd "${NMCT_HOME}"
         ./env/bin/python -m pip install -e .
         popd
         do_services start

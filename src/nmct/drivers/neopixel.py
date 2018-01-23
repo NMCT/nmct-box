@@ -121,6 +121,9 @@ class _LedArray(object):
             return ws.ws2811_led_set(self.channel, pos, int(value))
 
 
+_ws821x_lock = threading.RLock()
+
+
 class PixelStrip(object):
     _instance = None
 
@@ -143,7 +146,6 @@ class PixelStrip(object):
             gamma = list(range(256))
 
         self._gamma = gamma
-        self._lock = threading.RLock()
 
         # Keep track of successful init so we don't call ws2811_fini unecessarily
         self._init_successful = False
@@ -187,7 +189,7 @@ class PixelStrip(object):
 
     def _cleanup(self):
         # Clean up memory used by the library when not needed anymore.
-        with self._lock:
+        with _ws821x_lock:
             if self._leds is not None and self._init_successful:
                 # ws.ws2811_fini(self._leds)
                 #
@@ -197,7 +199,7 @@ class PixelStrip(object):
                 # Note that ws2811_fini will free the memory used by led_data internally.
 
     def set_gamma(self, gamma):
-        with self._lock:
+        with _ws821x_lock:
             if type(gamma) is list and len(gamma) == 256:
                 self._gamma = gamma
                 ws.ws2811_channel_t_gamma_set(self._channel, self._gamma)
@@ -206,7 +208,7 @@ class PixelStrip(object):
         """Initialize library, must be called once before other functions are
         called.
         """
-        with self._lock:
+        with _ws821x_lock:
             resp = ws.ws2811_init(self._leds)
             if resp != 0:
                 str_resp = ws.ws2811_get_return_t_str(resp)
@@ -216,7 +218,7 @@ class PixelStrip(object):
 
     def show(self, t=0.0):
         """Update the display with the data from the LED buffer."""
-        with self._lock:
+        with _ws821x_lock:
             resp = ws.ws2811_render(self._leds)
             if resp != 0:
                 str_resp = ws.ws2811_get_return_t_str(resp)
@@ -226,7 +228,7 @@ class PixelStrip(object):
     def set_pixel_color(self, n, color):
         """Set LED at position n to the provided 24-bit color value (in RGB order).
         """
-        with self._lock:
+        with _ws821x_lock:
             self._led_data[n] = color
 
     def set_pixel_rgb(self, n, red, green, blue):
@@ -237,14 +239,14 @@ class PixelStrip(object):
         self.set_pixel_color(n, Color(red, green, blue))
 
     def get_brightness(self):
-        with self._lock:
+        with _ws821x_lock:
             return ws.ws2811_channel_t_brightness_get(self._channel)
 
     def set_brightness(self, brightness):
         """Scale each LED in the buffer by the provided brightness.  A brightness
         of 0 is the darkest and 255 is the brightest.
         """
-        with self._lock:
+        with _ws821x_lock:
             ws.ws2811_channel_t_brightness_set(self._channel, brightness)
 
     def get_pixels(self):
@@ -255,7 +257,8 @@ class PixelStrip(object):
 
     def pixel_count(self):
         """Return the number of pixels in the display."""
-        return ws.ws2811_channel_t_count_get(self._channel)
+        with _ws821x_lock:
+            return ws.ws2811_channel_t_count_get(self._channel)
 
     __len__ = pixel_count
 

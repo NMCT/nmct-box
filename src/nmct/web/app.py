@@ -119,7 +119,7 @@ def show_uploads():
 @app.route("/fplot")
 def hello():
     script = bokeh.embed.autoload_server(model=None, app_path="/fplot",
-                                         url=request.url.replace("fplot", "plot/plot"))
+                                         url=request.url.replace("/fplot", "plot/plot"))
     return flask.render_template('plot.html', bokS=script)
 
 
