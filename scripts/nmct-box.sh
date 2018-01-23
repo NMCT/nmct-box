@@ -186,7 +186,7 @@ function install_aiy_voicekit(){
 #   $1 -> Boolean: (en/dis)able
 # #################################################################
 function do_pi_user(){
-    if [[ ${1} ]]; then
+    if [[ ${1} -eq ${TRUE} ]]; then
         echo -e "Enabling pi user"
         sudo chage -E -1 pi
         sudo usermod -U pi
@@ -420,11 +420,12 @@ function apply_refresh(){
 
 function do_phase1(){
     prepare_image ${HOSTNAME_PREFIX} ${NEW_USER} ${PASSWORD} ${DEFAULT_HOME}
+    sudo -u ${NEW_USER} git clone "${REPO_URL}" "${1}"
+    install_nmct_tool "${DEFAULT_HOME}"
+
     [[ -z ${SSH_CONNECTION} ]] &&
         ip="$(ip a s scope global up | awk '/inet /{print substr($2,0)}' | tr '\n' '\t' )" ||
         ip="$(echo ${SSH_CONNECTION} | awk '{print $3}')"
-    sudo -u ${NEW_USER} git clone "${REPO_URL}" "${1}"
-    install_nmct_tool "${DEFAULT_HOME}"
     echo -e "\n\n\n\nDone! User 'pi' will be disabled, after rebooting you can connect with: \n
     address:\t\033[32m${ip}\033[0m
     hostname:\t\033[32m${new_hostname}\033[0m
@@ -442,7 +443,7 @@ function set_boot_script() {
     sudo systemctl daemon-reload
     sudo systemctl enable nmct-box-atboot.service
     sudo systemctl start nmct-box-atboot.service
-    echo -e "#!/usr/bin/env bash \n\n ${1}/scipts/nmct-box.sh install | wall ; exit $?" |
+    echo -e "#!/usr/bin/env bash \n\n ${1}/scipts/nmct-box.sh install; exit $?" |
         sudo tee /boot/atboot.sh >/dev/null
 
 }
