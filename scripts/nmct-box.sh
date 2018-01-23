@@ -352,7 +352,7 @@ function prepare_install(){
 function install_dependencies(){
     install_aiy_voicekit "$(dirname "${1}")/aiy-voicekit"
     install_neopixel "$(dirname "${1}")/neopixel"
-#    install_snowboy "$(dirname "${1}")/snowboy"
+    install_snowboy "$(dirname "${1}")/snowboy"
     install_npm_packages configurable-http-proxy
 }
 
