@@ -320,7 +320,6 @@ function do_git_config(){
 #   $3 -> Password forv new user
 # #################################################################
 function prepare_image(){
-
     update_raspbian
     do_system_settings
     change_hostname ${1}
@@ -364,7 +363,8 @@ function install_dependencies(){
 function install_framework(){
     # install our package
     pushd "${1}"
-    ./env/bin/python3 -m pip install .
+    ./env/bin/python3 -m pip install -r requirements.txt -e .
+    mkdir uploads
     popd
 }
 
