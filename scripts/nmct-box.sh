@@ -498,6 +498,9 @@ for i in $*; do
         do_phase1
         set_boot_script "${NMCT_HOME}"
     ;;
+    set-hostname)
+        change_hostname ${HOSTNAME_PREFIX}
+    ;;
     start|stop|restart|status|enable|disable)
         do_services ${@}
         exit $?

@@ -1,7 +1,10 @@
 from traceback import print_exception
 
+import bokeh
 import flask
 from pathlib import Path
+
+from bokeh.embed import autoload_server
 
 import nmct
 import os
@@ -101,7 +104,7 @@ def allowed_file(filename):
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     w1ids = nmct.box.list_onewire_ids()
-    success=False
+    success = False
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -124,6 +127,12 @@ def upload_file():
 def show_uploads():
     p = Path(UPLOAD_FOLDER)
     return flask.render_template("uploads.html", files=[(f.name, f.owner(), f.suffix) for f in p.iterdir()])
+
+
+@app.route("/fplot")
+def hello():
+    script = bokeh.embed.autoload_server(model=None, app_path="/fplot", url=request.url.replace("fplot", "plot/plot"))
+    return flask.render_template('plot.html', bokS=script)
 
 
 if __name__ == '__main__':
