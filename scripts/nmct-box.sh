@@ -516,7 +516,9 @@ for i in $*; do
     ;;
     reload)
         do_services stop
-        install_framework "${NMCT_HOME}"
+        pushd
+        ./env/bin/python -m pip install -e .
+        popd
         do_services start
     ;;
     --function|-f)
