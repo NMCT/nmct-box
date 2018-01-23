@@ -236,7 +236,7 @@ function install_neopixel(){
 # #################################################################
 function install_services(){
     echo -e "Installing systemd units"
-    for file in ${1}/systemd/*; do
+    for file in "${1}/systemd/"*; do
         cat ${file} | envsubst | sudo tee "/etc/systemd/system/$(basename ${file})" >/dev/null
         sudo systemctl enable "$(basename ${file})"
     done
@@ -364,8 +364,9 @@ function install_framework(){
     # install our package
     pushd "${1}"
     ./env/bin/python3 -m pip install -r requirements.txt -e .
-    mkdir uploads
-    mkdir ./src/nmct/web/run
+    mkdir -p ./uploads/.run
+    sudo chown -R www-data:www-data ./uploads
+    mkdir -p ./src/nmct/web/run
     popd
 }
 
