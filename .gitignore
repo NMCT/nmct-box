@@ -214,3 +214,4 @@ tags
 .dropbox.attr
 .dropbox.cache
 
+notebooks/jupyterhub_cookie_secret
