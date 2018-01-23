@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User=nmct
 Group=www-data
-WorkingDirectory=${NMCT_HOME}/src/nmct/web
+WorkingDirectory=${NMCT_HOME}/uploads
 Environment="PATH=${NMCT_HOME}/env/bin"
 Environment="NMCT_HOME=${NMCT_HOME}"
 ExecStart="${NMCT_HOME}/env/bin/uwsgi" --ini "${NMCT_HOME}/src/nmct/web/wsgi-flask.ini"
