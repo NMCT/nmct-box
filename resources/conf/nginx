@@ -104,7 +104,6 @@ server {
 	}
 
 	location /static {
-
 		root ${NMCT_HOME}/src/nmct/web/static;
 	}
 

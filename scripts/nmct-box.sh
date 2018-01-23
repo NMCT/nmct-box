@@ -367,6 +367,8 @@ function install_framework(){
     mkdir -p ./uploads/.run
     sudo chown -R www-data:www-data ./uploads
     mkdir -p ./src/nmct/web/run
+    mkdir -p ./secret
+    cp ./resources/credentials-template.json ./.secret/credentials.json
     popd
 }
 
