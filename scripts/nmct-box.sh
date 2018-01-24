@@ -371,7 +371,7 @@ function install_framework(){
     # install our package
     pushd "${1}"
     ./env/bin/python3 -m pip install -r requirements.txt -e .
-    mkdir -p /home/nmct/uploads/static
+    sudo mkdir -p /home/nmct/uploads/static
     sudo chown -R www-data:www-data /home/nmct/uploads
     sudo chmod -R g+w  /home/nmct/uploads
     mkdir -p ./src/nmct/web/run
@@ -471,6 +471,7 @@ function usage(){
     echo -e "\t \033[1m install \033[0m\t Download and install the framework and all its dependencies"
     echo -e "\t \033[1m reinstall \033[0m\t Delete the entire installation and reinstall including dependencies"
     echo -e "\t \033[1m autoinstall \033[0m\t Prepare fresh OS and schedule install at next boot"
+    echo -e "\t \033[1m set-hostname \033[0m\t Auto-configure hostname"
 
     echo -e "\nServices:"
     echo -e "\t \033[1m start \033[0m\t Start all associated services "
@@ -479,6 +480,7 @@ function usage(){
     echo -e "\t \033[1m status \033[0m\t Show status of associated services "
     echo -e "\t \033[1m enable \033[0m\t Configure all associated services for automatic startup "
     echo -e "\t \033[1m disable \033[0m\t Disable automatic startup for all associated services"
+    echo -e "\t \033[1m run <service> \033[0m\t Run single service in foreground for debugging"
 
     echo -e "\nUpdating:"
     echo -e "\t \033[1m update \033[0m\t Download and install updates, including dependencies"

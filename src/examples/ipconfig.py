@@ -47,6 +47,8 @@ def ipconfig():
 
     button.on_press(shutdown)
     signal.signal(signal.SIGTERM, shutdown)
+    signal.signal(signal.SIGHUP, shutdown)
+    signal.signal(signal.SIGKILL, shutdown)
 
     while True:
         lcd.write_line("NMCT-Box".center(16), 1)
