@@ -36,21 +36,24 @@ def ipconfig():
     button = aiy.voicehat.get_button()
     delay = 3
 
+    running = True
+
     def shutdown(*args):
+        running = False
         lcd.clear()
         time.sleep(1)
         try:
-            nmct.box.stop()
+            # nmct.box.stop()
             sys.exit(0)
-        except Exception as ex:
+        except KeyError as ex:
             pass
 
     button.on_press(shutdown)
     signal.signal(signal.SIGTERM, shutdown)
     signal.signal(signal.SIGHUP, shutdown)
-    signal.signal(signal.SIGKILL, shutdown)
+    # signal.signal(signal.SIGKILL, shutdown)
 
-    while True:
+    while running:
         lcd.write_line("NMCT-Box".center(16), 1)
         if nmct.box.test_internet():
             lcd.write_line("Internet OK  :-)", 2)
@@ -71,5 +74,5 @@ def ipconfig():
 
 
 if __name__ == '__main__':
-    time.sleep(20)      # make sure we are fully booted and online
+    time.sleep(10)      # make sure we are fully booted and online
     ipconfig()
