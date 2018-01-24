@@ -24,13 +24,13 @@ display = nmct.box.get_display()
 
 def list_uploads():
     p = Path(app.config['UPLOAD_FOLDER'])
-    return [(f.name, f.owner(), f.suffix) for f in p.iterdir()]
+    return [(f.name, f.owner(), f.suffix[1:]) for f in p.iterdir()]
 
 
 @app.route('/')
 def show_dashboard():
     w1ids = nmct.box.list_onewire_ids()
-    return flask.render_template("dashboard.html", w1ids=w1ids)
+    return flask.render_template("dashboard.html", w1ids=w1ids, files=list_uploads())
 
 
 @app.route('/static/<path:path>')
@@ -55,7 +55,7 @@ def write_lcd():
     display.write(text)
     w1ids = nmct.box.list_onewire_ids()
 
-    return flask.render_template("dashboard.html", lcdMessage=text, w1ids=w1ids)
+    return flask.render_template("dashboard.html", lcdMessage=text, w1ids=w1ids, files=list_uploads())
 
 
 @app.route('/sensors', methods=['GET'])
@@ -85,7 +85,7 @@ def sensors():
 
     except Exception as ex:
         return flask.render_template("error.html", exc=ex, message=ex.args)
-    return flask.render_template("dashboard.html", show_method='gravity', show_text=show_text, w1ids=w1ids)
+    return flask.render_template("dashboard.html", show_method='gravity', show_text=show_text, w1ids=w1ids, files=list_uploads())
 
 
 @app.route('/temperatuur', methods=['GET'])
@@ -101,7 +101,7 @@ def show_temperature():
         show_text = "De temperatuur is {0:3.2f} \N{DEGREE SIGN}C".format(temperatuur)
     except Exception as ex:
         return flask.render_template("error.html", exc=ex, message=ex.args)
-    return flask.render_template("dashboard.html", show_method='show_temperature', show_text=show_text, w1ids=w1ids)
+    return flask.render_template("dashboard.html", show_method='show_temperature', show_text=show_text, w1ids=w1ids, files=list_uploads())
 
 
 def allowed_file(filename):
@@ -127,7 +127,7 @@ def upload_file():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             success = True
-    return flask.render_template("dashboard.html", show_method='upload', w1ids=w1ids, upload_success=success)
+    return flask.render_template("dashboard.html", show_method='upload', w1ids=w1ids, upload_success=success, files=list_uploads())
 
 
 @app.route('/uploads', methods=['GET'])

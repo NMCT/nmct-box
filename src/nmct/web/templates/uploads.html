@@ -1,10 +1,11 @@
 {% extends "panel.html" %}
 {% block panel_title %}Uploads{% endblock %}
+{% block panel_color %}yellow{% endblock %}
 {% block panel_contents %}
     <table width="100%">
         {% for f in files %}
             <tr>
-                <td>{{ f[0] }}</td>
+                <td><a href="/student?template={{ f[0] }}">{{ f[0] }}</a></td>
                 <td>{{ f[1] }}</td>
                 <td>{{ f[2] }}</td>
             </tr>

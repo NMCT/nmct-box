@@ -32,7 +32,7 @@ def neopixel():
     return flask.render_template("ring.html", palette=list(Palette))
 
 
-@app.route('/ring/animation', methods=['POST'])
+@app.route('/ring/animation', methods=['POST', 'GET'])
 def show_animation():
     animation = flask.request.form['animation']
     color = flask.request.form['color']
