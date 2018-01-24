@@ -10,7 +10,8 @@ from nmct.box import get_pixel_ring
 
 app = flask.Flask(__name__)
 ring = nmct.box.get_pixel_ring()
-animations = [(func.__name__, func.__name__.replace('_', ' ').capitalize()) for func in ring.list_animations()]
+animations = sorted([(func.__name__, func.__name__.replace('_', ' ').capitalize()) for func in ring.list_animations()])
+palette = list(Palette)
 
 
 @app.route('/static/<path:path>')
@@ -69,7 +70,7 @@ def show_animation():
         print_exception(ex, ex, ex.__traceback__)
         return flask.render_template("error.html", exc=ex, message=ex.args[0])
 
-    return flask.render_template("ring.html", animation=animation, color=color, palette=list(Palette),
+    return flask.render_template("ring.html", animation=animation, color=color, palette=palette,
                                  animations=animations, rgbvalues=rgb)
 
 

@@ -55,6 +55,9 @@ def write_lcd():
         text = flask.request.form.get('lcdMessage')
     else:
         text = flask.request.args.get('lcdMessage')
+    if text is None:
+        error = 'Gelieve een tekst mee te geven: http://xxx.xxx.xxx.xxx/temperauur?lcdMessage=hallo'
+        return flask.render_template("error.html", exc=None, message=error)
     text = text.rstrip("")
     display.write(text)
     w1ids = nmct.box.list_onewire_ids()
@@ -157,7 +160,6 @@ def hello():
     script = bokeh.embed.autoload_server(model=None, app_path="/fplot",
                                          url=request.url.replace("/fplot", "plot/plot"))
     return flask.render_template('plot.html', bokS=script)
-
 
 #
 # @app.errorhandler(500)
