@@ -22,6 +22,11 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 display = nmct.box.get_display()
 
 
+def list_uploads():
+    p = Path(app.config['UPLOAD_FOLDER'])
+    return [(f.name, f.owner(), f.suffix) for f in p.iterdir()]
+
+
 @app.route('/')
 def show_dashboard():
     w1ids = nmct.box.list_onewire_ids()
@@ -127,8 +132,7 @@ def upload_file():
 
 @app.route('/uploads', methods=['GET'])
 def show_uploads():
-    p = Path(UPLOAD_FOLDER)
-    return flask.render_template("uploads.html", files=[(f.name, f.owner(), f.suffix) for f in p.iterdir()])
+    return flask.render_template("uploads.html", files=list_uploads())
 
 
 @app.route("/fplot")

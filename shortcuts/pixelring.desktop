@@ -3,5 +3,5 @@ Encoding=UTF-8
 Type=Application
 Name=PixelRing demo
 Comment=A demo of the NeoPixel ring
-Exec=sudo ${NMCT_HOME}/env/bin/python ${NMCT_HOME}/src/examples/pixelring.py
+Exec=sudo -E ${NMCT_HOME}/env/bin/python ${NMCT_HOME}/src/examples/pixelring.py
 Terminal=true

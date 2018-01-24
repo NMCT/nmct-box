@@ -19,10 +19,10 @@ log = logging.getLogger(__name__)
 
 class Color:
     def __init__(self, red=0, green=0, blue=0, name='Color'):
-        self.red = self.r = red
-        self.green = self.g = green
-        self.blue = self.b = blue
-        self.name = name
+        self._red = self.r = red
+        self._green = self.g = green
+        self._blue = self.b = blue
+        self._name = name
 
     """
     Convert the provided red, green, blue color to a 24-bit color value.
@@ -31,7 +31,7 @@ class Color:
     """
 
     def to_int(self):
-        return (self.red << 16) | (self.green << 8) | self.blue
+        return (self._red << 16) | (self._green << 8) | self._blue
 
     __int__ = __index__ = to_int
 
@@ -43,10 +43,10 @@ class Color:
         return cls(r, g, b)
 
     def to_tuple(self):
-        return self.red, self.green, self.blue
+        return self._red, self._green, self._blue
 
     def __str__(self):
-        return "Color({r}, {g}, {b})".format(r=self.red, g=self.green, b=self.blue)
+        return "Color({r}, {g}, {b})".format(r=self._red, g=self._green, b=self._blue)
 
     __repr__ = __str__
 
@@ -69,7 +69,15 @@ CSS4_COLORS = {n: Color(*[round(x * 255) for x in colors.hex2color(v)])
 LETTER_COLORS = {n: Color(*[round(x * 255) for x in colors.hex2color(v)])
                  for n, v in colors.CSS4_COLORS.items()}
 
-Palette = Enum("Palette", dict(list(CSS4_COLORS.items())))
+
+class ColorEnum(Color, Enum):
+    def to_int(self):
+        return self.value.to_int()
+
+    __int__ = to_int
+
+
+Palette = ColorEnum("Palette", CSS4_COLORS)
 
 for n, v in colors.CSS4_COLORS.items():
     setattr(Color, n, Color(*[round(x * 255) for x in colors.hex2color(v)]))
@@ -398,22 +406,22 @@ if __name__ == "__main__":
     ring = PixelRing(24, 12)
     ring.begin()
     print("loop")
-    ring.loop(Palette.RED)
+    ring.loop(Palette.red)
     time.sleep(1)
     print("fill")
-    ring.fill(Palette.GREEN)
+    ring.fill(Palette.green)
     time.sleep(1)
     print("fill off")
-    ring.fill(Palette.BLACK)
+    ring.fill(Palette.black)
     time.sleep(1)
     print("unfill")
-    ring.unfill(Palette.GREEN)
+    ring.unfill(Palette.green)
     time.sleep(1)
     print("rainbow chase")
     ring.rainbow_chase()
     time.sleep(1)
     print("theater chase")
-    ring.theater_chase(Palette.BLUE)
+    ring.theater_chase(Palette.blue)
     time.sleep(1)
     print("rainbow")
     ring.rainbow()
@@ -429,5 +437,5 @@ if __name__ == "__main__":
             # ring.set_pixel_color(led, Color(0, 0, 0))
             # ring.show()
     for led in ring:
-        ring.set_pixel_color(led, Palette.BLACK)
+        ring.set_pixel_color(led, Palette.black)
         ring.show()

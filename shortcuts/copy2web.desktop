@@ -1,7 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Type=Application
-Name=Copy Templates from Dropbox
-Comment=Copy student HTML files to web server
-Exec=${NMCT_HOME}/scripts/copy2web.py
-Terminal=true

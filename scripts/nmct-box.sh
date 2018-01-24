@@ -114,9 +114,9 @@ function do_system_settings(){
     ${cmd} do_wifi_country 'BE'
     ${cmd} do_change_timezone 'Europe/Brussels'
     ${cmd} do_configure_keyboard 'be'
-    ${cmd} do_boot_behaviour B1 #B1=console, B3=Desktop, n+1=autologon
+    ${cmd} do_boot_behaviour B3 #B1=console, B3=Desktop, n+1=autologon
     ${cmd} do_boot_wait ${FALSE}
-    ${cmd} do_boot_splash ${FALSE}
+    ${cmd} do_boot_splash ${TRUE}
     ${cmd} do_vnc ${TRUE}
 
     # interfaces
@@ -125,8 +125,7 @@ function do_system_settings(){
     ${cmd} do_i2c ${TRUE}
     ${cmd} do_onewire ${TRUE}
 
-
-    echo "alias ll='ls -al'" | sudo tee /etc/profile.d/nmct_box
+    echo "alias ll='ls -al'" | sudo tee /etc/profile.d/nmct_box.sh
 }
 
 #    function install_framework(){
@@ -174,6 +173,7 @@ function install_aiy_voicekit(){
     sudo ./scripts/install-services.sh
     sudo ./scripts/configure-driver.sh
     sudo ./scripts/install-alsa-config.sh
+    mv ~/.asoundrc ~/.asoundrc.bak
     popd
     pushd "${dir}/src"
     python3 setup.py install
@@ -292,11 +292,17 @@ function do_services(){
 # Arguments:
 #   $1 -> Install directory (NMCT_HOME)
 # #################################################################
-function install_shortcuts(){
-       echo -e "Installing shortcuts"
+function configure_desktop(){
+    echo -e "Installing shortcuts"
+    sudo mkdir -p /usr/share/nmct-wallpaper
+    sudo ln -sf ${1}/src/nmct/web/static/media/NMCT-*.png /usr/share/nmct-wallpaper/
+    DISPLAY=':0.0' pcmanfm  --set-wallpaper /usr/share/nmct-wallpaper/NMCT-1920x1200.png
 
     for file in ${1}/shortcuts/*; do
-        cp ${file} ~/Desktop/
+        echo ${file}
+        #cat ${file} | envsubst '${NMCT_HOME} ${USER}' > ${file}  #"~/Desktop/$(basename "${file}")"
+        envsubst '${NMCT_HOME} ${USER}' < ${file}  > ~/Desktop/$(basename "${file}")
+#        ln -sf $(realpath "${file}") ~/Desktop/$(basename "${file}")
     done
 }
 
@@ -364,10 +370,11 @@ function install_framework(){
     # install our package
     pushd "${1}"
     ./env/bin/python3 -m pip install -r requirements.txt -e .
-    mkdir -p ./uploads/.run
-    sudo chown -R www-data:www-data ./uploads
-    sudo chmod -R g+w ./uploads
+    mkdir -p /home/nmct/uploads
+    sudo chown -R www-data:www-data /home/nmct/uploads
+    sudo chmod -R g+w  /home/nmct/uploads
     mkdir -p ./src/nmct/web/run
+    sudo chmod -R g+w  ./src/nmct/web/run
     mkdir -p ./secret
     cp ./resources/credentials-template.json ./.secret/credentials.json
     popd
@@ -384,7 +391,7 @@ function install_nmct_box(){
     install_framework "${1}"
     install_nmct_tool "${1}"
     install_services "${1}"
-    install_shortcuts "${1}"
+    configure_desktop "${1}"
     do_services start
     do_services enable
 
@@ -406,13 +413,13 @@ function apply_update(){
     do_services stop
     install_framework "${1}"
     install_services "${1}"
-    install_shortcuts "${1}"
+    configure_desktop "${1}"
     do_services start
 }
 function apply_refresh(){
     pushd "${1}"
     install_services "${1}"
-    install_shortcuts "${1}"
+    configure_desktop "${1}"
     do_services restart
 }
 
@@ -424,6 +431,7 @@ function apply_refresh(){
 # #################################################################
 
 function do_phase1(){
+    NMCT_HOME=${DEFAULT_HOME}
     prepare_image ${HOSTNAME_PREFIX} ${NEW_USER} ${PASSWORD} ${DEFAULT_HOME}
     sudo -u ${NEW_USER} git clone "${REPO_URL}" "${1}"
     install_nmct_tool "${DEFAULT_HOME}"

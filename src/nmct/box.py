@@ -11,7 +11,7 @@ from nmct.drivers.lcd import LCDisplay
 from nmct.drivers.neopixel import NeoPixelThread
 from nmct.drivers.onewire import OneWire, Thermometer
 
-_audio_path = Path(os.path.join(os.path.dirname(settings.RESOURCE_PATH), 'audio'))
+_audio_path = Path(os.path.join(settings.RESOURCE_PATH, 'audio'))
 _accelerometer = None
 _temp_probe = None
 _display = None
@@ -64,6 +64,7 @@ def get_pixel_ring():
 
 
 def play_sound(name):
+    print(_audio_path)
     aiy.audio.get_player().play_wav(
         _audio_path.absolute().joinpath(os.path.join('{}.wav'.format(name))).absolute().as_posix())
 
