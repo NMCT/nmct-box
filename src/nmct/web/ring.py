@@ -2,6 +2,7 @@ from random import randint
 from traceback import print_exception
 
 import flask
+from flask import send_from_directory
 
 import nmct
 from nmct import Palette
@@ -9,6 +10,21 @@ from nmct.box import get_pixel_ring
 
 app = flask.Flask(__name__)
 ring = nmct.box.get_pixel_ring()
+
+
+@app.route('/static/<path:path>')
+def serve_static(path):
+    return send_from_directory('./static', path)
+
+
+@app.route('/styles/<path:path>')
+def serve_styles(path):
+    return send_from_directory('./static/styles', path)
+
+
+@app.route('/media/<path:path>')
+def serve_media(path):
+    return send_from_directory('./static/media', path)
 
 
 @app.route('/ring', methods=['GET'])
@@ -33,7 +49,7 @@ def show_animation():
     # if color is None:
     print(color)
     if rgb:
-        color = Color.by_name(color)# Color(*[int(x) for x in color[1:-1].split(",")])
+        color = Color.by_name(color)  # Color(*[int(x) for x in color[1:-1].split(",")])
     else:
         color = Color(red, green, blue)  # *[randint(0, 255) for x in range(3)]
     try:
@@ -47,4 +63,4 @@ def show_animation():
 
 if __name__ == '__main__':
     # ring = get_pixel_ring()
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=3002, debug=True)

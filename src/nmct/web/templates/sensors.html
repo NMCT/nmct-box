@@ -1,0 +1,30 @@
+{% extends "panel.html" %}
+{% block panel_color %}red{% endblock %}
+{% block panel_title %}Sensors{% endblock %}
+{% block panel_contents %}
+    <form role="form" action="{{ url_for('sensors') }}" method="get">
+        <div class="form-group">
+            <label>Sensorwaarde</label>
+            <input class="form-control" name="Sensor" placeholder="{{ show_text }}">
+        </div>
+        <button type="submit" class="btn btn-default" name="sensor" value="gravity">Gravity
+        </button>
+        <button type="submit" class="btn btn-default" name="sensor" value="tilt">Tilt</button>
+
+    </form>
+    <br/>
+
+    <form role="form" action="{{ url_for('show_temperature') }}" method="get"
+          class="form-group">
+        <label> OneWire ID:
+            <select name="serial_number" class="form-control">
+                {% for id in w1ids %}
+                    <option value="{{ id }}" SELECTED>{{ id }}</option>
+                {% endfor %}
+            </select></label><label>
+        <button type="submit" class="btn btn-default" name="sensor"
+                value="temperature">Temperature
+        </button>
+    </label>
+    </form>
+{% endblock %}

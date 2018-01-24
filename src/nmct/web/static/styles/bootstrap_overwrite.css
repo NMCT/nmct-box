@@ -1,0 +1,82 @@
+.panel.blue .panel-heading, .panel.blue button:hover{
+    background: #2c97de;
+}
+
+.panel.blue .panel-body, .panel.blue input{
+    color: #2c97de;
+}
+
+.panel.blue button{
+    border-color: #2c97de;
+}
+
+.panel.red .panel-heading, .panel.red button:hover{
+    background: #cc3e4a;
+}
+
+.panel.red .panel-body, .panel.red input{
+    color: #cc3e4a;
+}
+
+.panel.red button{
+    border-color: #cc3e4a;
+}
+
+.panel.orange .panel-heading, .panel.orange button:hover{
+    background: #e76d3b;
+}
+
+.panel.orange .panel-body, .panel.orange input{
+    color: #e76d3b;
+}
+
+.panel.orange button{
+    border-color: #e76d3b;
+}
+
+.panel.green .panel-heading, .panel.green button:hover{
+    background: #84b547;
+}
+
+.panel.green .panel-body, .panel.green input{
+    color: #84b547;
+}
+
+.panel.green button{
+    border-color: #84b547;
+}
+
+.panel-heading{
+    font-family: Ubuntu, sans-serif;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+button{
+    -webkit-transition: all ease-in-out 0.5s;
+    -moz-transition: all ease-in-out 0.5s;
+    -ms-transition: all ease-in-out 0.5s;
+    -o-transition: all ease-in-out 0.5s;
+    transition: all ease-in-out 0.5s;
+}
+
+.panel .panel-body{
+    background: #424242;
+}
+
+.panel .panel-body p{
+    color: white;
+}
+
+.panel button{
+    background: #424242;
+    color: white;
+}
+
+.panel-default{
+    border: none;
+}
+
+.help-block{
+    margin-left: 15px;
+}

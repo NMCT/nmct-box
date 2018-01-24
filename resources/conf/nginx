@@ -38,7 +38,7 @@ server {
 		uwsgi_param SERVER_SOFTWARE nginx/$nginx_version;
 	}
 
-	location /ring/ {
+	location /ring {
 
 		include uwsgi_params;
 		uwsgi_pass unix:${NMCT_HOME}/src/nmct/web/run/nmct-neopixel.sock;
@@ -49,7 +49,7 @@ server {
 		uwsgi_param SERVER_SOFTWARE nginx/$nginx_version;
 	}
 
-	location /student/ {
+	location /student {
 
 		include uwsgi_params;
 		uwsgi_pass unix:${NMCT_HOME}/src/nmct/web/run/nmct-student.sock;
@@ -60,7 +60,7 @@ server {
 		uwsgi_param SERVER_SOFTWARE nginx/$nginx_version;
 	}
 
-	location /notebook/ {
+	location /notebook {
 
 		proxy_pass http://jupyter;
 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -84,13 +84,13 @@ server {
 		proxy_set_header Origin "";
 	}
 
-	location /hub/ {
+	location /hub {
 
 		proxy_pass http://jupyterhub;
 		proxy_set_header Host $host;
 	}
 
-	location /plot/ {
+	location /plot {
 
 		proxy_pass http://bokeh/;
 		proxy_set_header Upgrade $http_upgrade;
@@ -103,7 +103,7 @@ server {
 		proxy_redirect off;
 	}
 
-	location /static/ {
+	location /static {
 		root ${NMCT_HOME}/src/nmct/web/static;
 	}
 

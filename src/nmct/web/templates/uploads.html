@@ -1,10 +1,13 @@
-{% extends "index.html" %}
-{% block title %}Uploads{% endblock %}
-{% block content %}
-    <h1>Uploads</h1>
-   <table width="100%">
-   {% for f in files %}
-   <tr><td>{{ f[0] }}</td><td>{{ f[1] }}</td><td>{{ f[2] }}</td></tr>
-   </table>
-    {% endfor %}
+{% extends "panel.html" %}
+{% block panel_title %}Uploads{% endblock %}
+{% block panel_contents %}
+    <table width="100%">
+        {% for f in files %}
+            <tr>
+                <td>{{ f[0] }}</td>
+                <td>{{ f[1] }}</td>
+                <td>{{ f[2] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 {% endblock %}

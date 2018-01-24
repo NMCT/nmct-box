@@ -8,7 +8,7 @@ from bokeh.embed import autoload_server
 
 import nmct
 import os
-from flask import request, flash, redirect
+from flask import request, flash, redirect, send_from_directory
 from werkzeug.utils import secure_filename
 
 from nmct.box import get_pixel_ring
@@ -26,6 +26,21 @@ display = nmct.box.get_display()
 def show_dashboard():
     w1ids = nmct.box.list_onewire_ids()
     return flask.render_template("dashboard.html", w1ids=w1ids)
+
+
+@app.route('/static/<path:path>')
+def serve_static(path):
+    return send_from_directory('./static', path)
+
+
+@app.route('/styles/<path:path>')
+def serve_styles(path):
+    return send_from_directory('./static/styles', path)
+
+
+@app.route('/media/<path:path>')
+def serve_media(path):
+    return send_from_directory('./static/media', path)
 
 
 @app.route('/write_lcd', methods=['POST'])
@@ -124,4 +139,4 @@ def hello():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=3001, debug=True)

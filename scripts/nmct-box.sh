@@ -366,6 +366,7 @@ function install_framework(){
     ./env/bin/python3 -m pip install -r requirements.txt -e .
     mkdir -p ./uploads/.run
     sudo chown -R www-data:www-data ./uploads
+    sudo chmod -R g+w ./uploads
     mkdir -p ./src/nmct/web/run
     mkdir -p ./secret
     cp ./resources/credentials-template.json ./.secret/credentials.json

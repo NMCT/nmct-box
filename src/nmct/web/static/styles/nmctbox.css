@@ -1,0 +1,119 @@
+/* Dark theme swatches:
+    Black: #000000
+    Grey Headers: #212121
+    Grey Background: #303030
+    Grey Front: #424242
+    Orange Accent: #e85e00
+    Grey Accent: #d4d4d4
+ */
+
+body{
+    background: #303030;
+    background-size: cover;
+    background: url(../media/footer_lodyas.png) center;
+}
+
+/* HEADER */
+header{
+    height: 20vh;
+}
+
+header section{
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 80vw;
+    margin: 0 10vw;
+    border-bottom: 2px #d4d4d4 solid;
+}
+
+header section > div{
+    padding: 0 20px;
+}
+
+header span{
+    color: white;
+    font-size: 2.5em;
+    text-transform: uppercase;
+    line-height: 44px;
+    font-family: Ubuntu, sans-serif;
+    font-weight: bold;
+}
+
+/* MAIN */
+main{
+    height: calc(100vh - 20vh - 50px);
+    width: 80vw;
+    margin: 0 10vw;
+    max-width: 2000px;
+}
+
+.dashboard_wrapper{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+
+    display: flex;
+    flex-flow: column wrap;
+}
+
+#hor_containers{
+    width: 70%;
+}
+
+#vert_containers{
+    width: 30%;
+    align-items: flex-start;
+}
+
+#vert_containers > div{
+    width: 80%;
+}
+
+.dashboard_container{
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+
+}
+
+.dashboard_container > div{
+    height: calc(100% - 40px);
+    width: 80%;
+    margin: 20px 0;
+}
+
+.flexitem{
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.flexitem > *{
+    margin: 0 10px;
+}
+
+.buttonlist{
+    display: flex;
+    flex-flow: column nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.buttonlist > *{
+    width: 75%;
+    margin: 10px 20px;
+}
+
+/* FOOTER */
+footer{
+    height: 50px;
+    color: white;
+    padding: 10px;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
