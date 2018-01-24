@@ -26,7 +26,9 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 
 def sensor_demo():
+    print(nmct.box.measure_temperature())
     print(nmct.box.measure_acceleration())
+    print(nmct.box.measure_tilt())
 
 
 if __name__ == '__main__':

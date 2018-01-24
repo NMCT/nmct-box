@@ -48,9 +48,13 @@ def serve_media(path):
     return send_from_directory('./static/media', path)
 
 
-@app.route('/write_lcd', methods=['POST'])
+@app.route('/write_lcd', methods=['POST', 'GET'])
 def write_lcd():
-    text = flask.request.form['lcdMessage']
+    display.clear()
+    if flask.request.method == 'POST':
+        text = flask.request.form.get('lcdMessage')
+    else:
+        text = flask.request.args.get('lcdMessage')
     text = text.rstrip("")
     display.write(text)
     w1ids = nmct.box.list_onewire_ids()
@@ -85,7 +89,8 @@ def sensors():
 
     except Exception as ex:
         return flask.render_template("error.html", exc=ex, message=ex.args)
-    return flask.render_template("dashboard.html", show_method='gravity', show_text=show_text, w1ids=w1ids, files=list_uploads())
+    return flask.render_template("dashboard.html", show_method='gravity', show_text=show_text, w1ids=w1ids,
+                                 files=list_uploads())
 
 
 @app.route('/temperatuur', methods=['GET'])
@@ -101,11 +106,16 @@ def show_temperature():
         show_text = "De temperatuur is {0:3.2f} \N{DEGREE SIGN}C".format(temperatuur)
     except Exception as ex:
         return flask.render_template("error.html", exc=ex, message=ex.args)
-    return flask.render_template("dashboard.html", show_method='show_temperature', show_text=show_text, w1ids=w1ids, files=list_uploads())
+    return flask.render_template("dashboard.html", show_method='show_temperature', show_text=show_text, w1ids=w1ids,
+                                 files=list_uploads())
+
+
+def file_extension(filename):
+    return filename.rsplit('.', 1)[1].lower()
 
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and file_extension(filename) in ALLOWED_EXTENSIONS
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -123,11 +133,18 @@ def upload_file():
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
-        if file and allowed_file(file.filename):
+        if file:
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            if not allowed_file(filename):
+                return flask.render_template("error.html", exc=None, message="File type not allowed for upload")
+            if file_extension(filename) in ['html', 'htm']:
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            else:
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'static', filename))
+
             success = True
-    return flask.render_template("dashboard.html", show_method='upload', w1ids=w1ids, upload_success=success, files=list_uploads())
+    return flask.render_template("dashboard.html", show_method='upload', w1ids=w1ids, upload_success=success,
+                                 files=list_uploads())
 
 
 @app.route('/uploads', methods=['GET'])
@@ -140,6 +157,11 @@ def hello():
     script = bokeh.embed.autoload_server(model=None, app_path="/fplot",
                                          url=request.url.replace("/fplot", "plot/plot"))
     return flask.render_template('plot.html', bokS=script)
+
+
+@app.errorhandler(500)
+def page_not_found(e):
+    return flask.render_template('error.html', exc=e, message=e.message), 500
 
 
 if __name__ == '__main__':

@@ -10,6 +10,7 @@ from nmct.box import get_pixel_ring
 
 app = flask.Flask(__name__)
 ring = nmct.box.get_pixel_ring()
+animations = [(func.__name__, func.__name__.replace('_', ' ').capitalize()) for func in ring.list_animations()]
 
 
 @app.route('/static/<path:path>')
@@ -29,17 +30,24 @@ def serve_media(path):
 
 @app.route('/ring', methods=['GET'])
 def neopixel():
-    return flask.render_template("ring.html", palette=list(Palette))
+    return flask.render_template("ring.html", palette=list(Palette), animations=animations)
 
 
 @app.route('/ring/animation', methods=['POST', 'GET'])
 def show_animation():
-    animation = flask.request.form['animation']
-    color = flask.request.form['color']
-    rgb = flask.request.form['rgbvalues']
-    red = flask.request.form['red']
-    green = flask.request.form['green']
-    blue = flask.request.form['blue']
+    if flask.request.method == 'GET':
+        params = flask.request.args
+    elif flask.request.method == 'POST':
+        params = flask.request.form
+    else:
+        message = "Unsupported method: {}".format(flask.request.method)
+        return flask.render_template("error.html", exc=None, message=message)
+    animation = params.get('animation')
+    color = params.get('color')
+    rgb = bool(params.get('rgbvalues'))
+    red = int(params.get('red', 0))
+    green = int(params.get('green', 0))
+    blue = int(params.get('blue', 0))
 
     if animation is None:
         error = "Gelieve een animation mee te geven: /show_nmct_pixel?animation=loop&color=(255,0,0)"
@@ -47,18 +55,22 @@ def show_animation():
 
     from nmct import Color
     # if color is None:
-    print(color)
+    print("Input: {}, rgb: {}".format(color, rgb))
     if rgb:
-        color = Color.by_name(color)  # Color(*[int(x) for x in color[1:-1].split(",")])
-    else:
+        print("True")
         color = Color(red, green, blue)  # *[randint(0, 255) for x in range(3)]
+    else:
+        print("False")
+        color = Color.by_name(color)  # Color(*[int(x) for x in color[1:-1].split(",")])
+    print("Output: {}, rgb: {}".format(color, rgb))
     try:
         ring.queue_animation(animation, color)
     except Exception as ex:
         print_exception(ex, ex, ex.__traceback__)
-        return flask.render_template("error.html", exc=ex, message=ex.args)
+        return flask.render_template("error.html", exc=ex, message=ex.args[0])
 
-    return flask.render_template("ring.html", animation=animation, color=color, palette=list(Palette))
+    return flask.render_template("ring.html", animation=animation, color=color, palette=list(Palette),
+                                 animations=animations, rgbvalues=rgb)
 
 
 if __name__ == '__main__':

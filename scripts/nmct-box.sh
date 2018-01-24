@@ -154,6 +154,7 @@ function create_venv(){
     python3 -m pip install --upgrade pip wheel setuptools
     python3 -m venv --system-site-packages ${1}
     ${1}/bin/python -m pip install -I setuptools
+    echo 'export PATH="'${1}'/bin:$PATH"' | tee -a ~/.bashrc >> ~/.xsessionrc
 }
 
 function install_aiy_voicekit(){
@@ -370,7 +371,7 @@ function install_framework(){
     # install our package
     pushd "${1}"
     ./env/bin/python3 -m pip install -r requirements.txt -e .
-    mkdir -p /home/nmct/uploads
+    mkdir -p /home/nmct/uploads/static
     sudo chown -R www-data:www-data /home/nmct/uploads
     sudo chmod -R g+w  /home/nmct/uploads
     mkdir -p ./src/nmct/web/run
@@ -519,6 +520,11 @@ for i in $*; do
     ;;
     start|stop|restart|status|enable|disable)
         do_services ${@}
+        exit $?
+    ;;
+    run)
+        shift
+        $(grep ExecStart /etc/systemd/system/nmct-box-${@}.service | cut -d '=' -f2)
         exit $?
     ;;
     update)

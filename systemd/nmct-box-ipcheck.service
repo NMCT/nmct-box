@@ -1,9 +1,9 @@
 [Unit]
 Description=IP connection check and display on LCD
-After=network-online.target
+After=network.target
 
 [Service]
-Type=simple
+Type=oneshot
 User=${USER}
 Group=${USER}
 WorkingDirectory=${NMCT_HOME}

@@ -69,5 +69,5 @@ def ipconfig():
 
 
 if __name__ == '__main__':
-    time.sleep(30)      # make sure we are fully booted and online
+    time.sleep(20)      # make sure we are fully booted and online
     ipconfig()

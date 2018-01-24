@@ -370,7 +370,7 @@ class PixelRing(PixelStrip):
 
 class NeoPixelThread(threading.Thread):
     def __init__(self):
-        super().__init__(daemon=False, name="NeoPixelThread")
+        super().__init__(daemon=True, name="NeoPixelThread")
         self._queue = queue.Queue()
         self._ring = None
         if os.geteuid() == 0:

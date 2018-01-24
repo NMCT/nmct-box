@@ -1,76 +1,82 @@
-<style>
-    header{
-        display: none !important;
-    }
-
-    main{
-        width: 100vw !important;
-        margin: 0 !important;
-    }
-
-    .dashboard_container > div{
-        margin: 0 !important;
-    }
-
-    #vert_containers, #vert_containers > div {
-        width: 100% !important;
-    }
-
-    footer{
-        display: none !important;
-    }
-
-    .panel{
-        background: #424242 !important;
-    }
-</style>
-
 {% extends "index.html" %}
 {% block title %}NMCT-Box LED ring{% endblock %}
+{% block styles %}
+    {{ super() }}
+    <style>
+        header {
+            display: none !important;
+        }
 
+        main {
+            width: 100vw !important;
+            margin: 0 !important;
+        }
+
+        .dashboard_container > div {
+            margin: 0 !important;
+        }
+
+        #vert_containers, #vert_containers > div {
+            width: 100% !important;
+        }
+
+        footer {
+            display: none !important;
+        }
+
+        .panel {
+            background: #424242 !important;
+        }
+
+        .rgbval {
+            width: 4em !important;
+        }
+    </style>
+{% endblock %}
 {% block content %}
-<aside id="vert_containers" class="dashboard_container">
-    <div class="panel panel-default orange">
-        <div class="panel-heading">NeoPixel Ring</div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-lg-12">
-                    <form role="form" action="{{ url_for('show_animation') }}" method="post">
-                        <div class="form-group">
-                            <label>NeoPixel</label>
-                            <label>{{ animation }}</label>
-                        </div>
-                        <!-- TODO: add color picker? https://github.com/mrf345/flask_colorpicker/-->
-                        <div class="form-group">
-                            <!-- TODO: allow only one of named color/r,g,b values to be visible/selectable-->
-                            <label>Color palette:
-                                <select name="color" class="form-control">
-                                    {% for col in palette %}
-                                        <option value="{{ col.name }}">{{ col.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </label></div>
-                        <div class="form-group">
-                        <label>
-                            <input type="checkbox" name="rgbvalues" checked>
-                        </label>
-                            <label>Red: <input type="number" name="red" value="232"/> </label>
-                            <label>Green: <input type="number" name="green" value="94"> </label>
-                            <label>Blue: <input type="number" name="blue" value="0"> </label>
-                        </div>
-                        <div class="form-group buttonlist">
-                            <!-- TODO: programatically enumerate animations? -->
-                            <button type="submit" class="btn btn-default" name="animation" value="loop">loop led</button>
-                            <button type="submit" class="btn btn-default" name="animation" value="fill">fill ring</button>
-                            <button type="submit" class="btn btn-default" name="animation" value="theater_chase">theater chase</button>
-                            <button type="submit" class="btn btn-default" name="animation" value="rainbow">rainbow cycle</button>
-                            <button type="submit" class="btn btn-default" name="animation" value="rainbow_chase">rainbow chase</button>
-                            <button type="submit" class="btn btn-default" name="animation" value="clear">clear</button>
-                        </div>
-                    </form>
+    <aside id="vert_containers" class="dashboard_container">
+        <div class="panel panel-default orange">
+            <div class="panel-heading">NeoPixel Ring</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form role="form" action="{{ url_for('show_animation') }}" method="post">
+                            <div class="form-group">
+                                <label>NeoPixel</label>
+                                <label>{{ animation }}</label>
+                            </div>
+                            <!-- TODO: add color picker? https://github.com/mrf345/flask_colorpicker/-->
+                            <div class="form-group">
+                                <!-- TODO: allow only one of named color/r,g,b values to be visible/selectable-->
+                                <label>Color palette:
+                                    <select name="color" class="form-control">
+                                        {% for col in palette %}
+                                            <option value="{{ col.name }}">{{ col.name }}</option>
+                                            <!-- FIXME or DELETEME!-->
+                                        {% endfor %}
+                                    </select>
+                                </label></div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" name="rgbvalues" {% if rgbvalues %}checked{% endif %}>
+                                </label>
+                                <label class="rgbval">Red: <input class="rgbval" type="number" name="red" value="232"
+                                                                  min="0" max="255"/> </label>
+                                <label class="rgbval">Green: <input class="rgbval" type="number" name="green" value="94"
+                                                                    min="0" max="255"> </label>
+                                <label class="rgbval">Blue: <input class="rgbval" type="number" name="blue" value="0"
+                                                                   min="0" max="255"> </label>
+                            </div>
+                            <div class="form-group buttonlist">
+                                {% for ani in animations %}
+                                    <button type="submit" class="btn btn-default" name="animation"
+                                            value="{{ ani[0] }}">{{ ani[1] }}</button>
+                                {% endfor %}
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</aside>
+    </aside>
 {% endblock %}

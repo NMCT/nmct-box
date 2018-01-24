@@ -33,6 +33,11 @@ def measure_acceleration():
     return acc.measure()
 
 
+def measure_tilt():
+    acc = get_accelerometer()
+    return acc.tilt()
+
+
 def get_thermometer(w1id):
     return Thermometer(w1id)
 
