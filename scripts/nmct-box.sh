@@ -297,7 +297,7 @@ function configure_desktop(){
     echo -e "Installing shortcuts"
     sudo mkdir -p /usr/share/nmct-wallpaper
     sudo ln -sf ${1}/src/nmct/web/static/media/NMCT-*.png /usr/share/nmct-wallpaper/
-    DISPLAY=':0.0' pcmanfm  --set-wallpaper /usr/share/nmct-wallpaper/NMCT-1920x1200.png
+    echo 'DISPLAY='':0.0'' pcmanfm  --set-wallpaper /usr/share/nmct-wallpaper/NMCT-1920x1200.png' >> ~/.xsessionrc
 
     for file in ${1}/shortcuts/*; do
         echo ${file}
@@ -393,8 +393,8 @@ function install_nmct_box(){
     install_nmct_tool "${1}"
     install_services "${1}"
     configure_desktop "${1}"
-    do_services start
-    do_services enable
+    do_services start '*'
+    do_services enable '*'
 
 }
 
@@ -415,13 +415,13 @@ function apply_update(){
     install_framework "${1}"
     install_services "${1}"
     configure_desktop "${1}"
-    do_services start
+    do_services start '*'
 }
 function apply_refresh(){
     pushd "${1}"
     install_services "${1}"
     configure_desktop "${1}"
-    do_services restart
+    do_services restart '*'
 }
 
 
