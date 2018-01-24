@@ -2,7 +2,7 @@
 {% block panel_color %}blue{% endblock %}
 {% block panel_title %}LCD Display{% endblock %}
 {% block panel_contents %}
-    <form role="form" action="{{ url_for('write_lcd') }}" method="post">
+    <form role="form" action="{{ url_for('write_lcd') }}" method="get">
         <div class="form-group">
             <label>LCD Input</label>
             <div class="flexitem">

@@ -19,6 +19,8 @@ import logging
 
 import aiy.audio
 import aiy.voicehat
+import atexit
+
 import nmct.box
 import nmct.snowboy
 import nmct.watson
@@ -68,6 +70,7 @@ def conversation_demo():
                 conversation.finish()
             else:
                 text = recognizer.recognize()
+    nmct.box.stop()
 
 
 if __name__ == '__main__':

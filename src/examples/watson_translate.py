@@ -26,7 +26,7 @@ import nmct.snowboy
 import nmct.watson
 
 logging.basicConfig()
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARN)
 
 
 def translate_demo():
@@ -34,21 +34,21 @@ def translate_demo():
     led = aiy.voicehat.get_led()
 
     recognizer = nmct.watson.get_recognizer()
-    print(recognizer.list_models())
+    print("Available recognition models: \n" + "\n".join(recognizer.list_models()))
 
     translator = nmct.watson.get_translator()
-    print(translator.list_models())
+    print("Available translation models: \n" + "\n".join(model[0] for model in translator.list_models()))
     translator.set_model('en-es-conversational')
 
     english = nmct.watson.get_synthesizer()
-    print(english.list_voices())
+    print("Available voices and languages for text to speech:\n" + "\n".join(english.list_voices()))
 
     spanish = nmct.watson.get_synthesizer('es-LA_SofiaVoice')
 
     aiy.audio.get_recorder().start()
-    atexit.register(aiy.audio.get_recorder().stop)
 
     while True:
+        print("Press the button, then speak! Say 'stop' to end the loop.")
         button.wait_for_press()
         led.set_state(aiy.voicehat.LED.ON)
         text = recognizer.recognize()
@@ -59,12 +59,17 @@ def translate_demo():
             aiy.audio.get_player().play_bytes(english.synthesize(msg), 16000)
         else:
             print('You said: {}'.format(text))
+            if text.strip() == "stop":
+                break
             response = translator.translate(text)
             if "translation" in response:
                 translation = response["translation"]
                 print("Translation: {}".format(translation))
                 audio = spanish.synthesize(translation)
                 aiy.audio.get_player().play_bytes(audio, 16000)
+
+    aiy.audio.get_recorder().stop()
+    nmct.box.stop()
 
 
 if __name__ == '__main__':

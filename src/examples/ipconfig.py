@@ -28,7 +28,7 @@ import nmct.snowboy
 import nmct.watson
 
 logging.basicConfig()
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARN)
 
 
 def ipconfig():
@@ -40,8 +40,9 @@ def ipconfig():
         lcd.clear()
         time.sleep(1)
         try:
+            nmct.box.stop()
             sys.exit(0)
-        except Exception:
+        except Exception as ex:
             pass
 
     button.on_press(shutdown)

@@ -1,3 +1,4 @@
+import asyncio
 import socket
 from pathlib import Path
 import os
@@ -91,3 +92,8 @@ def get_ipconfig():
 
 def get_hostname():
     return socket.gethostname()
+
+
+def stop():
+    get_pixel_ring().stop()
+    asyncio.get_event_loop().close()

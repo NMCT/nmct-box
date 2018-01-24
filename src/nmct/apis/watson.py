@@ -139,6 +139,7 @@ class WatsonRecognizer(object):
         coro = loop.create_connection(factory, factory.host, 443, ssl=True)
         loop.run_until_complete(coro)
         loop.run_until_complete(factory.transcript)
+        # loop.close()
         return factory.transcript.result()
 
     def list_models(self):

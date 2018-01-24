@@ -26,10 +26,10 @@ import aiy.voicehat
 import nmct.box
 import nmct.snowboy
 import nmct.watson
-from nmct.drivers.neopixel import COLORS
+from nmct.drivers.neopixel import Palette, Color
 
 logging.basicConfig()
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARN)
 
 
 def nmct_box_demo():
@@ -68,30 +68,36 @@ def nmct_box_demo():
     atexit.register(aiy.audio.get_recorder().stop)
 
     def script():
+
         lcd.write("--- NMCT Box ---")
-        ring.queue_effect("fill", COLORS["ORANGE"])
-        ring.queue_effect("sleep", 0.5)
-        ring.queue_effect("fill", COLORS["BLACK"])
+        ring.queue_animation("fill", Palette.orange)
+        ring.queue_animation("sleep", 0.5)
+        ring.queue_animation("fill", Palette.black)
         lisa.say("Hi. I'm the NMCT box of arbitrary code execution and I'd like you to meet some of my friends."
                  "Press my big, round button to get started.")
+        led.set_state(aiy.voicehat.LED.ON)
         button.wait_for_press()
+        led.set_state(aiy.voicehat.LED.OFF)
 
-        allison.say("I'm Allison. I can tell you about my environment. Press the button to measure my acceleration.")
+        allison.say("Hello, I'm Allison. I can tell you about my environment. Press the button to measure acceleration.")
+        led.set_state(aiy.voicehat.LED.ON)
         button.wait_for_press()
+        led.set_state(aiy.voicehat.LED.OFF)
+
         allison.say("My acceleration is {x} G on the X-axis, {y} on y and {z} on the z-axis"
                     .format(**dict(acc.measure(gforce=True)._asdict())))
         time.sleep(1)
 
         michael.say("Hi, I'm Michael and I'm a doctor. Please insert the probe so I can read your temperature.")
-        ring.queue_effect("rainbow")
+        ring.queue_animation("rainbow")
         michael.say("Go ahead. Trust me. I'm a doctor. Press the button when it's in. ")
         lcd.write("Do it! Do it!")
-        ring.queue_effect("clear")
+        ring.queue_animation("clear")
         button.wait_for_press()
         michael.say("Your temperature measures {:.2f} degrees. I'd say that's cause for concern!"
                     .format(nmct.box.measure_temperature()))
-        ring.queue_effect("theater_chase", COLORS["RED"])
-        ring.queue_effect("clear")
+        ring.queue_animation("theater_chase", Palette.red)
+        ring.queue_animation("clear")
 
         time.sleep(1)
         lisa.say("I can listen for hotwords too. Say the magic word...")
@@ -99,13 +105,14 @@ def nmct_box_demo():
         led.set_state(led.BEACON)
         detector.wait_for_hotword()
         led.set_state(led.OFF)
-        ring.queue_effect("theater_chase", COLORS["BLUE"])
+        ring.queue_animation("theater_chase", Palette.blue)
         lcd.clear()
-        ring.queue_effect("clear")
+        ring.queue_animation("clear")
         lcd.write_line("--- NMCT Box ---", 0)
 
         lisa.say(
-            "Well done! Now meet some of my friends from all over the world. They can translate for you!")
+            "Well done! Now meet some of my friends from all over the world. They can translate for you! "
+            "After they introduce themselves, wait for my button to light up and say something in English...")
         time.sleep(1)
         sofia.say("Hola! Me llamo Sofia y hablos espanol!")
         led.set_state(aiy.voicehat.LED.ON)
@@ -147,14 +154,14 @@ def nmct_box_demo():
 
         def perform_action(action):
             if "lights_on" in action:
-                ring.queue_effect("fill", COLORS["WHITE"])
+                ring.queue_animation("fill", Palette.white)
             elif "lights_off" in action:
-                ring.queue_effect("fill", COLORS["BLACK"])
+                ring.queue_animation("fill", Palette.black)
             if "music_on" in action:
                 if action["music_on"] == "jazz":
-                    aiy.audio.get_player().play_wav("data/jazz.wav")
+                    nmct.box.play_sound("jazz")
                 elif action["music_on"] == "rock":
-                    aiy.audio.get_player().play_wav("data/rock.wav")
+                    nmct.box.play_sound("rock")
                 kate.say("That was nice. Anything else?")
 
         text = "Hi"
@@ -183,14 +190,15 @@ def nmct_box_demo():
                     text = recognizer.recognize()
                     led.set_state(aiy.voicehat.LED.OFF)
         time.sleep(1)
-        ring.queue_effect("rainbow_chase", speed=200)
-        ring.queue_effect("clear")
+        ring.queue_animation("rainbow_chase", speed=200)
+        ring.queue_animation("clear")
         lisa.say("That was fun. I hope it was as good for you as it was for me. "
-                 "See you around, if you need me, I'll be in my box!")
+                 "See you around, if you need me, I'll be in my box... wink, wink!")
         aiy.audio.get_recorder().stop()
+        nmct.box.stop()
 
     script()
-    sys.exit(0)
+    # sys.exit(0)
 
 
 if __name__ == '__main__':

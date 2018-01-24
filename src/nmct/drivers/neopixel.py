@@ -370,7 +370,7 @@ class PixelRing(PixelStrip):
 
 class NeoPixelThread(threading.Thread):
     def __init__(self):
-        super().__init__(daemon=True, name="NeoPixelThread")
+        super().__init__(daemon=False, name="NeoPixelThread")
         self._queue = queue.Queue()
         self._ring = None
         if os.geteuid() == 0:
@@ -385,17 +385,25 @@ class NeoPixelThread(threading.Thread):
                     break
                 funct()
             except Exception as ex:
+                print(ex)
                 print_exception(ex, ex, ex.__traceback__)
 
     def queue_animation(self, ani, *args, **kwargs):
-        if args is None:
-            args = []
-        if os.geteuid() == 0:
-            self._queue.put(functools.partial(getattr(self._ring, ani), *args, **kwargs))
+        if ani is None:
+            self._queue.put(None)
         else:
-            msg = "No root, no ring!"
-            log.error(msg)
-            raise OSError(msg)
+            if args is None:
+                args = []
+            if os.geteuid() == 0:
+                self._queue.put(functools.partial(getattr(self._ring, ani), *args, **kwargs))
+            else:
+                msg = "No root, no ring!"
+                log.error(msg)
+                raise OSError(msg)
+
+    def stop(self):
+        self.queue_animation(None)
+        self.join()
 
     @staticmethod
     def list_animations():

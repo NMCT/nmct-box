@@ -375,7 +375,7 @@ function install_framework(){
     sudo chmod -R g+w  /home/nmct/uploads
     mkdir -p ./src/nmct/web/run
     sudo chmod -R g+w  ./src/nmct/web/run
-    mkdir -p ./secret
+    mkdir -p ./.secret
     cp ./resources/credentials-template.json ./.secret/credentials.json
     popd
 }
