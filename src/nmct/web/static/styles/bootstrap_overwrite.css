@@ -1,4 +1,4 @@
-.panel.blue .panel-heading, .panel.blue button:hover{
+.panel.blue .panel-heading, .panel.blue .btn:hover{
     background: #2c97de;
 }
 
@@ -6,11 +6,11 @@
     color: #2c97de;
 }
 
-.panel.blue button{
+.panel.blue .btn{
     border-color: #2c97de;
 }
 
-.panel.red .panel-heading, .panel.red button:hover{
+.panel.red .panel-heading, .panel.red .btn:hover{
     background: #cc3e4a;
 }
 
@@ -18,11 +18,11 @@
     color: #cc3e4a;
 }
 
-.panel.red button{
+.panel.red .btn{
     border-color: #cc3e4a;
 }
 
-.panel.orange .panel-heading, .panel.orange button:hover{
+.panel.orange .panel-heading, .panel.orange .btn:hover{
     background: #e76d3b;
 }
 
@@ -30,11 +30,11 @@
     color: #e76d3b;
 }
 
-.panel.orange button{
+.panel.orange .btn{
     border-color: #e76d3b;
 }
 
-.panel.green .panel-heading, .panel.green button:hover{
+.panel.green .panel-heading, .panel.green .btn:hover{
     background: #84b547;
 }
 
@@ -42,7 +42,7 @@
     color: #84b547;
 }
 
-.panel.green button{
+.panel.green .btn{
     border-color: #84b547;
 }
 
@@ -52,7 +52,7 @@
     font-size: 1.2em;
 }
 
-button{
+.btn{
     -webkit-transition: all ease-in-out 0.5s;
     -moz-transition: all ease-in-out 0.5s;
     -ms-transition: all ease-in-out 0.5s;
@@ -68,9 +68,9 @@ button{
     color: white;
 }
 
-.panel button{
+.panel .btn{
     background: #424242;
-    color: white;
+    color: white !important;
 }
 
 .panel-default{

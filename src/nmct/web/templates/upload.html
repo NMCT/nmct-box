@@ -6,8 +6,10 @@
         <span>Upload successful!</span>
     {% endif %}
     <form action="{{ url_for('upload_file') }}" method=post enctype=multipart/form-data role="form">
-        <p><input type=file name=file>
-            <input type=submit value=Upload>
+        <div class="flexitem col-md-12">
+            <input type=file name=file class="col-md-6" style="min-height: 15px; margin: 5px 0;">
+            <input class="btn btn-default" type=submit value=Upload>
+        </div>
     </form>
     <a href="{{ url_for('show_uploads') }}">Uploads</a>
 {% endblock %}
