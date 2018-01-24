@@ -1,7 +1,10 @@
 {% extends "index.html" %}
 {% block title %}Error{% endblock %}
 {% block content %}
-    <h1>Something went wrong :( </h1>
-    <p class="error">{{ message }}</p>
+    <div class="error">
+        <h1>Something went wrong :( </h1>
+        <hr/>
+        <p class="error">{{ message }}</p>
+    </div>
     {{ exc }}
 {% endblock %}

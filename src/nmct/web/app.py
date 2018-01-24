@@ -24,7 +24,7 @@ display = nmct.box.get_display()
 
 def list_uploads():
     p = Path(app.config['UPLOAD_FOLDER'])
-    return [(f.name, f.owner(), f.suffix[1:]) for f in p.iterdir()]
+    return [(f.name, f.owner(), f.suffix[1:]) for f in p.iterdir() if f.is_file()]
 
 
 @app.route('/')
@@ -99,7 +99,7 @@ def show_temperature():
     w1ids = nmct.box.list_onewire_ids()
     serial = flask.request.args.get('serial_number')
     if serial is None:
-        error = 'Gelieve een serieel nummer mee te geven : http://xxx.xxx.xxx.xxx/temperauur?serial_number=28-xxxx'
+        error = 'Gelieve een serienummer mee te geven: http://xxx.xxx.xxx.xxx/temperauur?serial_number=28-xxxx'
         return flask.render_template("error.html", exc=None, message=error)
     try:
         temperatuur = nmct.box.get_thermometer(serial).measure()
@@ -159,9 +159,15 @@ def hello():
     return flask.render_template('plot.html', bokS=script)
 
 
-@app.errorhandler(500)
-def page_not_found(e):
-    return flask.render_template('error.html', exc=e, message=e.message), 500
+#
+# @app.errorhandler(500)
+# def page_not_found(e):
+#     return flask.render_template('error.html', exc=e, message=e.message)
+#
+#
+# @app.errorhandler(404)
+# def page_not_found(e):
+#     return flask.render_template('error.html', exc=e, message=e.message)
 
 
 if __name__ == '__main__':

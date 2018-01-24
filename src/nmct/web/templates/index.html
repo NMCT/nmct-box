@@ -20,6 +20,7 @@
         <link rel="stylesheet" href="/styles/bootstrap_overwrite.css"/>
     {% endblock %}
     {% block scripts %}
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     {% endblock %}
@@ -28,7 +29,8 @@
 <body>
 <header>
     <section>
-        <div><img src="/media/nmct-std-cl.png" style="cursor:pointer;" onclick="window.open('http://nmct.be','_blank');"/></div>
+        <div><img src="/media/nmct-std-cl.png" style="cursor:pointer;"
+                  onclick="window.open('http://nmct.be','_blank');"/></div>
         <div><span>nmct box<br/>dashboard</span></div>
     </section>
 </header>
