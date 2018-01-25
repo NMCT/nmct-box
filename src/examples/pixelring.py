@@ -28,16 +28,16 @@ logging.getLogger().setLevel(logging.DEBUG)
 
 def pixelring_demo():
     ring = nmct.box.get_pixel_ring()
-    ring.queue_effect("rainbow")
-    ring.queue_effect("clear")
+    ring.queue_animation("rainbow")
+    ring.queue_animation("clear")
     time.sleep(1)
     yellow_ = Palette.yellow
     ring.queue_animation("fill", yellow_)
     print(yellow_)
     time.sleep(2)
     ring.queue_animation("fill", Palette.black)
-    ring.queue_effect("theater_chase", Palette.blue)
-    ring.queue_effect("clear")
+    ring.queue_animation("theater_chase", Palette.blue)
+    ring.queue_animation("clear")
     nmct.box.stop()
 
 
