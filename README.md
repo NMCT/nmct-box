@@ -7,21 +7,21 @@
 ```bash
 git clone https://github.com/NMCT/nmct-box.git
 cd nmct-box/scripts
-./install.sh
+./nmct-box.sh install
+sudo reboot
 ```
 
 ### Updating
 ```bash
-cd nmct-box/scripts
-git pull
-./install.sh --nmct-only
+nmct-box update
 ```
 
 ### Preparing a complete Raspbian image
 - Flash the official Raspbian image using <etcher.io> or `dd`
-- Put a suitable `wpa_supplicant.conf`, `ssh` and [prepare_image.sh](scripts/) on the boot partition
-- After boot, run `sudo /boot/prepare_image.sh`
-- Wait ~2.5 hours 
+- Put a suitable `wpa_supplicant.conf`, `ssh` and [nmct-box.sh](scripts/) on the boot partition
+- After boot, run `/boot/nmct-box.sh prepare` (as root or sudo user)
+- Reboot and reconnect using the provided credentials
+- Run `/boot/nmct-box.sh install`
+- Reboot
 
 ## Usage
-> write me!
