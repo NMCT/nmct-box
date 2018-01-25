@@ -154,7 +154,8 @@ function create_venv(){
     python3 -m pip install --upgrade pip wheel setuptools
     python3 -m venv --system-site-packages ${1}
     ${1}/bin/python -m pip install -I setuptools
-    echo 'export PATH="'${1}'/bin:$PATH"' | tee -a ~/.bashrc >> ~/.xsessionrc
+    # FIXME!
+#    echo 'export PATH="'${1}'/bin:$PATH"' | tee -a ~/.bashrc >> ~/.xsessionrc
 }
 
 function install_aiy_voicekit(){
@@ -297,7 +298,7 @@ function configure_desktop(){
     echo -e "Installing shortcuts"
     sudo mkdir -p /usr/share/nmct-wallpaper
     sudo ln -sf ${1}/src/nmct/web/static/media/NMCT-*.png /usr/share/nmct-wallpaper/
-    echo 'DISPLAY='':0.0'' pcmanfm  --set-wallpaper /usr/share/nmct-wallpaper/NMCT-1920x1200.png' >> ~/.xsessionrc
+#    echo 'DISPLAY='':0.0'' pcmanfm  --set-wallpaper /usr/share/nmct-wallpaper/NMCT-1920x1200.png' >> ~/.xsessionrc
 
     for file in ${1}/shortcuts/*; do
         echo ${file}
