@@ -30,6 +30,11 @@ def list_uploads():
 @app.route('/')
 def show_dashboard():
     w1ids = nmct.box.list_onewire_ids()
+    #eerste keer geeft de sensor een nulwaarden terug
+    accelero = nmct.box.get_accelerometer()
+    accelero.accelero.measure()
+
+    
     return flask.render_template("dashboard.html", w1ids=w1ids, files=list_uploads())
 
 
