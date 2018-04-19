@@ -501,6 +501,8 @@ function usage(){
 
     echo -e "\Misc:"
     echo -e "\t \033[1m connect <ssid> <passphrase> \033[0m\t Connect to WPA-PSK secured WiFi network"
+    echo -e "\t \033[1m develop \033[0m\t Checkout dev branch"
+
     exit 0
 }
 
@@ -557,6 +559,13 @@ for i in $*; do
         ./env/bin/python -m pip install -e .
         popd
         do_services start
+    ;;
+    develop)
+        pushd "${NMCT_HOME}"
+        git fetch
+        git add .
+        git stash
+        git checkout -b dev --track origin/dev
     ;;
     connect)
         shift
