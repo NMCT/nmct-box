@@ -3,12 +3,12 @@ Description=uWSGI instance to serve student uploads
 After=network.target
 
 [Service]
-User=nmct
+User=${USER}
 Group=www-data
 WorkingDirectory=${NMCT_HOME}/src/nmct/web
-Environment="PATH=${NMCT_HOME}/env/bin"
+Environment="PATH=${NMCT_HOME}/env/bin:/usr/bin"
 Environment="NMCT_HOME=${NMCT_HOME}"
-ExecStart=${NMCT_HOME}/env/bin/uwsgi --ini "${NMCT_HOME}/resources/conf/wsgi-flask.ini"
+ExecStart=${NMCT_HOME}/env/bin/uwsgi --ini ${NMCT_HOME}/resources/conf/wsgi-flask.ini
 
 [Install]
 WantedBy=multi-user.target

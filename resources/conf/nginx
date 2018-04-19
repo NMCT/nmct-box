@@ -92,7 +92,7 @@ server {
 
 	location /plot {
 
-		proxy_pass http://bokeh/;
+		proxy_pass http://bokeh;
 		proxy_set_header Upgrade $http_upgrade;
 		proxy_set_header Connection "upgrade";
 		proxy_http_version 1.1;

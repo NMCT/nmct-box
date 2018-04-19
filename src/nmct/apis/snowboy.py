@@ -6,7 +6,7 @@ from snowboy import snowboydetect
 import aiy.audio
 
 from nmct.settings import RESOURCE_PATH
-signal
+
 
 class HotWord:
     def __init__(self, model, name: str = None, sensitivity: float = 0.5):

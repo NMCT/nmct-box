@@ -4,11 +4,11 @@ After=network.target
 
 [Service]
 User=www-data
-Group=nmct
+Group=${USER}
 WorkingDirectory=${NMCT_HOME}/src/nmct/web
 Environment="PATH=${NMCT_HOME}/env/bin"
 Environment="NMCT_HOME=${NMCT_HOME}"
-ExecStart=${NMCT_HOME}/env/bin/uwsgi --ini "${NMCT_HOME}/resources/conf/wsgi-student.ini"
+ExecStart=${NMCT_HOME}/env/bin/uwsgi --ini ${NMCT_HOME}/resources/conf/wsgi-student.ini
 
 [Install]
 WantedBy=multi-user.target

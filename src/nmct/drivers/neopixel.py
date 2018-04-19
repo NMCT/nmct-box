@@ -355,6 +355,11 @@ class PixelRing(PixelStrip):
             self.show()
             time.sleep(1 / speed)
 
+        for led in self:
+            self.set_pixel_color(led, Palette.black)
+            self.show()
+            time.sleep(1 / speed)
+
     @animation
     def rainbow_chase(self, *args, speed=20):
         """Rainbow movie theater light style chaser animation."""
@@ -366,6 +371,7 @@ class PixelRing(PixelStrip):
                 time.sleep(1 / speed)
                 for i in range(0, len(self), 3):
                     self.set_pixel_color(i + q, OFF)
+                    self.show()
 
 
 class NeoPixelThread(threading.Thread):
