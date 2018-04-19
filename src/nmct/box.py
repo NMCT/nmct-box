@@ -57,8 +57,8 @@ def get_accelerometer():
 def get_display():
     global _display
     if _display is None:
-        #_display = LCDisplay(26, 13) #box
-        _display=LCDisplay(5,13)
+        _display = LCDisplay(26, 13) #box
+        # _display=LCDisplay(5,13)
     return _display
 
 

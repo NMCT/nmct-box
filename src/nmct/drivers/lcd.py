@@ -146,7 +146,6 @@ class LCDisplay:
     def write(self, message):
         # print("Message : " + message + " naar LCD")
         #toegevoegd 17 april hbt
-
         self._driver.start_address(LCDisplay.I2C_ADDR)
         self.__lcd_init()
 
