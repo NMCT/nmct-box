@@ -25,7 +25,7 @@ nmct-box update
 - Reboot
 
 ## Usage
-```bash
+```console
 nmct@box-43def3:~ $ nmct-box -h
 
 NMCT-Box home: /home/nmct/nmct-box

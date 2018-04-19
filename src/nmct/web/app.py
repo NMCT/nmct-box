@@ -27,12 +27,6 @@ def list_uploads():
     return [(f.name, f.owner(), f.suffix[1:]) for f in p.iterdir() if f.is_file()]
 
 
-@app.route('/')
-def show_dashboard():
-    w1ids = nmct.box.list_onewire_ids()
-    return flask.render_template("dashboard.html", w1ids=w1ids, files=list_uploads())
-
-
 @app.route('/static/<path:path>')
 def serve_static(path):
     return send_from_directory('./static', path)
@@ -47,6 +41,17 @@ def serve_styles(path):
 def serve_media(path):
     return send_from_directory('./static/media', path)
 
+@app.route('/')
+@app.route('/dashboard/', methods=['GET'])
+def show_dashboard():
+    try:
+        w1ids = nmct.box.list_onewire_ids()
+    except Exception as ex:
+        return flask.render_template("error.html", exc=ex, message=ex.args)
+    return flask.render_template("dashboard.html", showmethod='write_lcd',
+                                 w1ids=w1ids, files=list_uploads())
+
+
 
 @app.route('/write_lcd', methods=['POST', 'GET'])
 def write_lcd():
@@ -56,13 +61,13 @@ def write_lcd():
     else:
         text = flask.request.args.get('lcdMessage')
     if text is None:
-        error = 'Gelieve een tekst mee te geven: http://xxx.xxx.xxx.xxx/temperauur?lcdMessage=hallo'
+        error = 'Gelieve een tekst mee te geven: http://xxx.xxx.xxx.xxx/write_lcd?lcdMessage=hallo'
         return flask.render_template("error.html", exc=None, message=error)
     text = text.rstrip("")
     display.write(text)
     w1ids = nmct.box.list_onewire_ids()
 
-    return flask.render_template("dashboard.html", lcdMessage=text, w1ids=w1ids, files=list_uploads())
+    return flask.render_template("dashboard.html",showmethod='write_lcd', lcdMessage=text, w1ids=w1ids, files=list_uploads())
 
 
 @app.route('/sensors', methods=['GET'])
@@ -74,6 +79,7 @@ def sensors():
     try:
 
         accelero = nmct.box.get_accelerometer()
+        accelero.measure()
 
         if sensor == "gravity":
             show_text = accelero.measure()

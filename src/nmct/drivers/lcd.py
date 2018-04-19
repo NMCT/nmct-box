@@ -9,7 +9,8 @@ class I2C:
         self.sda = sda
         self.scl = scl
         self.__setup()
-        self.__start_address(adres)
+        #aanpassing hbt
+        self.start_address(adres)
 
     def __setup(self):
         GPIO.setwarnings(False)
@@ -17,7 +18,7 @@ class I2C:
         GPIO.setup(self.sda, GPIO.OUT)
         GPIO.setup(self.scl, GPIO.OUT)
 
-    def __start_address(self, address):
+    def start_address(self, address):
         self.__start()
         self.write(address)
 
@@ -30,6 +31,18 @@ class I2C:
         time.sleep(0.01)
 
         GPIO.output(self.scl, GPIO.LOW)
+        time.sleep(0.01)
+
+    #aanpassing hbt
+    def stop(self):
+        GPIO.output(self.sda, GPIO.LOW)
+        GPIO.output(self.scl, GPIO.LOW)
+        time.sleep(0.01)
+
+        GPIO.output(self.scl, GPIO.HIGH)
+        time.sleep(0.01)
+
+        GPIO.output(self.sda, GPIO.HIGH)
         time.sleep(0.01)
 
     def __write_bit(self, bit):
@@ -88,61 +101,68 @@ class LCDisplay:
 
     def __lcd_init(self):
         # Initialise display
-        self.__lcd_byte(0x33, LCDisplay.LCD_CMD)  # 110011 Initialise
-        self.__lcd_byte(0x32, LCDisplay.LCD_CMD)  # 110010 Initialise
-        self.__lcd_byte(0x28, LCDisplay.LCD_CMD)  # 101000 Data length, number of lines, font size
-        self.__lcd_byte(0x0C, LCDisplay.LCD_CMD)  # 001100 Display On,Cursor Off, Blink Off
-        self.__lcd_byte(0x01, LCDisplay.LCD_CMD)  # 000001 Clear display
-        time.sleep(LCDisplay.E_DELAY)
-        self.__lcd_byte(LCDisplay.LCD_LINE_1, LCDisplay.LCD_CMD)  # Move to start
+        with self._lock:
+            self.__lcd_byte(0x33, LCDisplay.LCD_CMD)  # 110011 Initialise
+            self.__lcd_byte(0x32, LCDisplay.LCD_CMD)  # 110010 Initialise
+            self.__lcd_byte(0x28, LCDisplay.LCD_CMD)  # 101000 Data length, number of lines, font size
+            self.__lcd_byte(0x0C, LCDisplay.LCD_CMD)  # 001100 Display On,Cursor Off, Blink Off
+            self.__lcd_byte(0x01, LCDisplay.LCD_CMD)  # 000001 Clear display
+            time.sleep(LCDisplay.E_DELAY)
+            self.__lcd_byte(LCDisplay.LCD_LINE_1, LCDisplay.LCD_CMD)  # Move to start
 
     def __lcd_byte(self, bits, mode):
-        # Send byte to data pins
-        # bits = the data
-        # mode = 1 for data
-        #        0 for command
-        bits_high = mode | (bits & 0xF0) | LCDisplay.LCD_BACKLIGHT
-        bits_low = mode | ((bits << 4) & 0xF0) | LCDisplay.LCD_BACKLIGHT
-        # High bits
-        self._driver.write(bits_high)
-        self.__lcd_toggle_enable(bits_high)
-        # Low bits
-        self._driver.write(bits_low)
-        self.__lcd_toggle_enable(bits_low)
+        with self._lock:
+            # Send byte to data pins
+            # bits = the data
+            # mode = 1 for data
+            #        0 for command
+            bits_high = mode | (bits & 0xF0) | LCDisplay.LCD_BACKLIGHT
+            bits_low = mode | ((bits << 4) & 0xF0) | LCDisplay.LCD_BACKLIGHT
+            # High bits
+            self._driver.write(bits_high)
+            self.__lcd_toggle_enable(bits_high)
+            # Low bits
+            self._driver.write(bits_low)
+            self.__lcd_toggle_enable(bits_low)
 
     def __lcd_toggle_enable(self, bits):
-        # Toggle enable
-        time.sleep(LCDisplay.E_DELAY)
-        self._driver.write(bits | LCDisplay.ENABLE)
-        time.sleep(LCDisplay.E_PULSE)
-        self._driver.write(bits & ~LCDisplay.ENABLE)
-        time.sleep(LCDisplay.E_DELAY)
+        with self._lock:
+            # Toggle enable
+            time.sleep(LCDisplay.E_DELAY)
+            self._driver.write(bits | LCDisplay.ENABLE)
+            time.sleep(LCDisplay.E_PULSE)
+            self._driver.write(bits & ~LCDisplay.ENABLE)
+            time.sleep(LCDisplay.E_DELAY)
 
     def clear(self):
-        with self._lock:
-            self.__lcd_byte(LCDisplay.LCD_LINE_1, LCDisplay.LCD_CMD)
-            for i in range(16):
-                self.__lcd_byte(ord(" "), LCDisplay.LCD_CHR)
-            self.__lcd_byte(LCDisplay.LCD_LINE_2, LCDisplay.LCD_CMD)
-            for i in range(16):
-                self.__lcd_byte(ord(" "), LCDisplay.LCD_CHR)
-            self.__lcd_byte(LCDisplay.LCD_LINE_1, LCDisplay.LCD_CMD)
+        self.__lcd_byte(LCDisplay.LCD_LINE_1, LCDisplay.LCD_CMD)
+        for i in range(16):
+            self.__lcd_byte(ord(" "), LCDisplay.LCD_CHR)
+        self.__lcd_byte(LCDisplay.LCD_LINE_2, LCDisplay.LCD_CMD)
+        for i in range(16):
+            self.__lcd_byte(ord(" "), LCDisplay.LCD_CHR)
+        self.__lcd_byte(LCDisplay.LCD_LINE_1, LCDisplay.LCD_CMD)
 
     def write(self, message):
-        with self._lock:
-            # print("Message : " + message + " naar LCD")
-            for i in range(len(message)):
-                self.__lcd_byte(ord(message[i]), LCDisplay.LCD_CHR)
-                if i == 15:
-                    self.__lcd_byte(LCDisplay.LCD_LINE_2, LCDisplay.LCD_CMD)
-                if i == 31:
-                    self.__lcd_byte(LCDisplay.LCD_SCROLL, LCDisplay.LCD_CMD)
+        # print("Message : " + message + " naar LCD")
+        #toegevoegd 17 april hbt
+        self._driver.start_address(LCDisplay.I2C_ADDR)
+        self.__lcd_init()
+
+        for i in range(len(message)):
+            self.__lcd_byte(ord(message[i]), LCDisplay.LCD_CHR)
+            if i == 15:
+                self.__lcd_byte(LCDisplay.LCD_LINE_2, LCDisplay.LCD_CMD)
+            if i == 31:
+                self.__lcd_byte(LCDisplay.LCD_SCROLL, LCDisplay.LCD_CMD)
+
+        #aanpassing hbt
+        self._driver.stop()
 
     def write_line(self, message, line):
-        with self._lock:
-            self.__lcd_byte(0x80 | line - 1 << 6, LCDisplay.LCD_CMD)
-            for c in message:
-                self.__lcd_byte(ord(c), LCDisplay.LCD_CHR)
+        self.__lcd_byte(0x80 | line - 1 << 6, LCDisplay.LCD_CMD)
+        for c in message:
+            self.__lcd_byte(ord(c), LCDisplay.LCD_CHR)
 
 
 if __name__ == "__main__":
