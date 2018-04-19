@@ -36,11 +36,6 @@ def list_uploads():
     return [(f.name, f.owner(), f.suffix[1:]) for f in p.iterdir() if f.is_file()]
 
 
-@app.route('/')
-def show_dashboard():
-    return flask.render_template("dashboard.html", **default_values())
-
-
 @app.route('/static/<path:path>')
 def serve_static(path):
     return send_from_directory('./static', path)
@@ -56,6 +51,16 @@ def serve_media(path):
     return send_from_directory('./static/media', path)
 
 
+@app.route('/')
+@app.route('/dashboard/', methods=['GET'])
+def show_dashboard():
+    try:
+        defaults = default_values()
+    except Exception as ex:
+        return flask.render_template("error.html", exc=ex, message=ex.args)
+    return flask.render_template("dashboard.html", showmethod='write_lcd', **defaults)
+
+
 @app.route('/write_lcd', methods=['POST', 'GET'])
 def write_lcd():
     display.clear()
@@ -64,11 +69,11 @@ def write_lcd():
     else:
         text = flask.request.args.get('lcdMessage')
     if text is None:
-        error = 'Gelieve een tekst mee te geven: http://xxx.xxx.xxx.xxx/temperauur?lcdMessage=hallo'
+        error = 'Gelieve een tekst mee te geven: http://xxx.xxx.xxx.xxx/write_lcd?lcdMessage=hallo'
         return flask.render_template("error.html", exc=None, message=error)
     text = text.rstrip("")
     display.write(text)
-    return flask.render_template("dashboard.html", lcdMessage=text, **default_values())
+    return flask.render_template("dashboard.html", showmethod='write_lcd', lcdMessage=text, **default_values())
 
 
 @app.route('/speak', methods=['POST', 'GET'])
@@ -89,6 +94,7 @@ def sensors():
     try:
 
         accelero = nmct.box.get_accelerometer()
+        accelero.measure()
 
         if sensor == "gravity":
             show_text = accelero.measure()
@@ -167,9 +173,9 @@ def show_uploads():
     return flask.render_template("uploads.html", files=list_uploads())
 
 
-@app.route("/fplot")
-def hello():
-    script = bokeh.embed.server_document(request.url.replace("fplot", "plot/plot"), True)
+@app.route("/live_plot")
+def live_plot():
+    script = bokeh.embed.server_document(request.url.replace("live_plot", "plot/plot"), True)
     return flask.render_template('plot.html', bokeh_script=script)
 
 
