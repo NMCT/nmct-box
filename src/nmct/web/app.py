@@ -1,11 +1,8 @@
-from traceback import print_exception
-
-import bokeh
+import bokeh.embed
 import flask
 from pathlib import Path
 
 import json
-from bokeh.embed import autoload_server
 from nmct import settings
 
 import nmct
@@ -13,7 +10,6 @@ import os
 from flask import request, flash, redirect, send_from_directory
 from werkzeug.utils import secure_filename
 
-from nmct.box import get_pixel_ring
 from nmct.settings import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, MAX_UPLOAD_SIZE
 
 app = flask.Flask(__name__)

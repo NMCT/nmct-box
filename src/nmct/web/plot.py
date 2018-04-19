@@ -175,6 +175,6 @@ if __name__ == '__main__':
     server.io_loop.start()
 else:
     doc = curdoc()
-    plot_tilt(doc)
-    plot_acceleration(doc)
     plot_temperature(doc)
+    plot_acceleration(doc)
+    plot_tilt(doc)

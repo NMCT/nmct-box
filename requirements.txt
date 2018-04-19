@@ -1,3 +1,4 @@
+werkzeug
 PyYAML
 PyNaCL>=1.2.1
 
