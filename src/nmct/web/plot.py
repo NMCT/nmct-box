@@ -177,4 +177,4 @@ else:
     doc = curdoc()
     plot_tilt(doc)
     plot_acceleration(doc)
-    # plot_temperature(doc)
+    plot_temperature(doc)
