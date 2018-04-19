@@ -82,8 +82,12 @@ def write_lcd():
 def tts_speak():
     text = flask.request.form.get('tts_text')
     voice = flask.request.form.get('tts_voice')
-    watson = nmct.watson.get_synthesizer(voice)
-    watson.say(text)
+    if text and voice:
+        try:
+            watson = nmct.watson.get_synthesizer(voice)
+            watson.say(text)
+        except Exception as ex:
+            return flask.render_template("error.html", exc=ex, message=ex.args)
     return flask.render_template("dashboard.html", tts_text=text, tts_voice=voice, **default_values())
 
 
