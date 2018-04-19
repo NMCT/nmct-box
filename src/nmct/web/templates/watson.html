@@ -1,0 +1,30 @@
+{% extends "panel.html" %}
+{% block panel_color %}blue{% endblock %}
+{% block panel_title %}Watson{% endblock %}
+{% block panel_contents %}
+    <form role="form" action="{{ url_for('tts_speak') }}" method="post">
+        <p class="help-block">Geef hier tekst in om te laten uitspreken door Watson.</p>
+        <div class="form-group">
+            <div><label class="flexitem">Tekst: <br><br>
+                <textarea class="form-control" name="tts_text">{{ tts_text }}</textarea></label>
+            </div>
+            <label>Stem:
+                <select name="tts_voice" class="form-control">
+                    {% for id in voices %}
+                        <option value="{{ id }}" SELECTED>{{ id }}</option>
+                    {% endfor %}
+                </select></label>
+            <button type="submit" class="btn btn-default" name="show_method">Spreek</button>
+        </div>
+    </form>
+    <hr>
+    <form role="form" action="{{ url_for('save_ws_id') }}" method="post">
+        <div class="form-group">
+            <p class="help-block">Stel hier de <em>workspace id</em> van Watson Conversation in die je wil gebruiken.
+            </p>
+            <label>Workspace ID:
+                <input type="text" class="form-control " name="workspace_id"
+                       placeholder="{{ workspace_id }}"/></label>
+            <button type="submit" class="btn btn-default" name="show_method">Opslaan</button>
+        </div>
+    </form>{% endblock %}

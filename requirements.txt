@@ -1,15 +1,18 @@
+werkzeug
 PyYAML
+PyNaCL>=1.2.1
 
 git+https://github.com/Kitt-AI/snowboy#egg=snowboy
 -e git+https://github.com/google/aiyprojects-raspbian.git@aiyprojects#egg=aiy&subdirectory=src
 
+pip
 jupyter
 jupyterthemes
 jupyterhub
 pandas
 widgetsnbextension
 RPi.GPIO
-watson-developer-cloud
+watson-developer-cloud==1.0.2
 autobahn
 flask
 smbus-cffi

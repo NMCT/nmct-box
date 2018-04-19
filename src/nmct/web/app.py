@@ -1,17 +1,15 @@
-from traceback import print_exception
-
-import bokeh
+import bokeh.embed
 import flask
 from pathlib import Path
 
-from bokeh.embed import autoload_server
+import json
+from nmct import settings
 
 import nmct
 import os
 from flask import request, flash, redirect, send_from_directory
 from werkzeug.utils import secure_filename
 
-from nmct.box import get_pixel_ring
 from nmct.settings import ALLOWED_EXTENSIONS, UPLOAD_FOLDER, MAX_UPLOAD_SIZE
 
 app = flask.Flask(__name__)
@@ -20,6 +18,19 @@ app.config['MAX_CONTENT_LENGTH'] = MAX_UPLOAD_SIZE
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 display = nmct.box.get_display()
+tts = nmct.watson.get_synthesizer()
+secrets_file = os.path.join(settings.SECRETS_PATH, "credentials.json")
+
+
+def default_values():
+    with open(secrets_file) as f:
+        secrets = json.load(f)
+    return {
+        'uploads': list_uploads(),
+        'w1ids': nmct.box.list_onewire_ids(),
+        'voices': tts.list_voices(),
+        'workspace_id': secrets["watson"].get("workspace_id", ''),
+    }
 
 
 def list_uploads():
@@ -41,16 +52,15 @@ def serve_styles(path):
 def serve_media(path):
     return send_from_directory('./static/media', path)
 
+
 @app.route('/')
 @app.route('/dashboard/', methods=['GET'])
 def show_dashboard():
     try:
-        w1ids = nmct.box.list_onewire_ids()
+        defaults = default_values()
     except Exception as ex:
         return flask.render_template("error.html", exc=ex, message=ex.args)
-    return flask.render_template("dashboard.html", showmethod='write_lcd',
-                                 w1ids=w1ids, files=list_uploads())
-
+    return flask.render_template("dashboard.html", showmethod='write_lcd', **defaults)
 
 
 @app.route('/write_lcd', methods=['POST', 'GET'])
@@ -65,47 +75,55 @@ def write_lcd():
         return flask.render_template("error.html", exc=None, message=error)
     text = text.rstrip("")
     display.write(text)
-    w1ids = nmct.box.list_onewire_ids()
+    return flask.render_template("dashboard.html", showmethod='write_lcd', lcdMessage=text, **default_values())
 
-    return flask.render_template("dashboard.html",showmethod='write_lcd', lcdMessage=text, w1ids=w1ids, files=list_uploads())
+
+@app.route('/speak', methods=['POST'])
+def tts_speak():
+    text = flask.request.form.get('tts_text')
+    voice = flask.request.form.get('tts_voice')
+    watson = nmct.watson.get_synthesizer(voice)
+    watson.say(text)
+    return flask.render_template("dashboard.html", tts_text=text, tts_voice=voice, **default_values())
+
+
+@app.route('/set_workspace_id', methods=['POST'])
+def save_ws_id():
+    wid = flask.request.form.get('workspace_id')
+    try:
+        with open(secrets_file) as f:
+            data = json.load(f)
+        data["watson"]["workspace_id"] = wid
+        with open(secrets_file, 'w') as f:
+            json.dump(data, f)
+    except Exception as ex:
+        return flask.render_template("error.html", exc=ex, message=ex.args)
+    return show_dashboard()
 
 
 @app.route('/sensors', methods=['GET'])
 def sensors():
-    w1ids = nmct.box.list_onewire_ids()
-    # axe = request.form['show_method']
     sensor = flask.request.args.get('sensor')
     show_text = ""
     try:
-
         accelero = nmct.box.get_accelerometer()
         accelero.measure()
-
         if sensor == "gravity":
             show_text = accelero.measure()
-
         if sensor == "tilt":
             tilt = accelero.tilt()
-            # print(tilt.roll)
-            # print(tilt.pitch)
             show_text = "roll: {0:5.2f}\N{DEGREE SIGN} pitch : {1:5.2f}\N{DEGREE SIGN}".format(tilt.roll, tilt.pitch)
-
         if sensor == "temperature":
             temp = nmct.box.measure_temperature()
             show_text = "Temperature: {}\N{DEGREE SIGN}".format(temp)
-
-        # print(accelero.tilt())
-
     except Exception as ex:
         return flask.render_template("error.html", exc=ex, message=ex.args)
-    return flask.render_template("dashboard.html", show_method='gravity', show_text=show_text, w1ids=w1ids,
-                                 files=list_uploads())
+    return flask.render_template("dashboard.html", show_method='gravity', show_text=show_text, **default_values())
 
 
 @app.route('/temperatuur', methods=['GET'])
 def show_temperature():
     show_text = ""
-    w1ids = nmct.box.list_onewire_ids()
     serial = flask.request.args.get('serial_number')
     if serial is None:
         error = 'Gelieve een serienummer mee te geven: http://xxx.xxx.xxx.xxx/temperauur?serial_number=28-xxxx'
@@ -115,8 +133,8 @@ def show_temperature():
         show_text = "De temperatuur is {0:3.2f} \N{DEGREE SIGN}C".format(temperatuur)
     except Exception as ex:
         return flask.render_template("error.html", exc=ex, message=ex.args)
-    return flask.render_template("dashboard.html", show_method='show_temperature', show_text=show_text, w1ids=w1ids,
-                                 files=list_uploads())
+    return flask.render_template("dashboard.html", show_method='show_temperature', show_text=show_text,
+                                 **default_values())
 
 
 def file_extension(filename):
@@ -129,7 +147,6 @@ def allowed_file(filename):
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
-    w1ids = nmct.box.list_onewire_ids()
     success = False
     if request.method == 'POST':
         # check if the post request has the file part
@@ -152,8 +169,7 @@ def upload_file():
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], 'static', filename))
 
             success = True
-    return flask.render_template("dashboard.html", show_method='upload', w1ids=w1ids, upload_success=success,
-                                 files=list_uploads())
+    return flask.render_template("dashboard.html", show_method='upload', upload_success=success, **default_values())
 
 
 @app.route('/uploads', methods=['GET'])
@@ -161,21 +177,10 @@ def show_uploads():
     return flask.render_template("uploads.html", files=list_uploads())
 
 
-@app.route("/fplot")
-def hello():
-    script = bokeh.embed.autoload_server(model=None, app_path="/fplot",
-                                         url=request.url.replace("/fplot", "plot/plot"))
-    return flask.render_template('plot.html', bokS=script)
-
-#
-# @app.errorhandler(500)
-# def page_not_found(e):
-#     return flask.render_template('error.html', exc=e, message=e.message)
-#
-#
-# @app.errorhandler(404)
-# def page_not_found(e):
-#     return flask.render_template('error.html', exc=e, message=e.message)
+@app.route("/live_plot")
+def live_plot():
+    script = bokeh.embed.server_document(request.url.replace("live_plot", "plot/plot"), True)
+    return flask.render_template('plot.html', bokeh_script=script)
 
 
 if __name__ == '__main__':

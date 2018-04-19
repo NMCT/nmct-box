@@ -1,0 +1,5 @@
+{% extends "panel.html" %}
+{% block panel_title %}Live Sensor Data{% endblock %}
+{% block panel_contents %}
+    {{ bokeh_script|indent(4)|safe }}
+{% endblock %}

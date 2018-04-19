@@ -14,7 +14,7 @@ def get_recognizer(model=DEFAULT_MODEL):
     return _recognizers[model]
 
 
-def get_conversation(workspace_id, credentials=None):
+def get_conversation(workspace_id=None, credentials=None):
     global _conversation
     _conversation.setdefault(workspace_id, WatsonConversation(workspace_id, credentials=credentials))
     return _conversation[workspace_id]

@@ -3,20 +3,12 @@
 {% block panel_title %}LCD Display{% endblock %}
 {% block panel_contents %}
     <form role="form" action="{{ url_for('write_lcd') }}" method="get">
+        <p class="help-block">Geef hier tekst in om naar het LCD display te sturen. Na het opstarten moet je eerst
+            een keer op de grote knop van de nmct-box drukken om naar het LCD display te kunnen schrijven.</p>
         <div class="form-group">
-            <label>LCD Input</label>
-             <p class="help-block ">Druk op de grote knop van de nmct-box om naar het LCD display te kunnen schrijven.</p>
-                <input class="form-control "  name="lcdMessage" value="{{ lcdMessage }}"/>
+            <label>Tekst:
+                <input type="text" class="form-control" name="lcdMessage" value="{{ lcdMessage }}"/> </label>
+            <button type="submit" class="btn btn-default" name="show_method">Schrijf naar LCD display </button>
         </div>
-            <label>
-
-                <button type="submit" class="btn btn-default "  name="show_method">Schrijf naar
-                LCD
-                display
-            </button>
-
-            <p class="help-block" >Geef hier tekst in om naar het LCD display te sturen.</p>
-
-            </label>
     </form>
 {% endblock %}

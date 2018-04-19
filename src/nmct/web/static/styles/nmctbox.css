@@ -113,6 +113,9 @@ main {
     color: #eeeeee;
 
 }
+input[type=text] {
+    min-width: 500px;
+}
 
 /* FOOTER */
 footer {

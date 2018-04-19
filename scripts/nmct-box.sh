@@ -371,7 +371,8 @@ function install_dependencies(){
 function install_framework(){
     # install our package
     pushd "${1}"
-    ./env/bin/python3 -m pip install -r requirements.txt -e .
+    ./env/bin/python3 -m pip install --upgrade -r requirements.txt -e .
+    ./env/bin/python -m ipykernel install --user --name nmct-box --display-name "Python3 (nmct-box)"
     sudo mkdir -p /home/nmct/uploads/static
     sudo chown -R www-data:www-data /home/nmct/uploads
     sudo chmod -R g+w  /home/nmct/uploads
@@ -425,8 +426,19 @@ function apply_refresh(){
     do_services restart '*'
 }
 
-
-
+##################################################################
+# Purpose: Add and connect to WPA secured WiFi network
+# Arguments:
+#   $1 -> Install directory (NMCT_HOME)
+# #################################################################
+function add_wifi_psk(){
+    ssid=${1}
+    psk=${2}
+    test -z "${psk}"  && echo "Usage: ${0} connect <SSID> <PSK>" >&2 && exit 1
+    wpa_passphrase "${1}" "${2}" | sudo tee -a /etc/wpa_supplicant/wpa_supplicant.conf
+    wpa_cli -i wlan0 reconfigure
+    wpa_cli -i wlan0 status
+}
 
 ##################################################################
 # Command line use
@@ -487,7 +499,10 @@ function usage(){
     echo -e "\t \033[1m update \033[0m\t Download and install updates, including dependencies"
     echo -e "\t \033[1m refresh \033[0m\t Download and install updates of the framework only"
 
-    echo -e ""
+    echo -e "\Misc:"
+    echo -e "\t \033[1m connect <ssid> <passphrase> \033[0m\t Connect to WPA-PSK secured WiFi network"
+    echo -e "\t \033[1m develop \033[0m\t Checkout dev branch"
+
     exit 0
 }
 
@@ -530,12 +545,12 @@ for i in $*; do
         $(grep ExecStart /etc/systemd/system/nmct-box-${@}.service | cut -d '=' -f2)
         exit $?
     ;;
-    update)
+    update|refresh)
         arg=${@}
         do_services stop
         update_project "${NMCT_HOME}"
         "$0" -f apply_${arg} "${NMCT_HOME}"
-        do_services start *
+        do_services start '*'
         exit $?
     ;;
     reload)
@@ -544,6 +559,18 @@ for i in $*; do
         ./env/bin/python -m pip install -e .
         popd
         do_services start
+    ;;
+    develop)
+        pushd "${NMCT_HOME}"
+        git fetch
+        git add .
+        git stash
+        git checkout -b dev --track origin/dev
+    ;;
+    connect)
+        shift
+        add_wifi_psk "${@}"
+        exit $?
     ;;
     --function|-f)
         shift
