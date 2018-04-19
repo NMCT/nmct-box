@@ -6,7 +6,7 @@ After=network.target
 User=${USER}
 Group=www-data
 WorkingDirectory=${NMCT_HOME}
-Environment="PATH=${NMCT_HOME}/env/bin:/usr/bin"
+Environment="PATH=${NMCT_HOME}/env/bin:/usr/bin:/bin"
 Environment="NMCT_HOME=${NMCT_HOME}"
 ExecStart=${NMCT_HOME}/env/bin/python /usr/bin/jupyter-notebook --config=${NMCT_HOME}/resources/conf/jupyter_notebook_config.py
 
