@@ -45,7 +45,7 @@
 #  Use '*' to allow any origin to access your server.
 #  
 #  Takes precedence over allow_origin_pat.
-# c.NotebookApp.allow_origin = ''
+c.NotebookApp.allow_origin = '*'
 
 ## Use a regular expression for the Access-Control-Allow-Origin header
 #  
@@ -56,7 +56,7 @@
 #  where `origin` is the origin of the request.
 #  
 #  Ignored if allow_origin is set.
-c.NotebookApp.allow_origin_pat = '*'
+# c.NotebookApp.allow_origin_pat = '*'
 
 ## Allow password to be changed at login for the notebook server.
 #  
@@ -478,7 +478,7 @@ c.NotebookApp.port = 2002
 ## A class for managing multiple kernels.
 
 ## The name of the default kernel to start
-# c.MultiKernelManager.default_kernel_name = 'python3'
+c.MultiKernelManager.default_kernel_name = 'nmct-box'
 
 ## The kernel manager class.  This is configurable to allow subclassing of the
 #  KernelManager for customized behavior.
@@ -694,4 +694,4 @@ c.KernelSpecManager.ensure_native_kernel = False
 ## Whitelist of allowed kernel names.
 #  
 #  By default, all installed kernels are allowed.
-c.KernelSpecManager.whitelist = set('nmct-box-env')
+# c.KernelSpecManager.whitelist = set('nmct-box-env')

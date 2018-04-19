@@ -372,7 +372,7 @@ function install_framework(){
     # install our package
     pushd "${1}"
     ./env/bin/python3 -m pip install -r requirements.txt -e .
-    ./env/bin/python -m ipykernel install --user --name nmct-box-env --display-name "Python (nmct-box)"
+    ./env/bin/python -m ipykernel install --user --name nmct-box --display-name "Python3 (nmct-box)"
     sudo mkdir -p /home/nmct/uploads/static
     sudo chown -R www-data:www-data /home/nmct/uploads
     sudo chmod -R g+w  /home/nmct/uploads

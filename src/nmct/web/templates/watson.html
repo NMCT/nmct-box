@@ -1,19 +1,29 @@
 {% extends "panel.html" %}
 {% block panel_color %}blue{% endblock %}
-{% block panel_title %}Text to Speech{% endblock %}
+{% block panel_title %}Watson{% endblock %}
 {% block panel_contents %}
+    <form role="form" action="{{ url_for('save_ws_id') }}" method="post">
+         <div class="form-group">
+            <div class="flexitem">
+                <label>Conversation Workspace ID:
+            <input class="form-control" name="workspace_id"
+                   placeholder="{{ workspace_id }}"/></label>
+        <button type="submit" class="btn btn-default" name="show_method">Save</button>
+            </div></div>
+    </form>
+    <hr>
     <form role="form" action="{{ url_for('tts_speak') }}" method="post">
         <div class="form-group">
-            <label> Voice:
+            <div class="flexitem">
+            <label>Voice:
                 <select name="tts_voice" class="form-control">
                     {% for id in voices %}
                         <option value="{{ id }}" SELECTED>{{ id }}</option>
                     {% endfor %}
                 </select></label>
-            <label>Text</label>
-            <div class="flexitem">
-                <input class="form-control" name="tts_text"
-                       placeholder="{{ tts_text }}"/>
+                <label>Text:
+                    <input class="form-control" name="tts_text"
+                           placeholder="{{ tts_text }}"/></label>
                 <button type="submit" class="btn btn-default" name="show_method">Speak</button>
                 <p class="help-block">Geef hier tekst in om te laten uitspreken door Watson.</p>
             </div>

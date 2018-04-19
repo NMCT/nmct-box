@@ -4,9 +4,9 @@
 {% block panel_contents %}
     <form role="form" action="{{ url_for('write_lcd') }}" method="get">
         <div class="form-group">
-            <label>LCD Input</label>
              <p class="help-block ">Druk op de grote knop van de nmct-box om naar het LCD display te kunnen schrijven.</p>
-                <input class="form-control "  name="lcdMessage" value="{{ lcdMessage }}"/>
+            <label>LCD Input
+                <input class="form-control "  name="lcdMessage" value="{{ lcdMessage }}"/></label>
         </div>
             <label>
 
@@ -14,9 +14,9 @@
                 LCD
                 display
             </button>
+            </label>
 
             <p class="help-block" >Geef hier tekst in om naar het LCD display te sturen.</p>
 
-            </label>
     </form>
 {% endblock %}

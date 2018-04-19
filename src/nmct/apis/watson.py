@@ -13,13 +13,15 @@ from nmct import settings
 
 log = logging.getLogger("Watson")
 
+SECRETS_FILE = os.path.join(settings.SECRETS_PATH, "credentials.json")
+
 
 class AuthenticationError(Exception):
     pass
 
 
 class ServiceCredential(object):
-    def __init__(self, name, data=None, secrets=os.path.join(settings.SECRETS_PATH, "credentials.json")):
+    def __init__(self, name, data=None, secrets=SECRETS_FILE):
         try:
             if data is None:
                 with open(secrets) as f:
@@ -148,9 +150,13 @@ class WatsonRecognizer(object):
 
 
 class WatsonConversation(object):
-    def __init__(self, workspace_id, credentials=None):
-        print('init\n\n')
-
+    def __init__(self, workspace_id=None, credentials=None):
+        if not workspace_id:
+            try:
+                with open(SECRETS_FILE) as f:
+                    workspace_id = json.load(f)["watson"].get("workspace_id", '')
+            except IOError:
+                workspace_id = ''
         self.workspace_id = workspace_id
         auth = ServiceCredential("conversation", data=credentials)
         self.client = ConversationV1(version="2017-05-26", **auth.data)

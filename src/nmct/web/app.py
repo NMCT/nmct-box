@@ -4,7 +4,9 @@ import bokeh
 import flask
 from pathlib import Path
 
+import json
 from bokeh.embed import autoload_server
+from nmct import settings
 
 import nmct
 import os
@@ -21,13 +23,17 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 display = nmct.box.get_display()
 tts = nmct.watson.get_synthesizer()
+secrets_file = os.path.join(settings.SECRETS_PATH, "credentials.json")
 
 
 def default_values():
+    with open(secrets_file) as f:
+        secrets = json.load(f)
     return {
         'uploads': list_uploads(),
         'w1ids': nmct.box.list_onewire_ids(),
-        'voices': tts.list_voices()
+        'voices': tts.list_voices(),
+        'workspace_id': secrets["watson"].get("workspace_id", ''),
     }
 
 
@@ -76,7 +82,7 @@ def write_lcd():
     return flask.render_template("dashboard.html", showmethod='write_lcd', lcdMessage=text, **default_values())
 
 
-@app.route('/speak', methods=['POST', 'GET'])
+@app.route('/speak', methods=['POST'])
 def tts_speak():
     text = flask.request.form.get('tts_text')
     voice = flask.request.form.get('tts_voice')
@@ -85,32 +91,35 @@ def tts_speak():
     return flask.render_template("dashboard.html", tts_text=text, tts_voice=voice, **default_values())
 
 
+@app.route('/set_workspace_id', methods=['POST'])
+def save_ws_id():
+    wid = flask.request.form.get('workspace_id')
+    try:
+        with open(secrets_file) as f:
+            data = json.load(f)
+        data["watson"]["workspace_id"] = wid
+        with open(secrets_file, 'w') as f:
+            json.dump(data, f)
+    except Exception as ex:
+        return flask.render_template("error.html", exc=ex, message=ex.args)
+    return show_dashboard()
+
+
 @app.route('/sensors', methods=['GET'])
 def sensors():
-    w1ids = nmct.box.list_onewire_ids()
-    # axe = request.form['show_method']
     sensor = flask.request.args.get('sensor')
     show_text = ""
     try:
-
         accelero = nmct.box.get_accelerometer()
         accelero.measure()
-
         if sensor == "gravity":
             show_text = accelero.measure()
-
         if sensor == "tilt":
             tilt = accelero.tilt()
-            # print(tilt.roll)
-            # print(tilt.pitch)
             show_text = "roll: {0:5.2f}\N{DEGREE SIGN} pitch : {1:5.2f}\N{DEGREE SIGN}".format(tilt.roll, tilt.pitch)
-
         if sensor == "temperature":
             temp = nmct.box.measure_temperature()
             show_text = "Temperature: {}\N{DEGREE SIGN}".format(temp)
-
-        # print(accelero.tilt())
-
     except Exception as ex:
         return flask.render_template("error.html", exc=ex, message=ex.args)
     return flask.render_template("dashboard.html", show_method='gravity', show_text=show_text, **default_values())
@@ -119,7 +128,6 @@ def sensors():
 @app.route('/temperatuur', methods=['GET'])
 def show_temperature():
     show_text = ""
-    w1ids = nmct.box.list_onewire_ids()
     serial = flask.request.args.get('serial_number')
     if serial is None:
         error = 'Gelieve een serienummer mee te geven: http://xxx.xxx.xxx.xxx/temperauur?serial_number=28-xxxx'
@@ -177,17 +185,6 @@ def show_uploads():
 def live_plot():
     script = bokeh.embed.server_document(request.url.replace("live_plot", "plot/plot"), True)
     return flask.render_template('plot.html', bokeh_script=script)
-
-
-#
-# @app.errorhandler(500)
-# def page_not_found(e):
-#     return flask.render_template('error.html', exc=e, message=e.message)
-#
-#
-# @app.errorhandler(404)
-# def page_not_found(e):
-#     return flask.render_template('error.html', exc=e, message=e.message)
 
 
 if __name__ == '__main__':
